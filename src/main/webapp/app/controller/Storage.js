@@ -42,7 +42,6 @@ Ext.define("ARSnova.controller.Storage", {
 		/** initalize 'initialized' object */
 		localforage.getItem('initialized', function(isInitialized) {
 			if(isInitialized == null) {
-				console.log('isInit');
 				localforage.setItem('initialized', new Object());
 			}
 		});
@@ -50,12 +49,16 @@ Ext.define("ARSnova.controller.Storage", {
 		    
 	/** session specific initialization */
 	initializeSessionStorage: function(sessionid) {		
+		var me = this;
+		
 		localforage.getItem('initialized', function(error, initObject) {
 			if(error) return;
 			else {
 				if(typeof initObject[sessionid] === 'undefined') {
 					initObject[sessionid] = true;
 					localforage.setItem('initialized', initObject);
+					
+					me.genericSetterMethod('questionObj', new Object());
 				}
 			}
 		});
