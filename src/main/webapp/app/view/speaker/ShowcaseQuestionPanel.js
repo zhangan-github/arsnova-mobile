@@ -76,7 +76,7 @@ Ext.define('ARSnova.view.speaker.ShowcaseQuestionPanel', {
 
 		this.add([this.toolbar]);
 
-		this.on('activate', this.onActivate);
+		this.onBefore('painted', this.onActivate);
 		this.on('activate', this.beforeActivate, this, null, 'before');
 		this.on('activeitemchange', this.onItemChange);
 		this.on('painted', function() { ARSnova.app.innerScrollPanel = this; });
@@ -111,6 +111,7 @@ Ext.define('ARSnova.view.speaker.ShowcaseQuestionPanel', {
 		var hideIndicator = ARSnova.app.showLoadMask(Messages.LOAD_MASK_SEARCH_QUESTIONS);
 		var timestamp1 = Math.floor(Date.now());
 		
+		var task = function() {
 		ARSnova.app.getController('Storage').getQuestionObj({
 			success: function(questions) {
 				var panel = ARSnova.app.mainTabPanel.tabPanel.speakerTabPanel.showcaseQuestionPanel;
@@ -138,7 +139,7 @@ Ext.define('ARSnova.view.speaker.ShowcaseQuestionPanel', {
 				panel.checkFirstQuestion();
 				hideIndicator();
 				
-				console.log(Math.floor(Date.now()) - timestamp1);
+				alert(Math.floor(Date.now()) - timestamp1);
 			},
 			failure: function() {
 				me.getController().getQuestions(sessionStorage.getItem("keyword"), {
@@ -168,7 +169,7 @@ Ext.define('ARSnova.view.speaker.ShowcaseQuestionPanel', {
 						panel.setActiveItem(0);
 						panel.checkFirstQuestion();
 						hideIndicator();
-						console.log(Date.now() - timestamp1);
+						alert(Date.now() - timestamp1);
 					},
 					failure: function (response) {
 						console.log('error');
@@ -177,6 +178,9 @@ Ext.define('ARSnova.view.speaker.ShowcaseQuestionPanel', {
 				});
 			}
 		});
+		};
+		
+		Ext.create('Ext.util.DelayedTask', task, this).delay(1);
 	},
 
 	addQuestion: function (question) {

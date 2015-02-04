@@ -30,7 +30,7 @@ Ext.define("ARSnova.controller.Storage", {
 	initializeStorage: function() {
 	        
 		/** use localstorage as driver for debugging reasons */
-		localforage.setDriver('localStorageWrapper');
+		// localforage.setDriver('localStorageWrapper');
 		        
 		localforage.config({
 			name        : 'ARSnovaDB',
@@ -96,7 +96,7 @@ Ext.define("ARSnova.controller.Storage", {
 		var me = this;
 		localforage.getItem(key, function(err, obj) {
 			var value = obj[me.activeSessionId];
-			
+			err = true;
 			if(err) {
 				console.log('storage error');
 				promise.failure ? 
