@@ -78,6 +78,7 @@ Ext.define("ARSnova.controller.Sessions", {
 				localStorage.setItem('creationTime', obj.creationTime);
 			
 				sessionStorage.setItem('keyword', obj.keyword);
+				ARSnova.app.getController('Storage').setActiveSessionId(obj.keyword);
 				
 				// deactivate several about tabs
 				ARSnova.app.mainTabPanel.tabPanel.deactivateAboutTabs();
