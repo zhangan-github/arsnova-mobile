@@ -58,10 +58,28 @@ Ext.define("ARSnova.controller.Storage", {
 					initObject[sessionid] = true;
 					localforage.setItem('initialized', initObject);
 					
-					me.genericSetterMethod('questionObj', new Object());
+					me.initQuestionObj(sessionid);
 				}
 			}
 		});
+	},
+	
+	initQuestionObj: function(sessionid) {
+		var me = this;
+		
+		ARSnova.app.getController('Questions').getQuestions(sessionid, {
+			success: function (response) {
+				var questions = Ext.decode(response.responseText);
+				me.genericSetterMethod('questionObj', questions);
+			},
+			failure: function (response) {
+				console.log('error');
+			}
+		});
+	},
+	
+	getQuestionObj: function(callbacks) {
+		this.genericGetterMethod('questionObj', callbacks);
 	},
 	
 	setActiveSessionId: function(sessionid) {
@@ -76,12 +94,19 @@ Ext.define("ARSnova.controller.Storage", {
 	/** generic getter method */
 	genericGetterMethod: function(key, promise) {
 		var me = this;
-		localforage.getItem(err, key, function(obj) {
+		localforage.getItem(key, function(err, obj) {
+			var value = obj[me.activeSessionId];
+			
 			if(err) {
-				console.log('failed');
+				console.log('storage error');
+				promise.failure ? 
+					promise.failure.call(this, value) : 
+					Ext.emptyFn;
 			}
 			else {
-				promise(obj[me.activeSessionId]);
+				promise.success ? 
+					promise.success.call(this, value) : 
+					promise(value);
 			}
 		});
 	},
@@ -89,12 +114,16 @@ Ext.define("ARSnova.controller.Storage", {
 	/** generic setter method */
 	genericSetterMethod: function(key, value, promise) {
 		var me = this;
-		localforage.getItem(key, function(object) {
-			if(object == null) object = {};
-		
-			object[me.activeSessionId] = value;
-			if(typeof promise === 'undefined') { localforage.setItem(key, object); }
-			else { localforage.setItem(key, object, promise); } 
+		localforage.getItem(key, function(err, object) {
+			if(err) {
+				console.log('storage error');
+			} else {
+				if(object == null) object = {};
+				
+				object[me.activeSessionId] = value;
+				if(typeof promise === 'undefined') { localforage.setItem(key, object); }
+				else { localforage.setItem(key, object, promise); } 
+			}
 		});
 	}
 });

@@ -107,11 +107,12 @@ Ext.define('ARSnova.view.speaker.ShowcaseQuestionPanel', {
 	},
 			
 	getAllSkillQuestions: function () {
+		var me = this;
 		var hideIndicator = ARSnova.app.showLoadMask(Messages.LOAD_MASK_SEARCH_QUESTIONS);
-
-		this.getController().getQuestions(sessionStorage.getItem("keyword"), {
-			success: function (response) {
-				var questions = Ext.decode(response.responseText);
+		var timestamp1 = Math.floor(Date.now());
+		
+		ARSnova.app.getController('Storage').getQuestionObj({
+			success: function(questions) {
 				var panel = ARSnova.app.mainTabPanel.tabPanel.speakerTabPanel.showcaseQuestionPanel;
 
 				panel.toolbar.resetQuestionCounter(questions.length);
@@ -136,10 +137,44 @@ Ext.define('ARSnova.view.speaker.ShowcaseQuestionPanel', {
 				panel.setActiveItem(0);
 				panel.checkFirstQuestion();
 				hideIndicator();
+				
+				console.log(Math.floor(Date.now()) - timestamp1);
 			},
-			failure: function (response) {
-				console.log('error');
-				hideIndicator();
+			failure: function() {
+				me.getController().getQuestions(sessionStorage.getItem("keyword"), {
+					success: function (response) {
+						var questions = Ext.decode(response.responseText);
+						var panel = ARSnova.app.mainTabPanel.tabPanel.speakerTabPanel.showcaseQuestionPanel;
+
+						panel.toolbar.resetQuestionCounter(questions.length);
+
+						if (questions.length == 1) {
+							panel._indicator.hide();
+						}
+
+						var questionsArr = [];
+						var questionIds = [];
+						questions.forEach(function (question) {
+							questionsArr[question._id] = question;
+							questionIds.push(question._id);
+						});
+						questionIds.forEach(function (questionId) {
+							panel.addQuestion(questionsArr[questionId]);
+						});
+
+						// bugfix (workaround): after removing all items from carousel the active index
+						// is set to -1. To fix that you have manually  set the activeItem on the first
+						// question.
+						panel.setActiveItem(0);
+						panel.checkFirstQuestion();
+						hideIndicator();
+						console.log(Date.now() - timestamp1);
+					},
+					failure: function (response) {
+						console.log('error');
+						hideIndicator();
+					}
+				});
 			}
 		});
 	},
