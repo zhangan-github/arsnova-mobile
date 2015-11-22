@@ -61,9 +61,9 @@ $label-text-shadow: none;
 
 
 /** splashscreen default colors **/
-$splashscreen-background-color: $background-color;
+$splashscreen-background-color: #99CC33;
 $splashscreen-loading-dots-color: $brand-primary;
-$splashscreen-slogan-text-color: $brand-text;
+$splashscreen-slogan-text-color: #ffffff;
 $loading-indicator-primary-color: $brand-primary;
 $loading-indicator-secondary-color: $brand-secondary;
 
@@ -75,7 +75,7 @@ $button-icon-alternative-color: $brand-secondary;
 $button-confirm-bg-color: $brand-success;
 $button-confirm-txt-color: $default-white-color;
 $button-action-bg-color: $brand-primary;
-$button-action-active-bg-color: $brand-info;
+$button-action-active-bg-color: #ff9600;
 $button-action-txt-color: $default-white-color;
 $button-decline-bg-color: $brand-danger;
 $button-decline-txt-color: $default-white-color;
