@@ -115,12 +115,14 @@ $list-selection-color: #ffcc66;
 /** question container configuration **/
 $question-container-bg-color: #f5f5f5;
 $question-container-text-color: $brand-text;
+$question-container-border-width: 3px;
+$question-container-border-color: $default-white-color;
 
 
 /** toolbar color configuration **/
 $toolbar-bg-color: #88BA14;
-$toolbar-title-txt-color: #000000;
-$toolbar-speaker-title-color: #000000;
+$toolbar-title-txt-color: #ffffff;
+$toolbar-speaker-title-color: #ffffff;
 $toolbar-button-bg-color: #446700;
 $toolbar-button-txt-color: $default-white-color;
 $toolbar-back-button-bg-color: #446700;
@@ -134,6 +136,12 @@ $tabbar-bg-color: #88BA14;
 $tabbar-button-label-color: #ffffff;
 $tabbar-button-icon-color: #446700;
 $tabbar-button-active-icon-color: #ff9600;
+$tabbar-button-label-color: #446700;
+$tabbar-button-icon-color: #446700;
+$tabbar-button-active-icon-color: #ff9600;
+$tabbar-notification-badge-color: $brand-danger;
+$tabbar-notification-badge-text-color: $default-white-color;
+$tabbar-notification-badge-border-color: $default-white-color;
 
 
 /** carousel indicator and navigation color configuration **/
@@ -148,8 +156,6 @@ $badge-question-color: $default-grey-color;
 $badge-feedback-color: #00587c;
 $badge-unread-feedback-color: $brand-danger;
 $badge-answers-color: $brand-warning;
-$notification-badge-color: $brand-danger;
-$notification-badge-text-color: $default-white-color;
 
 
 /** mask configuration **/
@@ -157,6 +163,14 @@ $mask-error-text-color: $brand-danger;
 $mask-correct-text-color: $brand-success;
 $mask-background-color: #000000;
 $mask-opacity: 0.3;
+
+
+/** countdown timer configuration **/
+$timer-minutes-color: #446700;
+$timer-seconds-color: $default-orange-color;
+$timer-warning-color: $default-red-color;
+$timer-label-color: $label-font-color;
+$timer-label-font: "Open Sans";
 
 
 /** projector mode color configuration **/
