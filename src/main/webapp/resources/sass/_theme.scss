@@ -19,14 +19,13 @@
 
 /** default colors **/
 $default-white-color: #FFF;
-$default-green-color: #88BA24;
-$default-grey-color: #394a59;
+$default-green-color: #99CC33;
+$default-grey-color: #475766;
 $default-lightgrey-color: #788895;
 $default-red-color: #971b2f;
 $default-lightblue-color: #00b5e2;
 $default-darkblue-color: #012169;
-//$default-orange-color: #f2a900;
-$default-orange-color: #ff9600;
+$default-orange-color: #FF9600;
 
 /** brand configuration **/
 $brand-primary: $default-grey-color;
@@ -39,7 +38,8 @@ $brand-text: $default-grey-color;
 $brand-buttons: $default-white-color;
 $brand-icons: $default-grey-color;
 
-$background-color: #dfe5e6;
+//$background-color: #dfe5e6;
+$background-color: #E9F2F7;
 $twitter-color: #55ACEE;
 $facebook-color: #3b5998;
 $google-color: #D34836;
@@ -56,7 +56,7 @@ $logo-nova-color: $default-green-color;
 /** label configuration **/
 $label-font-color: $brand-text;
 $label-font-active-color: $brand-secondary;
-$label-font-family: Georgia,"Helvetica Neue",HelveticaNeue,"Helvetica-Neue",Helvetica,"BBAlpha Sans",sans-serif;
+$label-font-family: Arial,"Helvetica Neue",HelveticaNeue,"Helvetica-Neue",Helvetica,"BBAlpha Sans",sans-serif;
 $label-font-weight: normal;
 $label-text-shadow: none;
 
