@@ -1,0 +1,221 @@
+/*
+ * This file is part of ARSnova Mobile.
+ * Copyright (C) 2011-2012 Christian Thomas Weber
+ * Copyright (C) 2012-2015 The ARSnova Team
+ *
+ * ARSnova Mobile is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ARSnova Mobile is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with ARSnova Mobile.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/** default colors **/
+<<<<<<< HEAD
+$default-white-color: #ffffff;
+$default-green-color: #ff9600;
+$default-grey-color: #446700;
+$default-lightgrey-color: #788895;
+$default-red-color: #971b2f;
+$default-lightblue-color: #ecf9ff;
+$default-darkblue-color: #00587c;
+=======
+$default-white-color: #FFF;
+$default-green-color: #88BA24;
+$default-grey-color: #394a59;
+$default-lightgrey-color: #788895;
+$default-red-color: #971b2f;
+$default-lightblue-color: #00b5e2;
+$default-darkblue-color: #012169;
+//$default-orange-color: #f2a900;
+>>>>>>> master
+$default-orange-color: #ff9600;
+
+/** brand configuration **/
+$brand-primary: $default-grey-color;
+$brand-secondary: $default-green-color;
+$brand-success: $default-green-color;
+$brand-info: $default-grey-color;
+$brand-warning: $default-orange-color;
+$brand-danger: $default-red-color;
+$brand-text: $default-grey-color;
+$brand-buttons: #CFE3A8;
+$brand-icons: $default-grey-color;
+
+<<<<<<< HEAD
+$background-color: #fcfccd;
+=======
+$background-color: #dfe5e6;
+>>>>>>> master
+$twitter-color: #55ACEE;
+$facebook-color: #3b5998;
+$google-color: #D34836;
+$smiley-color: #FFCC00;
+$smiley-bg-color: $default-grey-color;
+
+
+/** logo configuration **/
+<<<<<<< HEAD
+$logo-icon-color: #ff9600;
+$logo-ars-color: #446700;
+$logo-nova-color: #ff9600;
+=======
+$logo-icon-color: $default-green-color;
+$logo-ars-color: $default-grey-color;
+$logo-nova-color: $default-green-color;
+>>>>>>> master
+
+
+/** label configuration **/
+$label-font-color: $brand-text;
+$label-font-active-color: $brand-secondary;
+$label-font-family: Georgia,"Helvetica Neue",HelveticaNeue,"Helvetica-Neue",Helvetica,"BBAlpha Sans",sans-serif;
+$label-font-weight: normal;
+$label-text-shadow: none;
+
+
+/** splashscreen default colors **/
+$splashscreen-background-color: #88BA14;
+$splashscreen-loading-dots-color: $brand-primary;
+$splashscreen-slogan-text-color: #ffffff;
+$loading-indicator-primary-color: $brand-primary;
+$loading-indicator-secondary-color: $brand-secondary;
+
+
+/** default button configuration **/
+$button-bg-color: $brand-buttons;
+$button-icon-color: $brand-icons;
+$button-icon-alternative-color: $brand-secondary;
+$button-confirm-bg-color: $brand-success;
+$button-confirm-txt-color: $default-white-color;
+$button-action-bg-color: $brand-primary;
+$button-action-active-bg-color: #ff9600;
+$button-action-txt-color: $default-white-color;
+$button-decline-bg-color: $brand-danger;
+$button-decline-txt-color: $default-white-color;
+$button-pressing-color: #C4C4C4;
+$button-hover-color: #EEEEEE;
+
+
+
+/** button icon color configuration **/
+$icon-feature-entry-color: $button-icon-alternative-color;
+$icon-questionmark-color: $button-icon-alternative-color;
+$icon-newsession-color: $button-icon-alternative-color;
+$icon-delete-close-icon-color: $brand-danger;
+$icon-release-timer-color: $button-icon-alternative-color;
+$icon-lock-unlocked-color: $button-icon-color;
+<<<<<<< HEAD
+$icon-lock-locked-color: $brand-danger;
+=======
+$icon-lock-locked-color: $default-red-color;
+>>>>>>> master
+$icon-chart-color: $button-icon-alternative-color;
+$icon-bullhorn-color: $button-icon-alternative-color;
+$icon-presenter-color: #ff9600;
+
+
+/** form color configuration **/
+$form-bg-color: #e7f3cd;
+$form-text-color: $brand-text;
+<<<<<<< HEAD
+$form-placeholder-color: #000000;
+$form-placeholder-opacity: 0.3;
+=======
+$form-placeholder-color: $default-lightgrey-color;
+$form-placeholder-opacity: 0.7;
+>>>>>>> master
+$form-checked-icon-color: $brand-success;
+$form-unchecked-icon-color: #DDDDDD;
+$markdown-button-color: $brand-text;
+$markdown-button-bg-color: #cfe3a8;
+
+
+/** list color configuration **/
+$list-text-color: $brand-text;
+$list-bg-color: #e7f3cd;
+$list-header-color: $default-lightgrey-color;
+$list-selection-color: #ffcc66;
+
+
+/** question container configuration **/
+$question-container-bg-color: #f5f5f5;
+$question-container-text-color: $brand-text;
+$question-container-border-width: 3px;
+$question-container-border-color: $default-white-color;
+
+
+/** toolbar color configuration **/
+$toolbar-bg-color: #88BA14;
+$toolbar-title-txt-color: #ffffff;
+$toolbar-speaker-title-color: #ffffff;
+$toolbar-button-bg-color: #446700;
+$toolbar-button-txt-color: $default-white-color;
+$toolbar-back-button-bg-color: #446700;
+$toolbar-back-button-txt-color: #ffffff;
+$toolbar-toogleCorrect-button-active-color: $brand-success;
+$toolbar-toogleCorrect-button-inactive-color: $brand-info;
+
+
+/** tabbar icon color configuration **/
+$tabbar-bg-color: #fcfccd;
+$tabbar-button-label-color: #ffffff;
+$tabbar-button-icon-color: #446700;
+$tabbar-button-active-icon-color: #ff9600;
+$tabbar-button-label-color: #446700;
+$tabbar-button-icon-color: #446700;
+$tabbar-button-active-icon-color: #ff9600;
+$tabbar-notification-badge-color: $brand-danger;
+$tabbar-notification-badge-text-color: $default-white-color;
+$tabbar-notification-badge-border-color: $default-white-color;
+
+
+/** carousel indicator and navigation color configuration **/
+$carousel-indicator-color: $brand-primary;
+$carousel-indicator-active-color: $brand-secondary;
+$carousel-navigation-button-color: $brand-primary;
+$carousel-navigation-button-pressed-color: $brand-info;
+
+
+/** default badge configuration **/
+$badge-question-color: $default-grey-color;
+$badge-feedback-color: #00587c;
+$badge-unread-feedback-color: $brand-danger;
+$badge-answers-color: $brand-warning;
+
+
+/** mask configuration **/
+$mask-error-text-color: $brand-danger;
+$mask-correct-text-color: $brand-success;
+$mask-background-color: #000000;
+$mask-opacity: 0.3;
+
+
+/** countdown timer configuration **/
+$timer-minutes-color: #446700;
+$timer-seconds-color: $default-orange-color;
+$timer-warning-color: $default-red-color;
+$timer-label-color: $label-font-color;
+$timer-label-font: "Open Sans";
+
+
+/** projector mode color configuration **/
+$projectormode-primary-color: $brand-primary;
+$projectormode-secondary-color: $default-white-color;
+$projectormode-back-button-color: $default-white-color;
+$projectormode-background-color: $background-color;
+$projectormode-active-color: $default-lightgrey-color;
+$projectormode-font-family: Verdana,Geneva,sans-serif;
+$projectormode-text-color: black;
+
+
+/** additional color configurations **/
+$caption-bg-color: $brand-buttons;
+$startscreen-rolechange-alternative-color: $brand-secondary;
