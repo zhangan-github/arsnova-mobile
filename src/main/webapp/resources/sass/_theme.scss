@@ -18,27 +18,28 @@
  */
 
 /** default colors **/
-$default-white-color: #ffffff;
-$default-green-color: #ff9600;
-$default-grey-color: #446700;
+$default-white-color: #FFF;
+$default-green-color: #88BA24;
+$default-grey-color: #394a59;
 $default-lightgrey-color: #788895;
 $default-red-color: #971b2f;
-$default-lightblue-color: #ecf9ff;
-$default-darkblue-color: #00587c;
+$default-lightblue-color: #00b5e2;
+$default-darkblue-color: #012169;
+//$default-orange-color: #f2a900;
 $default-orange-color: #ff9600;
 
 /** brand configuration **/
 $brand-primary: $default-grey-color;
 $brand-secondary: $default-green-color;
 $brand-success: $default-green-color;
-$brand-info: $default-grey-color;
+$brand-info: $default-lightgrey-color;
 $brand-warning: $default-orange-color;
 $brand-danger: $default-red-color;
 $brand-text: $default-grey-color;
-$brand-buttons: #CFE3A8;
+$brand-buttons: $default-white-color;
 $brand-icons: $default-grey-color;
 
-$background-color: #fcfccd;
+$background-color: #dfe5e6;
 $twitter-color: #55ACEE;
 $facebook-color: #3b5998;
 $google-color: #D34836;
@@ -47,9 +48,9 @@ $smiley-bg-color: $default-grey-color;
 
 
 /** logo configuration **/
-$logo-icon-color: #ff9600;
-$logo-ars-color: #446700;
-$logo-nova-color: #ff9600;
+$logo-icon-color: $default-green-color;
+$logo-ars-color: $default-grey-color;
+$logo-nova-color: $default-green-color;
 
 
 /** label configuration **/
@@ -61,9 +62,9 @@ $label-text-shadow: none;
 
 
 /** splashscreen default colors **/
-$splashscreen-background-color: #88BA14;
+$splashscreen-background-color: $background-color;
 $splashscreen-loading-dots-color: $brand-primary;
-$splashscreen-slogan-text-color: #ffffff;
+$splashscreen-slogan-text-color: $brand-text;
 $loading-indicator-primary-color: $brand-primary;
 $loading-indicator-secondary-color: $brand-secondary;
 
@@ -75,7 +76,7 @@ $button-icon-alternative-color: $brand-secondary;
 $button-confirm-bg-color: $brand-success;
 $button-confirm-txt-color: $default-white-color;
 $button-action-bg-color: $brand-primary;
-$button-action-active-bg-color: #ff9600;
+$button-action-active-bg-color: $brand-info;
 $button-action-txt-color: $default-white-color;
 $button-decline-bg-color: $brand-danger;
 $button-decline-txt-color: $default-white-color;
@@ -91,57 +92,54 @@ $icon-newsession-color: $button-icon-alternative-color;
 $icon-delete-close-icon-color: $brand-danger;
 $icon-release-timer-color: $button-icon-alternative-color;
 $icon-lock-unlocked-color: $button-icon-color;
-$icon-lock-locked-color: $brand-danger;
+$icon-lock-locked-color: $default-red-color;
 $icon-chart-color: $button-icon-alternative-color;
 $icon-bullhorn-color: $button-icon-alternative-color;
-$icon-presenter-color: #ff9600;
+$icon-presenter-color: $button-icon-alternative-color;
 
 
 /** form color configuration **/
-$form-bg-color: #e7f3cd;
+$form-bg-color: $default-white-color;
 $form-text-color: $brand-text;
-$form-placeholder-color: #000000;
-$form-placeholder-opacity: 0.3;
+$form-placeholder-color: $default-lightgrey-color;
+$form-placeholder-opacity: 0.7;
 $form-checked-icon-color: $brand-success;
 $form-unchecked-icon-color: #DDDDDD;
 $markdown-button-color: $brand-text;
-$markdown-button-bg-color: #cfe3a8;
+$markdown-button-bg-color: $default-white-color;
 
 
 /** list color configuration **/
 $list-text-color: $brand-text;
-$list-bg-color: #e7f3cd;
+$list-bg-color: $default-white-color;
 $list-header-color: $default-lightgrey-color;
-$list-selection-color: #ffcc66;
+$list-selection-color: $brand-warning;
 
 
 /** question container configuration **/
-$question-container-bg-color: #f5f5f5;
+$question-container-bg-color: $default-white-color;
 $question-container-text-color: $brand-text;
 $question-container-border-width: 3px;
 $question-container-border-color: $default-white-color;
 
 
 /** toolbar color configuration **/
-$toolbar-bg-color: #88BA14;
-$toolbar-title-txt-color: #ffffff;
-$toolbar-speaker-title-color: #ffffff;
-$toolbar-button-bg-color: #446700;
+$toolbar-bg-color: $brand-primary;
+$toolbar-title-txt-color: $default-white-color;
+$toolbar-speaker-title-color: $default-white-color;
+$toolbar-button-bg-color: $brand-secondary;
 $toolbar-button-txt-color: $default-white-color;
-$toolbar-back-button-bg-color: #446700;
-$toolbar-back-button-txt-color: #ffffff;
+$toolbar-back-button-bg-color: $brand-buttons;
+$toolbar-back-button-txt-color: $brand-text;
 $toolbar-toogleCorrect-button-active-color: $brand-success;
 $toolbar-toogleCorrect-button-inactive-color: $brand-info;
 
 
 /** tabbar icon color configuration **/
-$tabbar-bg-color: #fcfccd;
-$tabbar-button-label-color: #ffffff;
-$tabbar-button-icon-color: #446700;
-$tabbar-button-active-icon-color: #ff9600;
-$tabbar-button-label-color: #446700;
-$tabbar-button-icon-color: #446700;
-$tabbar-button-active-icon-color: #ff9600;
+$tabbar-bg-color: $background-color;
+$tabbar-button-label-color: $brand-primary;
+$tabbar-button-icon-color: $brand-primary;
+$tabbar-button-active-icon-color: $brand-success;
 $tabbar-notification-badge-color: $brand-danger;
 $tabbar-notification-badge-text-color: $default-white-color;
 $tabbar-notification-badge-border-color: $default-white-color;
@@ -156,7 +154,7 @@ $carousel-navigation-button-pressed-color: $brand-info;
 
 /** default badge configuration **/
 $badge-question-color: $default-grey-color;
-$badge-feedback-color: #00587c;
+$badge-feedback-color: $brand-success;
 $badge-unread-feedback-color: $brand-danger;
 $badge-answers-color: $brand-warning;
 
@@ -169,7 +167,7 @@ $mask-opacity: 0.3;
 
 
 /** countdown timer configuration **/
-$timer-minutes-color: #446700;
+$timer-minutes-color: $default-grey-color;
 $timer-seconds-color: $default-orange-color;
 $timer-warning-color: $default-red-color;
 $timer-label-color: $label-font-color;
