@@ -128,24 +128,24 @@ $question-container-border-color: $default-white-color;
 
 
 /** toolbar color configuration **/
-$toolbar-bg-color: $brand-primary;
+$toolbar-bg-color: $brand-secondary;
 $toolbar-title-txt-color: $default-white-color;
 $toolbar-speaker-title-color: $default-white-color;
-$toolbar-button-bg-color: $brand-secondary;
+$toolbar-button-bg-color: $default-grey-color;
 $toolbar-button-txt-color: $default-white-color;
-$toolbar-back-button-bg-color: $brand-buttons;
-$toolbar-back-button-txt-color: $brand-text;
-$toolbar-toggleCorrect-button-active-color: $brand-success;
-$toolbar-toggleCorrect-button-inactive-color: $brand-info;
+$toolbar-back-button-bg-color: $default-white-color;
+$toolbar-back-button-txt-color: $default-grey-color;
+$toolbar-toggleCorrect-button-active-color: $default-grey-color;
+$toolbar-toggleCorrect-button-inactive-color: $default-orange-color;
 
 
 /** tabbar icon color configuration **/
-$tabbar-bg-color: $background-color;
-$tabbar-button-label-color: $brand-primary;
-$tabbar-button-icon-color: $brand-primary;
+$tabbar-bg-color: $brand-primary;
+$tabbar-button-label-color: $default-white-color;
+$tabbar-button-icon-color: $default-white-color;
 $tabbar-button-active-icon-color: $brand-success;
-$tabbar-notification-badge-color: $default-white-color;
-$tabbar-notification-badge-text-color: $default-grey-color;
+$tabbar-notification-badge-color: $default-grey-color;
+$tabbar-notification-badge-text-color: $default-white-color;
 $tabbar-notification-badge-border-color: $default-white-color;
 
 
