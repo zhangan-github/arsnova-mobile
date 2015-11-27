@@ -289,8 +289,6 @@
 }
 
 .iconBtn {
-	border-color: transparent !important;
-
 	.icon-newsession {
 		color: $icon-newsession-color;
 		margin-left: 19px !important;
@@ -376,9 +374,12 @@
 	top: -1px;
 }
 
-.login-icon-cas,
-.login-icon-arsnova {
+.login-icon-cas {
 	color: #80ba24;
+}
+
+.login-icon-arsnova {
+	color: $arsnova-color;
 }
 
 .login-icon-twitter {

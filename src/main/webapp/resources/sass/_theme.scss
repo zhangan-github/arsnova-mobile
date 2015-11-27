@@ -19,13 +19,15 @@
 
 /** default colors **/
 $default-white-color: #FFF;
-$default-green-color: #99CC33;
-$default-grey-color: #475766;
+$default-green-color: #88BA24;
+$default-grey-color: #394a59;
 $default-lightgrey-color: #788895;
 $default-red-color: #971b2f;
 $default-lightblue-color: #00b5e2;
 $default-darkblue-color: #012169;
-$default-orange-color: #FF9600;
+//$default-orange-color: #f2a900;
+$default-orange-color: #ff9600;
+
 
 /** brand configuration **/
 $brand-primary: $default-grey-color;
@@ -37,12 +39,14 @@ $brand-danger: $default-red-color;
 $brand-text: $default-grey-color;
 $brand-buttons: $default-white-color;
 $brand-icons: $default-grey-color;
+$background-color: #dfe5e6;
 
-//$background-color: #dfe5e6;
-$background-color: #E9F2F7;
+
+/** login icon configuration **/
 $twitter-color: #55ACEE;
 $facebook-color: #3b5998;
 $google-color: #D34836;
+$arsnova-color: $default-green-color;
 $smiley-color: #FFCC00;
 $smiley-bg-color: $default-grey-color;
 
@@ -82,7 +86,8 @@ $button-decline-bg-color: $brand-danger;
 $button-decline-txt-color: $default-white-color;
 $button-pressing-color: #C4C4C4;
 $button-hover-color: #EEEEEE;
-
+$button-border-color: #D0D0D0;
+$button-border-width: 1px;
 
 
 /** button icon color configuration **/
@@ -140,8 +145,8 @@ $tabbar-bg-color: $background-color;
 $tabbar-button-label-color: $brand-primary;
 $tabbar-button-icon-color: $brand-primary;
 $tabbar-button-active-icon-color: $brand-success;
-$tabbar-notification-badge-color: $brand-danger;
-$tabbar-notification-badge-text-color: $default-white-color;
+$tabbar-notification-badge-color: $default-white-color;
+$tabbar-notification-badge-text-color: $default-grey-color;
 $tabbar-notification-badge-border-color: $default-white-color;
 
 
