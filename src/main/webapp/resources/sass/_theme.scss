@@ -17,6 +17,14 @@
  * along with ARSnova Mobile.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* BUW icon for LDAP button */
+.iconBtnImg.login-icon-ldap {
+	margin: 0 !important;
+	width: 100% !important;
+	height: 100% !important;
+	background: url(/buw/buw-login.png) no-repeat center center; color: transparent;
+}
+
 /** default colors **/
 $default-white-color: #FFF;
 $default-green-color: #99CC33;
