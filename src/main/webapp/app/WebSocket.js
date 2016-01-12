@@ -35,6 +35,7 @@ Ext.define('ARSnova.WebSocket', {
 		setSessionActive: "arsnova/socket/session/active",
 		feedbackReset: "arsnova/socket/feedback/reset",
 		feedbackAverage: "arsnova/socket/feedback/average",
+		lockFeedback: "arsnova/socket/feedback/lock",
 		lockVote: "arsnova/socket/lecturer/lockVote",
 		lockVotes: "arsnova/socket/lecturer/lockVotes",
 		unlockVote: "arsnova/socket/lecturer/unlockVote",
@@ -111,11 +112,25 @@ Ext.define('ARSnova.WebSocket', {
 			}, this));
 
 			this.socket.on('feedbackData', Ext.bind(function (data) {
+				var features = Ext.decode(sessionStorage.getItem("features"));
+
+				if (features.liveClicker && !ARSnova.app.feedbackModel.lock &&
+					ARSnova.app.userRole !== ARSnova.app.USER_ROLE_SPEAKER) {
+					return;
+				}
+
 				console.debug("Socket.IO: feedbackData", data);
 				this.fireEvent("arsnova/socket/feedback/update", data);
 			}, this));
 
 			this.socket.on('feedbackDataRoundedAverage', Ext.bind(function (average) {
+				var features = Ext.decode(sessionStorage.getItem("features"));
+
+				if (features.liveClicker && !ARSnova.app.feedbackModel.lock &&
+					ARSnova.app.userRole !== ARSnova.app.USER_ROLE_SPEAKER) {
+					return;
+				}
+
 				console.debug("Socket.IO: feedbackDataRoundedAverage", average);
 				this.fireEvent(this.events.feedbackAverage, average);
 			}, this));
@@ -123,6 +138,11 @@ Ext.define('ARSnova.WebSocket', {
 			this.socket.on('feedbackReset', Ext.bind(function (affectedSessions) {
 				console.debug("Socket.IO: feedbackReset", affectedSessions);
 				this.fireEvent(this.events.feedbackReset, affectedSessions);
+			}, this));
+
+			this.socket.on('lockFeedback', Ext.bind(function (lock) {
+				console.debug("Socket.IO: lockFeedback", lock);
+				this.fireEvent(this.events.lockFeedback, lock);
 			}, this));
 
 			this.socket.on('setSessionActive', Ext.bind(function (active) {

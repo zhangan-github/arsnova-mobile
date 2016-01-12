@@ -19,7 +19,10 @@
 Ext.define('ARSnova.view.diagnosis.UseCasePanel', {
 	extend: 'Ext.Container',
 
-	requires: ['ARSnova.view.diagnosis.AddOnsPanel'],
+	requires: [
+		'ARSnova.view.diagnosis.AddOnsPanel',
+		'ARSnova.view.components.DetailsRadioField'
+	],
 
 	config: {
 		options: {},
@@ -44,6 +47,7 @@ Ext.define('ARSnova.view.diagnosis.UseCasePanel', {
 	initialize: function () {
 		this.callParent(arguments);
 		var me = this;
+		var screenWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
 
 		this.backButton = Ext.create('Ext.Button', {
 			text: Messages.BACK,
@@ -61,7 +65,7 @@ Ext.define('ARSnova.view.diagnosis.UseCasePanel', {
 			}
 		});
 
-		this.toolbar = Ext.create('Ext.Toolbar', {
+		this.toolbar = Ext.create('Ext.TitleBar', {
 			title: Messages.USECASES,
 			docked: 'top',
 			ui: 'light',
@@ -70,33 +74,44 @@ Ext.define('ARSnova.view.diagnosis.UseCasePanel', {
 
 		this.useCaseFieldSet = Ext.create('Ext.form.FieldSet', {
 			xtype: 'fieldset',
-			title: Messages.USECASES_CHOOSE,
+			title: screenWidth > 665 ? Messages.USECASES_CHOOSE :
+				Messages.USECASES_CHOOSE_SHORT,
 			defaults: {
 				name: 'usecase',
-				xtype: 'radiofield',
+				xtype: 'detailsradiofield',
 				labelWidth: 'auto'
 			},
 
 			items: [{
-				value: 'clicker',
+				value: 'liveClicker',
 				checked: true,
-				label: Messages.USECASE_CLICKER
+				label: Messages.USECASE_ABCD_CLICKER,
+				details: Messages.USECASE_ABCD_CLICKER_DETAILS
+			}, {
+				value: 'clicker',
+				label: Messages.USECASE_CLICKER,
+				details: Messages.USECASE_CLICKER_DETAILS
 			}, {
 				value: 'peerGrading',
-				label: Messages.USECASE_PEER_GRADING
+				label: Messages.USECASE_PEER_GRADING,
+				details: Messages.USECASE_PEER_GRADING_DETAILS
 			}, {
 				value: 'flashcard',
 				hidden: !ARSnova.app.globalConfig.features.flashcard,
-				label: Messages.USECASE_FLASHCARD
+				label: Messages.USECASE_FLASHCARD,
+				details: Messages.USECASE_FLASHCARD_DETAILS
 			}, {
 				value: 'liveFeedback',
-				label: Messages.USECASE_LIVE_FEEDBACK
+				label: Messages.USECASE_LIVE_FEEDBACK,
+				details: Messages.USECASE_LIVE_FEEDBACK_DETAILS
 			}, {
 				value: 'total',
-				label: Messages.USECASE_ARSNOVA_TOTAL
+				label: Messages.USECASE_ARSNOVA_TOTAL,
+				details: Messages.USECASE_ARSNOVA_TOTAL_DETAILS
 			}, {
 				value: 'custom',
 				label: Messages.USECASE_ARSNOVA_CUSTOM,
+				details: Messages.USECASE_ARSNOVA_CUSTOM_DETAILS,
 				listeners: {
 					scope: this,
 					check: function (field) {
@@ -207,7 +222,7 @@ Ext.define('ARSnova.view.diagnosis.UseCasePanel', {
 	validateSelection: function () {
 		var selection = this.getUseCaseValues();
 		if (!selection.clicker && !selection.peerGrading && !selection.flashcard &&
-			!selection.liveFeedback && !selection.total && !selection.custom) {
+			!selection.liveFeedback && !selection.total && !selection.custom && !selection.liveClicker) {
 			Ext.Msg.alert(Messages.NOTIFICATION, Messages.FEATURE_SAVE_ERROR);
 			return false;
 		}

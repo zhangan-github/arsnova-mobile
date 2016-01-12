@@ -29,8 +29,8 @@
 
 @mixin toolbar-button-config($bgcolor, $txtcolor) {
 	color: $txtcolor;
-	background: $bgcolor !important;
-	border: 1px solid $bgcolor !important;
+	background: $bgcolor;
+	border: 1px solid $bgcolor;
 }
 
 @mixin button-decoration-config($bgcolor, $txtcolor) {
@@ -303,6 +303,20 @@ html, body,
 			$toolbar-button-txt-color
 		);
 
+		&.feedbackFreezeButton {
+			@include toolbar-button-config(
+				$feedback-freeze-button-color,
+				$feedback-freeze-button-txt-color
+			); 
+		}
+		
+		&.feedbackReleaseButton {
+			@include toolbar-button-config(
+				$feedback-release-button-color,
+				$feedback-release-button-txt-color
+			);
+		}
+
 		&.toggleCorrectButton {
 			@include toolbar-button-config(
 				$toolbar-toggleCorrect-button-inactive-color,
@@ -405,8 +419,13 @@ html, body,
 
 		.x-button-icon {
 			&:before,
+			&.voteIcons.icon-chart:before,
 			&.voteIcons.icon-bullhorn:before {
 				color: $tabbar-button-active-icon-color;
+			}
+
+			&.voteIcons.lockedFeedback:before {
+				color: $feedback-freeze-tabBar-icon-color !important;
 			}
 
 			&.voteIcons:before {
@@ -466,6 +485,24 @@ html, body,
 
 	&.x-carousel-indicator-active {
 		background-color: $carousel-indicator-active-color;
+	}
+}
+
+.sessionInfoButton.maskClickable {
+	color: $icon-hint-color;
+
+	&:hover {
+		color: $button-pressing-color !important;
+		cursor: pointer;
+	}
+}
+
+.sessionInfoButton.solution.maskClickable {
+	color: $icon-solution-color;
+
+	&:hover {
+		color: $button-pressing-color !important;
+		cursor: pointer;
 	}
 }
 

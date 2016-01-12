@@ -33,6 +33,26 @@
 	padding: 0px !important;
 }
 
+.abcdBarChartColor {
+	color: $vote-abcd-chart-bar-color;
+}
+
+.feedbackOkColor {
+	color: $feedback-ok-background-color;
+}
+
+.feedbackGoodColor {
+	color: $feedback-good-background-color;
+}
+
+.feedbackBadColor {
+	color: $feedback-bad-background-color;
+}
+
+.feedbackNoneColor {
+	color: $feedback-gone-background-color;
+}
+
 .noOverflow {
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -534,7 +554,7 @@ code {
 
 	&:hover {
 		background-color: $caption-bg-color;
-		cursor: initial;
+		cursor: initial !important;
 	}
 }
 
@@ -550,7 +570,13 @@ code {
 	}
 }
 
-.x-msgbox.hintMessageBox {
+.detailsRadioField {
+	.x-field-input {
+		min-width: 0;
+	}
+}
+
+.x-msgbox.markdownMessageBox {
 	max-width: 480px;
 	width: 90%;	
 }

@@ -98,8 +98,10 @@ $icon-release-timer-color: $button-icon-alternative-color;
 $icon-lock-unlocked-color: $button-icon-color;
 $icon-lock-locked-color: $default-red-color;
 $icon-chart-color: $button-icon-alternative-color;
-$icon-bullhorn-color: $button-icon-alternative-color;
-$icon-presenter-color: $button-icon-alternative-color;
+$icon-bullhorn-color: $default-orange-color;
+$icon-presenter-color: $default-grey-color;
+$icon-hint-color: $default-orange-color;
+$icon-solution-color: $default-orange-color;
 
 
 /** form color configuration **/
@@ -147,6 +149,25 @@ $tabbar-button-active-icon-color: $brand-success;
 $tabbar-notification-badge-color: $default-grey-color;
 $tabbar-notification-badge-text-color: $default-white-color;
 $tabbar-notification-badge-border-color: $default-white-color;
+
+
+/** live feedback configuration **/
+$feedback-ok-background-color: $brand-secondary; /* can follow */
+$feedback-good-background-color: $default-orange-color;  /* faster, please! */
+$feedback-bad-background-color: $default-red-color; /* too fast! */
+$feedback-gone-background-color: $brand-primary; /* you have lost me */
+
+$feedback-release-button-color: $default-orange-color;
+$feedback-release-button-txt-color: $default-white-color;
+$feedback-freeze-button-color: $default-red-color;
+$feedback-freeze-button-txt-color: $default-white-color;
+$feedback-freeze-tabBar-icon-color: $default-orange-color;
+
+/** live vote configuration **/
+$vote-speaker-abcd-option-text-color: $default-grey-color;
+$vote-student-abcd-button-color: $default-white-color;
+$vote-student-abcd-button-text-color: $default-grey-color;
+$vote-abcd-chart-bar-color: $default-grey-color;
 
 
 /** carousel indicator and navigation color configuration **/

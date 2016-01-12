@@ -123,6 +123,9 @@ Ext.application({
 	/* other*/
 	cardSwitchDuration: 500,
 	projectorModeActive: false,
+	isFeedbackLocked: false,
+	timerStyleConfig: null,
+	feedbackChartStyleConfig: null,
 	socket: null,
 	globalConfig: null,
 	configLoaded: null,
@@ -162,10 +165,6 @@ Ext.application({
 			me.globalConfig = globalConfig;
 			me.mainTabPanel = Ext.create('ARSnova.view.MainTabPanel');
 			me.configLoaded.resolve();
-
-			if (!me.areLocalStorageLoginVarsUninitialized) {
-				me.closeSplashScreen();
-			}
 		}, function () {
 			console.error("Could not load configuration");
 			Ext.Msg.alert(Messages.NOTIFICATION, Messages.CONNECTION_PROBLEM, function () {
@@ -288,6 +287,12 @@ Ext.application({
 		console.debug("Application: checkPreviousLogin");
 		if (ARSnova.app.areLocalStorageLoginVarsUninitialized()) {
 			return false;
+		}
+		if (localStorage.getItem('lastVisitedRole') === ARSnova.app.USER_ROLE_SPEAKER) {
+			localStorage.setItem('role', ARSnova.app.USER_ROLE_SPEAKER);
+			localStorage.removeItem('lastVisitedRole');
+			localStorage.removeItem('sessionId');
+			sessionStorage.removeItem('keyword');
 		}
 
 		ARSnova.app.loggedIn = true;

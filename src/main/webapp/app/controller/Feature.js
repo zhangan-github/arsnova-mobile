@@ -23,6 +23,7 @@ Ext.define("ARSnova.controller.Feature", {
 		custom: true,
 		total: false,
 		clicker: false,
+		liveClicker: false,
 		liveFeedback: false,
 		flashcard: false,
 		peerGrading: false
@@ -37,7 +38,21 @@ Ext.define("ARSnova.controller.Feature", {
 		learningProgress: true
 	},
 
-	applyFeatures: function () {
+	/* TODO:
+	 * Remove this workaround as soon as the feature controller uses its own
+	 * variable. Server-side global config should never be overriden.
+	 *
+	 * Potential solution:
+	 * Store feature activation locally in this controller and add
+	 * `isFeatureEnabled` method for feature testing.
+	 */
+	launch: function () {
+		ARSnova.app.configLoaded.then(function () {
+			ARSnova.app.globalConfig.features.learningProgress = true;
+		});
+	},
+
+	applyFeatures: function (prevFeatures) {
 		var features = Ext.decode(sessionStorage.getItem("features"));
 
 		var useCases = {
@@ -45,9 +60,16 @@ Ext.define("ARSnova.controller.Feature", {
 			peerGrading: this.applyPeerGradingUseCase,
 			flashcard: this.applyFlashcardUseCase,
 			liveFeedback: this.applyLiveFeedbackUseCase,
+			liveClicker: this.applyLiveClickerUseCase,
 			total: this.applyTotalUseCase,
 			custom: this.applyCustomUseCase
 		};
+
+		if (ARSnova.app.userRole !== ARSnova.app.USER_ROLE_SPEAKER &&
+			prevFeatures && (prevFeatures.liveClicker || features.liveClicker)) {
+			ARSnova.app.getController('Sessions').liveClickerSessionReload(prevFeatures);
+			return;
+		}
 
 		for (var property in features) {
 			if (features[property] && typeof useCases[property] === 'function') {
@@ -74,6 +96,27 @@ Ext.define("ARSnova.controller.Feature", {
 
 	applyTotalUseCase: function (useCases) {
 		this.applyCustomUseCase(useCases, this.features);
+	},
+
+	applyLiveClickerUseCase: function (useCases, featureChange) {
+		var tabPanel = ARSnova.app.mainTabPanel.tabPanel;
+		var fP = tabPanel.feedbackTabPanel;
+
+		if (ARSnova.app.userRole === ARSnova.app.USER_ROLE_SPEAKER ||
+			localStorage.getItem('lastVisitedRole') === ARSnova.app.USER_ROLE_SPEAKER) {
+			this.applyCustomUseCase(useCases, this.getFeatureValues(useCases));
+			tabPanel.speakerTabPanel.inClassPanel.showcaseActionButton.setHidden(false);
+			tabPanel.speakerTabPanel.inClassPanel.changeActionButtonsMode('liveClicker');
+			tabPanel.feedbackTabPanel.tab.show();
+		} else {
+			this.setSinglePageMode('feedback', {});
+		}
+
+		fP.votePanel.initializeOptionButtons();
+		fP.statisticPanel.initializeOptionButtons();
+		fP.statisticPanel.setToolbarTitle(Messages.QUESTION_LIVE_CLICKER);
+		fP.votePanel.setToolbarTitle(Messages.QUESTION_LIVE_CLICKER);
+		fP.votePanel.questionRequestButton.setHidden(true);
 	},
 
 	applyCustomUseCase: function (useCases, features) {
@@ -119,8 +162,16 @@ Ext.define("ARSnova.controller.Feature", {
 			features.jitt = false;
 			features.learningProgress = false;
 			features.interposed = false;
-			features.learningProgress = false;
 			features.feedback = false;
+			features.pi = false;
+		}
+
+		if (useCases.liveClicker) {
+			features.jitt = false;
+			features.learningProgress = false;
+			features.interposed = false;
+			features.feedback = false;
+			features.lecture = false;
 			features.pi = false;
 		}
 
@@ -229,6 +280,7 @@ Ext.define("ARSnova.controller.Feature", {
 			button = tabPanel.inClassPanel.myLearningProgressButton;
 		}
 
+		/* FIXME: Server-side global config should never be overriden. */
 		ARSnova.app.globalConfig.features.learningProgress = enable;
 		this.applyButtonChange(container, button, enable, 3);
 	},
@@ -262,6 +314,12 @@ Ext.define("ARSnova.controller.Feature", {
 
 		var tP = ARSnova.app.mainTabPanel.tabPanel;
 		var tabPanel = isSpeaker ? tP.speakerTabPanel : tP.userTabPanel;
+
+		tP.feedbackTabPanel.statisticPanel.setToolbarTitle(localStorage.getItem('shortName'));
+		tP.feedbackTabPanel.statisticPanel.initializeOptionButtons();
+		tP.feedbackTabPanel.votePanel.setToolbarTitle(Messages.FEEDBACK);
+		tP.feedbackTabPanel.votePanel.initializeOptionButtons();
+		tP.feedbackTabPanel.statisticPanel.updateTabBar();
 
 		if (isSpeaker) {
 			tabPanel.inClassPanel.showcaseActionButton.setHidden(!hasQuestionFeatures);
@@ -298,7 +356,7 @@ Ext.define("ARSnova.controller.Feature", {
 
 			// flashcard use case
 			tabPanel.inClassPanel.lectureQuestionButton.setText(
-				features.flashcard ? Messages.FLASHCARDS : Messages.LECTURE_QUESTION_LONG
+				features.flashcard ? Messages.FLASHCARDS : Messages.LECTURE_QUESTIONS_LONG
 			);
 
 			// peer grading use case
