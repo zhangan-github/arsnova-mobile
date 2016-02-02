@@ -25,6 +25,10 @@ Ext.define('ARSnova.view.feedback.VotePanel', {
 		scrollable: {
 			direction: 'vertical',
 			directionLock: true
+		},
+		layout: {
+			type: 'vbox',
+			pack: 'center'
 		}
 	},
 
@@ -50,6 +54,7 @@ Ext.define('ARSnova.view.feedback.VotePanel', {
 	initialize: function () {
 		this.callParent(arguments);
 		this.controller = ARSnova.app.getController('Feedback');
+		var features = Ext.decode(sessionStorage.getItem("features"));
 
 		this.backButton = Ext.create('Ext.Button', {
 			text: Messages.BACK,
@@ -141,6 +146,12 @@ Ext.define('ARSnova.view.feedback.VotePanel', {
 			this.buttonPanelBottom,
 			this.questionRequestButton
 		]);
+
+		this.onBefore('painted', function () {
+			if (features.liveClicker) {
+				ARSnova.app.mainTabPanel.tabPanel.getTabBar().setHidden(true);
+			}
+		});
 	},
 
 	buttonClicked: function (button) {

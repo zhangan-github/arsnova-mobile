@@ -24,7 +24,9 @@ Ext.define('ARSnova.view.home.MySessionsPanel', {
 		'ARSnova.view.home.SessionList',
 		'Ext.ux.Fileup',
 		'ARSnova.view.home.SessionExportListPanel',
-		'ARSnova.controller.SessionImport'
+		'ARSnova.controller.SessionImport',
+		'ARSnova.controller.Motds',
+		'ARSnova.view.components.MotdMessageBox'
 	],
 
 	config: {
@@ -32,6 +34,10 @@ Ext.define('ARSnova.view.home.MySessionsPanel', {
 		scrollable: {
 			direction: 'vertical',
 			directionLock: true
+		},
+		layout: {
+			type: 'vbox',
+			pack: 'center'
 		}
 	},
 
@@ -76,6 +82,17 @@ Ext.define('ARSnova.view.home.MySessionsPanel', {
 			}
 		});
 
+		this.motdButton = Ext.create('Ext.Button', {
+			text: Messages.MESSAGEOFTHEDAY_BUTTON,
+			align: 'right',
+			ui: 'confirm',
+			controller: 'Motds',
+			action: 'listAllMotds',
+			hidden: true,
+			scope: this,
+			handler: this.buttonClicked
+		});
+
 		this.toolbar = Ext.create('Ext.TitleBar', {
 			title: Messages.SESSIONS,
 			cls: 'speakerTitleText',
@@ -83,7 +100,8 @@ Ext.define('ARSnova.view.home.MySessionsPanel', {
 			ui: 'light',
 			items: [
 				this.backButton,
-				this.logoutButton
+				this.logoutButton,
+				this.motdButton
 			]
 		});
 
@@ -115,7 +133,7 @@ Ext.define('ARSnova.view.home.MySessionsPanel', {
 
 		this.caption = Ext.create('ARSnova.view.Caption', {
 			cls: 'x-form-fieldset',
-			style: "border-radius: 15px"
+			style: "border-radius: 15px;"
 		});
 
 		this.sessionsForm = Ext.create('ARSnova.view.home.SessionList', {
@@ -350,11 +368,22 @@ Ext.define('ARSnova.view.home.MySessionsPanel', {
 		});
 	},
 
+	buttonClicked: function (button) {
+		ARSnova.app.getController(button.config.controller)[button.config.action]();
+	},
+
 	onActivate: function () {
 		var me = this;
 		this.resetPaginationState();
 
 		if (ARSnova.app.userRole === ARSnova.app.USER_ROLE_SPEAKER) {
+			var motds = null;
+			ARSnova.app.restProxy.getMotdsForTutors({
+				success: function (response) {
+					motds = Ext.decode(response.responseText);
+					ARSnova.app.getController('Motds').showMotds(motds, 1);
+				}
+			});
 			this.backButton.hide();
 			this.logoutButton.show();
 
@@ -378,6 +407,9 @@ Ext.define('ARSnova.view.home.MySessionsPanel', {
 				p2.then(handler);
 				p3.then(handler);
 			});
+		}
+		if (ARSnova.app.isAdmin === true) {
+			this.motdButton.show();
 		}
 	},
 

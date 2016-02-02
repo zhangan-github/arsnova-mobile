@@ -22,7 +22,11 @@ Ext.define('ARSnova.view.home.NewSessionPanel', {
 	config: {
 		fullscreen: true,
 		scrollable: null,
-		scroll: 'vertical'
+		scroll: 'vertical',
+		layout: {
+			type: 'vbox',
+			pack: 'center'
+		}
 	},
 
 	sessionKey: null,
@@ -94,7 +98,7 @@ Ext.define('ARSnova.view.home.NewSessionPanel', {
 
 		this.sessionInfoButton = Ext.create('Ext.Button', {
 			id: 'session-info-button',
-			cls: 'x-button-label centerButton',
+			cls: 'saveButton centered',
 			ui: 'action',
 			text: Messages.SESSION_OPTIONAL_INFO,
 			handler: function () {
@@ -108,15 +112,17 @@ Ext.define('ARSnova.view.home.NewSessionPanel', {
 				var sessionForm = Ext.create('ARSnova.view.home.SessionInfoPanel', {
 					sessionInfo: session,
 					backReference: panel,
-					referencePanel: hTP
+					referencePanel: hTP,
+					sessionCreationMode: true
 				});
+
 				hTP.animateActiveItem(sessionForm, 'slide');
 			}
 		});
 
 		this.submitButton = Ext.create('Ext.Button', {
 			id: 'create-session-button',
-			cls: 'centerButton',
+			cls: 'saveButton centered',
 			ui: 'confirm',
 			text: Messages.CONTINUE,
 			handler: this.onSubmit

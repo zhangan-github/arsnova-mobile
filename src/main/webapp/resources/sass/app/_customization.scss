@@ -73,10 +73,6 @@ html, body,
 	}
 }
 
-.roleIconBtn .iconBtn {
-	border-color: transparent;
-}
-
 .x-button .courseIcon,
 .answerListButton .x-button-label,
 .forwardListButton .x-button-label,
@@ -297,6 +293,13 @@ html, body,
 		color: $toolbar-speaker-title-color;
 	}
 
+	.x-button-confirm {
+		@include toolbar-button-config(
+			$toolbar-confirm-button-bg-color !important,
+			$toolbar-confirm-button-txt-color !important
+		)
+	}
+
 	.x-button-normal {
 		@include toolbar-button-config(
 			$toolbar-button-bg-color,
@@ -319,14 +322,14 @@ html, body,
 
 		&.toggleCorrectButton {
 			@include toolbar-button-config(
-				$toolbar-toggleCorrect-button-inactive-color,
+				$toolbar-correct-button-inactive-color,
 				$toolbar-button-txt-color
 			);
 
 			&.x-button-pressed,
 			&.x-button-pressing {
 				@include toolbar-button-config(
-					$toolbar-toggleCorrect-button-active-color,
+					$toolbar-correct-button-active-color,
 					$toolbar-button-txt-color
 				);
 			}
@@ -522,6 +525,18 @@ html, body,
 	max-width: 21em;
 	padding: 5px;
 	top: -70px;
+}
+
+.matrixButton {
+	.x-toggle {
+		background-image: none;
+		background-color: $button-toggle-off-color;
+	}
+
+	.x-toggle-on {
+		background-image: none;
+		background-color: $button-toggle-on-color;
+	}
 }
 
 .alternativeRoleChangeColor {

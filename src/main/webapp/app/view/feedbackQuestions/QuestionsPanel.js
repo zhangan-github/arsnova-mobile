@@ -28,6 +28,10 @@ Ext.define('ARSnova.view.feedbackQuestions.QuestionsPanel', {
 			direction: 'vertical',
 			directionLock: true
 		},
+		layout: {
+			type: 'vbox',
+			pack: 'center'
+		},
 
 		store: Ext.create('Ext.data.JsonStore', {
 			model: 'ARSnova.model.FeedbackQuestion',
@@ -166,6 +170,7 @@ Ext.define('ARSnova.view.feedbackQuestions.QuestionsPanel', {
 
 		this.list = Ext.create('ARSnova.view.components.List', {
 			activeCls: 'search-item-active',
+			cls: 'roundedCorners',
 
 			style: {
 				marginBottom: '20px',
@@ -226,15 +231,14 @@ Ext.define('ARSnova.view.feedbackQuestions.QuestionsPanel', {
 		});
 
 		this.formPanel = Ext.create('Ext.form.Panel', {
-			cls: 'roundedCorners',
-			height: '100%',
-			width: '100%',
 			scrollable: null,
-			flex: 1,
 			style: {
 				marginTop: this.deleteAllButton.getHidden() ? '15px' : ''
 			},
-			items: [this.list]
+			items: [{
+				xtype: 'fieldset',
+				items: [this.list]
+			}]
 		});
 
 		this.questionRequestButton = Ext.create('Ext.Button', {

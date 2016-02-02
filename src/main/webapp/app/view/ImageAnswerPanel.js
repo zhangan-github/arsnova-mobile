@@ -21,10 +21,13 @@ Ext.define('ARSnova.view.ImageAnswerPanel', {
 	extend: 'Ext.Panel',
 
 	config: {
-		layout: 'vbox',
 		fullscreen: true,
 		title: Messages.ANSWERS,
 		iconCls: 'icon-chart',
+		layout: {
+			type: 'vbox',
+			pack: 'center'
+		},
 
 		/**
 		 * task for speakers in a session

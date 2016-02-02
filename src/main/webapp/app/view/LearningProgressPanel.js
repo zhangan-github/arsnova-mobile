@@ -27,6 +27,10 @@ Ext.define('ARSnova.view.LearningProgressPanel', {
 		scrollable: {
 			direction: 'vertical',
 			directionLock: true
+		},
+		layout: {
+			type: 'vbox',
+			pack: 'center'
 		}
 	},
 
@@ -222,7 +226,13 @@ Ext.define('ARSnova.view.LearningProgressPanel', {
 		questionVariantFieldSet.setHidden(hide);
 	},
 
+	setPointsVariantFieldHidden: function (hide) {
+		var pointsVariantFieldSet = this.learningProgressChooser.getItems().items[0];
+		pointsVariantFieldSet.setHidden(hide);
+	},
+
 	refreshQuestionVariantFields: function () {
+		var pointVariantFields = this.learningProgressChooser.getItems().items[0].getInnerItems();
 		var questionVariantFields = this.learningProgressChooser.getItems().items[1].getInnerItems();
 		var options = ARSnova.app.getController('Sessions').getLearningProgressOptions();
 
@@ -231,6 +241,13 @@ Ext.define('ARSnova.view.LearningProgressPanel', {
 				field.check();
 			}
 		});
+
+		pointVariantFields.forEach(function (field) {
+			if (field.getValue() === options.type) {
+				field.check();
+			}
+		});
+
 		this.showProgress(options);
 	}
 });

@@ -41,6 +41,10 @@ Ext.define('ARSnova.view.diagnosis.UseCasePanel', {
 		scrollable: {
 			direction: 'vertical',
 			directionLock: true
+		},
+		layout: {
+			type: 'vbox',
+			pack: 'center'
 		}
 	},
 
@@ -92,18 +96,17 @@ Ext.define('ARSnova.view.diagnosis.UseCasePanel', {
 				label: Messages.USECASE_CLICKER,
 				details: Messages.USECASE_CLICKER_DETAILS
 			}, {
+				value: 'liveFeedback',
+				label: Messages.USECASE_LIVE_FEEDBACK,
+				details: Messages.USECASE_LIVE_FEEDBACK_DETAILS
+			}, {
 				value: 'peerGrading',
 				label: Messages.USECASE_PEER_GRADING,
 				details: Messages.USECASE_PEER_GRADING_DETAILS
 			}, {
 				value: 'flashcard',
-				hidden: !ARSnova.app.globalConfig.features.flashcard,
 				label: Messages.USECASE_FLASHCARD,
 				details: Messages.USECASE_FLASHCARD_DETAILS
-			}, {
-				value: 'liveFeedback',
-				label: Messages.USECASE_LIVE_FEEDBACK,
-				details: Messages.USECASE_LIVE_FEEDBACK_DETAILS
 			}, {
 				value: 'total',
 				label: Messages.USECASE_ARSNOVA_TOTAL,
@@ -129,7 +132,7 @@ Ext.define('ARSnova.view.diagnosis.UseCasePanel', {
 		if (this.config.sessionCreationMode) {
 			this.backButton.setHandler(this.sessionCreationBackHandler);
 			this.submitButton = Ext.create('Ext.Button', {
-				cls: 'centerButton',
+				cls: 'saveButton centered',
 				ui: 'confirm',
 				scope: this,
 				text: Messages.SESSION_SAVE,
@@ -137,7 +140,7 @@ Ext.define('ARSnova.view.diagnosis.UseCasePanel', {
 			});
 		} else {
 			this.submitButton = Ext.create('Ext.Button', {
-				cls: 'centerButton',
+				cls: 'saveButton centered',
 				ui: 'confirm',
 				text: Messages.SAVE,
 				scope: this,
@@ -150,7 +153,7 @@ Ext.define('ARSnova.view.diagnosis.UseCasePanel', {
 		}
 
 		this.continueButton = Ext.create('Ext.Button', {
-			cls: 'centerButton',
+			cls: 'saveButton centered',
 			ui: 'confirm',
 			scope: this,
 			text: Messages.CONTINUE,
@@ -159,6 +162,7 @@ Ext.define('ARSnova.view.diagnosis.UseCasePanel', {
 
 		this.formPanel = Ext.create('Ext.form.FormPanel', {
 			scrollable: null,
+			style: 'margin-bottom: 15px;',
 			items: [this.useCaseFieldSet, this.submitButton]
 		});
 
@@ -266,7 +270,7 @@ Ext.define('ARSnova.view.diagnosis.UseCasePanel', {
 	},
 
 	onSubmit: function (button) {
-		var features = this.config.features;
+		var me = this;
 		var selection = ARSnova.app.getController('Feature').getFeatureValues(this.getUseCaseValues());
 		button.disable();
 
@@ -275,6 +279,7 @@ Ext.define('ARSnova.view.diagnosis.UseCasePanel', {
 				success: function () {
 					button.enable();
 					Ext.toast(Messages.SETTINGS_SAVED, 3000);
+					me.inClassPanelBackHandler();
 				},
 				failure: function () {
 					button.enable();

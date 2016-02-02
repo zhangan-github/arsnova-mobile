@@ -27,6 +27,10 @@ Ext.define('ARSnova.view.user.InClass', {
 		scrollable: {
 			direction: 'vertical',
 			directionLock: true
+		},
+		layout: {
+			type: 'vbox',
+			pack: 'center'
 		}
 	},
 
@@ -122,7 +126,7 @@ Ext.define('ARSnova.view.user.InClass', {
 		});
 
 		this.roleIconButton = Ext.create('ARSnova.view.MatrixButton', {
-			cls: 'roleIconBtn',
+			text: Messages.CHANGE_ROLE_BUTTONTEXT,
 			buttonConfig: 'icon',
 			imageCls: 'icon-users',
 			hidden: !ARSnova.app.isSessionOwner,
@@ -136,8 +140,6 @@ Ext.define('ARSnova.view.user.InClass', {
 				type: 'hbox',
 				pack: 'center'
 			},
-
-			style: 'margin: 15px',
 
 			items: [{
 					xtype: 'spacer',
@@ -260,6 +262,7 @@ Ext.define('ARSnova.view.user.InClass', {
 				this.actionButtonPanel, this.inClassButtons,
 				{
 					xtype: 'formpanel',
+					style: 'margin-bottom: 10px;',
 					cls: 'standardForm topPadding',
 					scrollable: null,
 					items: this.caption
@@ -312,9 +315,12 @@ Ext.define('ARSnova.view.user.InClass', {
 	onPainted: function () {
 		this.startTasks();
 
-		if (ARSnova.app.isSessionOwner) {
-			this.updateActionButtonElements();
-		}
+		ARSnova.app.restProxy.getMotdsForSession(sessionStorage.getItem("keyword"), {
+			success: function (response) {
+				var motds = Ext.decode(response.responseText);
+				ARSnova.app.getController('Motds').showMotds(motds, 1);
+			}
+		});
 	},
 
 	/* will be called on session login */
@@ -489,19 +495,6 @@ Ext.define('ARSnova.view.user.InClass', {
 			}
 
 			this.showNotification(questionIds, "preparation");
-		}
-	},
-
-	updateActionButtonElements: function () {
-		var features = Ext.decode(sessionStorage.getItem("features"));
-		var applyButtonStyle = !features.interposed || !features.feedback;
-
-		if (applyButtonStyle) {
-			this.roleIconButton.setCls('');
-			this.roleIconButton.setButtonText(Messages.CHANGE_ROLE_BUTTONTEXT);
-		} else {
-			this.roleIconButton.setCls('roleIconBtn');
-			this.roleIconButton.setButtonText();
 		}
 	},
 

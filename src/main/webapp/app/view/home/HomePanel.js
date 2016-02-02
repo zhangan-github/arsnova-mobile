@@ -21,7 +21,8 @@ Ext.define('ARSnova.view.home.HomePanel', {
 
 	requires: [
 		'ARSnova.view.home.SessionList',
-		'ARSnova.view.Caption'
+		'ARSnova.view.Caption',
+		'ARSnova.view.components.MotdMessageBox'
 	],
 
 	config: {
@@ -29,6 +30,10 @@ Ext.define('ARSnova.view.home.HomePanel', {
 		scrollable: {
 			direction: 'vertical',
 			directionLock: true
+		},
+		layout: {
+			type: 'vbox',
+			pack: 'center'
 		}
 	},
 
@@ -268,6 +273,14 @@ Ext.define('ARSnova.view.home.HomePanel', {
 				// errors swallow results, retest each promise seperately to figure out if one succeeded
 				p1.then(handler);
 				p2.then(handler);
+			});
+			ARSnova.app.restProxy.getMotdsForStudents({
+				success: function (response) {
+					var motds = Ext.decode(response.responseText);
+					if (motds !== null) {
+						ARSnova.app.getController('Motds').showMotds(motds, 1);
+					}
+				}
 			});
 		}
 	},

@@ -207,18 +207,16 @@ Ext.define('ARSnova.view.speaker.NewQuestionPanel', {
 
 		var me = this;
 		var config = ARSnova.app.globalConfig;
-		if (config.features.flashcard) {
-			formatItems.push({
-				itemId: Messages.FLASHCARD,
-				text: messageAppendix.length ?
-						Messages.FLASHCARD :
-						Messages.FLASHCARD_SHORT
-			});
-			me.flashcardQuestion = Ext.create('ARSnova.view.speaker.form.FlashcardQuestion', {
-				editPanel: false,
-				hidden: true
-			});
-		}
+		formatItems.push({
+			itemId: Messages.FLASHCARD,
+			text: messageAppendix.length ?
+					Messages.FLASHCARD :
+					Messages.FLASHCARD_SHORT
+		});
+		me.flashcardQuestion = Ext.create('ARSnova.view.speaker.form.FlashcardQuestion', {
+			editPanel: false,
+			hidden: true
+		});
 		if (config.features.gridSquare) {
 			formatItems.push({
 				itemId: Messages.GRID,
@@ -361,9 +359,9 @@ Ext.define('ARSnova.view.speaker.NewQuestionPanel', {
 
 		me.saveAndContinueButton = Ext.create('Ext.Button', {
 			ui: 'confirm',
-			cls: 'saveQuestionButton',
+			cls: 'saveButton centered',
 			text: Messages.SAVE_AND_CONTINUE,
-			style: 'margin-top: 50px',
+			style: 'margin-top: 20px; margin-bottom: 20px;',
 			handler: function (button) {
 				me.saveHandler(button).then(function () {
 					Ext.toast(Messages.QUESTION_SAVED, 3000);

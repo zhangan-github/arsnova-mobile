@@ -26,9 +26,14 @@ Ext.define('ARSnova.view.home.SessionInfoPanel', {
 		backReference: null,
 		referencePanel: null,
 		fullscreen: true,
+		sessionCreationMode: false,
 		scrollable: {
 			direction: 'vertical',
 			directionLock: true
+		},
+		layout: {
+			type: 'vbox',
+			pack: 'center'
 		}
 	},
 
@@ -262,7 +267,6 @@ Ext.define('ARSnova.view.home.SessionInfoPanel', {
 
 		this.descriptionFieldSet = Ext.create('Ext.form.FieldSet', {
 			hidden: true,
-			title: Messages.SESSIONPOOL_INFO,
 			cls: 'standardFieldset',
 			items: [
 				this.descriptionText
@@ -335,10 +339,23 @@ Ext.define('ARSnova.view.home.SessionInfoPanel', {
 			}
 		});
 
+		var sessionLinkLabel = {};
+		var keyword = sessionStorage.getItem('keyword');
+
+		if (keyword) {
+			sessionLinkLabel = {
+				cls: 'gravure selectable',
+				html: showShortLabels ? Messages.SESSION_ID + ": " +
+					ARSnova.app.formatSessionID(keyword) :
+					window.location + 'id/' + keyword
+			};
+		}
+
 		this.mainPart = Ext.create('Ext.form.FormPanel', {
 			cls: 'newQuestion',
 			scrollable: null,
-			items: [
+			style: 'margin-bottom: 15px 0 0 15px',
+			items: [sessionLinkLabel,
 				this.descriptionFieldSet,
 				this.creatorFieldSet,
 				this.sessionFieldSet,
@@ -352,12 +369,37 @@ Ext.define('ARSnova.view.home.SessionInfoPanel', {
 		});
 
 		this.add([this.toolbar, this.mainPart]);
-		this.on('painted', this.disableInput());
+		this.on('painted', this.onPainted);
 	},
 
 	previewHandler: function () {
 		var descriptionPreview = Ext.create('ARSnova.view.PreviewBox', {});
 		descriptionPreview.showPreview(this.description.getValue());
+	},
+
+	onPainted: function () {
+		if (this.config.sessionCreationMode) {
+			this.enableInput();
+		} else {
+			this.disableInput();
+			var sessionLink = this.mainPart.element.down('.selectable');
+			var range = {};
+
+			if (sessionLink) {
+				/** selectable event listener **/
+				sessionLink.addListener('tap', function () {
+					if (document.selection) {
+						range = document.body.createTextRange();
+						range.moveToElementText(this.dom);
+						range.select();
+					} else if (window.getSelection) {
+						range = document.createRange();
+						range.selectNode(this.dom);
+						window.getSelection().addRange(range);
+					}
+				});
+			}
+		}
 	},
 
 	validate: function () {
@@ -433,6 +475,7 @@ Ext.define('ARSnova.view.home.SessionInfoPanel', {
 		}
 
 		if (this.getSessionInfo().ppDescription) {
+			this.descriptionText.setContent(this.getSessionInfo().ppDescription, true, true);
 			this.descriptionFieldSet.show();
 		}
 

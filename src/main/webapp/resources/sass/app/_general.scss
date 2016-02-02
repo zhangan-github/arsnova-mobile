@@ -33,24 +33,22 @@
 	padding: 0px !important;
 }
 
-.abcdBarChartColor {
-	color: $vote-abcd-chart-bar-color;
-}
+.x-html {
+	a:link {
+	    color: $hyperlink-unvisited-color;
+	}
 
-.feedbackOkColor {
-	color: $feedback-ok-background-color;
-}
-
-.feedbackGoodColor {
-	color: $feedback-good-background-color;
-}
-
-.feedbackBadColor {
-	color: $feedback-bad-background-color;
-}
-
-.feedbackNoneColor {
-	color: $feedback-gone-background-color;
+	a:visited {
+	    color: $hyperlink-visited-color;
+	}
+	
+	a:hover {
+	    color: $hyperlink-hover-color;
+	}
+	
+	a:active {
+	    color: $hyperlink-active-color;
+	}
 }
 
 .noOverflow {
@@ -239,6 +237,7 @@ code {
 	max-width: 720px;
 	margin-left: auto;
 	margin-right: auto;
+	width: 100%;
 }
 
 .x-msgbox {
@@ -440,6 +439,17 @@ code {
 	margin-right: 12px !important;
 }
 
+.inClassForm {
+	margin-left: auto !important;
+	margin-right: auto !important;
+
+	.forwardListButton, .caption {
+		margin-left: 12px;
+		margin-right: 12px;
+		width: auto;
+	}
+}
+
 .standardFieldset .x-form-fieldset-inner {
 	border: none;
 	background-color: transparent;
@@ -593,7 +603,7 @@ code {
 }
 
 .loginFieldSet .x-button-confirm {
-	height: 45px;
+	height: 40px;
 	margin: -10px 10px 0px !important;
 }
 
@@ -636,4 +646,11 @@ code {
 
 .isActive {
 	color: $brand-success;
+}
+
+.x-nested-list .x-list-normal {
+	.x-list-item,
+	.x-list-item:hover {
+		background-color: transparent;
+	}
 }

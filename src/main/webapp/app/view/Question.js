@@ -43,6 +43,11 @@ Ext.define('ARSnova.view.Question', {
 		scrollable: {
 			direction: 'vertical',
 			directionLock: true
+		},
+
+		layout: {
+			type: 'vbox',
+			pack: 'center'
 		}
 	},
 
@@ -91,7 +96,7 @@ Ext.define('ARSnova.view.Question', {
 			flex: 1,
 			ui: 'action',
 			xtype: 'button',
-			cls: 'login-button noMargin',
+			cls: 'saveButton noMargin',
 			text: Messages.ABSTENTION,
 			handler: this.mcAbstentionHandler,
 			scope: this
@@ -100,7 +105,8 @@ Ext.define('ARSnova.view.Question', {
 		this.buttonContainer = Ext.create('Ext.Container', {
 			layout: {
 				type: 'hbox',
-				align: 'stretch'
+				align: 'stretch',
+				pack: 'center'
 			},
 			defaults: {
 				style: "margin: 10px;"
@@ -367,7 +373,7 @@ Ext.define('ARSnova.view.Question', {
 		this.mcSaveButton = Ext.create('Ext.Button', {
 			flex: 1,
 			ui: 'confirm',
-			cls: 'login-button noMargin',
+			cls: 'saveButton noMargin',
 			text: Messages.SAVE,
 			handler: !this.viewOnly ? this.saveMcQuestionHandler : function () {},
 			scope: this,
@@ -430,7 +436,7 @@ Ext.define('ARSnova.view.Question', {
 			flex: 1,
 			ui: 'confirm',
 			text: Messages.SAVE,
-			cls: 'login-button noMargin',
+			cls: 'saveButton noMargin',
 			handler: !this.viewOnly ? this.saveGridQuestionHandler : function () {},
 			disabled: false,
 			scope: this
@@ -477,7 +483,7 @@ Ext.define('ARSnova.view.Question', {
 
 		this.flashcardContainer = {
 			xtype: 'button',
-			cls: 'login-button',
+			cls: 'saveButton centered',
 			ui: 'confirm',
 			text: Messages.SHOW_FLASHCARD_ANSWER,
 			handler: function (button) {

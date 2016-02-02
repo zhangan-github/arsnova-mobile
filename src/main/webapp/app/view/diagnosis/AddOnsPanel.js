@@ -29,6 +29,10 @@ Ext.define('ARSnova.view.diagnosis.AddOnsPanel', {
 		scrollable: {
 			direction: 'vertical',
 			directionLock: true
+		},
+		layout: {
+			type: 'vbox',
+			pack: 'center'
 		}
 	},
 
@@ -119,7 +123,7 @@ Ext.define('ARSnova.view.diagnosis.AddOnsPanel', {
 
 		if (this.config.sessionCreationMode) {
 			this.submitButton = Ext.create('Ext.Button', {
-				cls: 'centerButton',
+				cls: 'saveButton centered',
 				ui: 'confirm',
 				scope: this,
 				text: Messages.SESSION_SAVE,
@@ -127,7 +131,7 @@ Ext.define('ARSnova.view.diagnosis.AddOnsPanel', {
 			});
 		} else {
 			this.submitButton = Ext.create('Ext.Button', {
-				cls: 'centerButton',
+				cls: 'saveButton centered',
 				ui: 'confirm',
 				text: Messages.SAVE,
 				scope: this,
@@ -137,6 +141,7 @@ Ext.define('ARSnova.view.diagnosis.AddOnsPanel', {
 
 		this.formPanel = Ext.create('Ext.form.FormPanel', {
 			scrollable: null,
+			style: 'margin-bottom: 20px',
 			items: [this.featureFormPanel, this.submitButton]
 		});
 
@@ -184,6 +189,7 @@ Ext.define('ARSnova.view.diagnosis.AddOnsPanel', {
 	},
 
 	onSubmit: function (button) {
+		var me = this;
 		button.disable();
 
 		if (this.validateSelection(button)) {
@@ -191,6 +197,7 @@ Ext.define('ARSnova.view.diagnosis.AddOnsPanel', {
 				success: function () {
 					button.enable();
 					Ext.toast(Messages.SETTINGS_SAVED, 3000);
+					me.config.lastPanel.inClassPanelBackHandler();
 				},
 				failure: function () {
 					button.enable();
