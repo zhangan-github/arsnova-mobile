@@ -50,9 +50,10 @@ $background-color: #dfe5e6;
 
 
 /** logo configuration **/
-$logo-icon-color: #3d9c19;
+/* Original ARSnova colors: #3d9c19, #394a59 */
+$logo-icon-color: $brand-secondary;
 $logo-ars-color: #394a59;
-$logo-nova-color: #3d9c19;
+$logo-nova-color: $brand-secondary;
 
 
 /** login icon configuration **/
