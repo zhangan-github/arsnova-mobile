@@ -87,7 +87,7 @@
 				OPEN_SESSION: "Offene Session",
 				CLOSED_SESSION: "Gesperrte Session",
 				CONFIRM_CLOSE_SESSION: "Zugang wirklich sperren?",
-				CONFIRM_CLOSE_SESSION_MESSAGE: "Wenn Sie den Zugang sperren, können nur noch aktuell angemeldete Studierende teilnehmen.",
+				CONFIRM_CLOSE_SESSION_MESSAGE: "Wenn Sie den Zugang sperren, können nur noch aktuell angemeldete Studierende teilnehmen. Während einer Session verhindert diese Option ein mehrfaches Abstimmen mit verschiedenen Browsern.",
 				ON_SESSION_CREATION_1: "Es wurde der Zugangsschlüssel «###» für Ihre Session erzeugt. Dieser kann jederzeit auf der Session-Übersicht eingesehen werden. Bitte teilen Sie ihn Ihren Studierenden mit.",
 				ON_SESSION_CREATION_2: "Sie können diese Session nur in der Rolle Dozent/in via ### verwalten",
 				ON_THIS_DEVICE: "auf diesem Gerät",
