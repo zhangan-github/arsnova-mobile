@@ -1,7 +1,7 @@
 /*
  * This file is part of ARSnova Mobile.
  * Copyright (C) 2011-2012 Christian Thomas Weber
- * Copyright (C) 2012-2015 The ARSnova Team
+ * Copyright (C) 2012-2016 The ARSnova Team
  *
  * ARSnova Mobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@
  */
 
 
-// fix hidden fieldsets in firefox 
+// fix hidden fieldsets in firefox
 .x-firefox .x-stretched.x-dock-vertical > .x-dock-body {
-    height: auto;
+	height: auto;
 }
 
 // fix placeholder opacity
@@ -33,3 +33,7 @@
 	opacity: 0;
 }
 
+// prevent pull-refresh on chrome mobile
+body.x-android.splashscreenClosed {
+	overflow-y: hidden !important;
+}

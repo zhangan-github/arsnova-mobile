@@ -1,33 +1,29 @@
 Ext.define("ARSnova.controller.Version", {
 	extend: 'Ext.app.Controller',
 
-	info: {
-		frontend: null,
-		backend: null
-	},
+	info: {},
+	promise: null,
 
 	getInfo: function () {
-		var me = this;
-		var backendPromise = new RSVP.Promise();
-		var frontendPromise = new RSVP.Promise();
-		var resultPromise = new RSVP.Promise();
-		var headers = {
-			"Accept": "application/json"
-		};
+		if (!this.promise) {
+			var me = this;
+			var backendPromise = new RSVP.Promise();
+			var frontendPromise = new RSVP.Promise();
+			var headers = {
+				"Accept": "application/json"
+			};
+			this.promise = new RSVP.Promise();
 
-		ARSnova.app.configLoaded.then(function () {
-			if (!me.info.backend) {
+			ARSnova.app.configLoaded.then(function () {
 				Ext.Ajax.request({
-					url: ARSnova.app.globalConfig.apiPath,
+					url: ARSnova.app.globalConfig.apiPath + "/",
 					headers: headers,
 					success: function (response) {
 						me.info.backend = Ext.decode(response.responseText);
 						backendPromise.resolve(me.info.backend);
 					}
 				});
-			}
 
-			if (!me.info.frontend) {
 				/* This request is not sent to the API so the RestProxy is not used  */
 				Ext.Ajax.request({
 					url: location.pathname + "resources/version.json",
@@ -37,14 +33,14 @@ Ext.define("ARSnova.controller.Version", {
 						frontendPromise.resolve(me.info.frontend);
 					}
 				});
-			}
-		});
+			});
 
-		RSVP.all([backendPromise, frontendPromise]).then(function (infos) {
-			console.log(me.info);
-			resultPromise.resolve(me.info);
-		});
+			RSVP.all([backendPromise, frontendPromise]).then(function (infos) {
+				console.log(me.info);
+				me.promise.resolve(me.info);
+			});
+		}
 
-		return resultPromise;
+		return this.promise;
 	}
 });

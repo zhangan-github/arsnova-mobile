@@ -1,7 +1,7 @@
 /*
  * This file is part of ARSnova Mobile.
  * Copyright (C) 2011-2012 Christian Thomas Weber
- * Copyright (C) 2012-2015 The ARSnova Team
+ * Copyright (C) 2012-2016 The ARSnova Team
  *
  * ARSnova Mobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@ Ext.define("ARSnova.controller.Sessions", {
 
 			if (keyword) {
 				ARSnova.app.socket.setSession(keyword);
+				ARSnova.app.getController('Feature').lastUpdate = Date.now();
 			}
 		});
 	},
@@ -59,7 +60,8 @@ Ext.define("ARSnova.controller.Sessions", {
 				} else {
 					// check if session is open
 					if (!obj.active) {
-						Ext.Msg.alert("Hinweis", "Die Session \"" + obj.name + "\” ist momentan geschlossen.");
+						Ext.Msg.alert(Messages.NOTIFICATION, Messages.SESSION_IS_CLOSED.replace(/###/, obj.name));
+						sessionStorage.clear();
 						return;
 					}
 					ARSnova.app.userRole = ARSnova.app.USER_ROLE_STUDENT;
@@ -85,6 +87,7 @@ Ext.define("ARSnova.controller.Sessions", {
 				// deactivate several about tabs
 				ARSnova.app.mainTabPanel.tabPanel.deactivateAboutTabs();
 				ARSnova.app.socket.setSession(obj.keyword);
+				ARSnova.app.getController('Feature').lastUpdate = Date.now();
 
 				// start task to update the feedback tab in tabBar
 				ARSnova.app.feedbackModel.on("arsnova/session/feedback/count", ARSnova.app.mainTabPanel.tabPanel.updateFeedbackBadge, ARSnova.app.mainTabPanel.tabPanel);
@@ -497,6 +500,7 @@ Ext.define("ARSnova.controller.Sessions", {
 			tabPanel.updateHomeBadge();
 			ARSnova.app.socket.setSession(null);
 			ARSnova.app.socket.setSession(sessionStorage.getItem('keyword'));
+			ARSnova.app.getController('Feature').lastUpdate = Date.now();
 			onAnimationEnd = (typeof onAnimationEnd === 'function') ?
 				onAnimationEnd : hideLoadMask;
 

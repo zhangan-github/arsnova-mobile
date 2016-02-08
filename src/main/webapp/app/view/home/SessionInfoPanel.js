@@ -1,7 +1,7 @@
 /*
  * This file is part of ARSnova Mobile.
  * Copyright (C) 2011-2012 Christian Thomas Weber
- * Copyright (C) 2012-2015 The ARSnova Team
+ * Copyright (C) 2012-2016 The ARSnova Team
  *
  * ARSnova Mobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -63,7 +63,7 @@ Ext.define('ARSnova.view.home.SessionInfoPanel', {
 			});
 
 			var levels;
-			if (moment.lang() === "en") {
+			if (moment.locale() === "en") {
 				levels = config.publicPool.levelsEn.split(',');
 			} else {
 				levels = config.publicPool.levelsDe.split(',');
@@ -88,6 +88,7 @@ Ext.define('ARSnova.view.home.SessionInfoPanel', {
 		this.backButton = Ext.create('Ext.Button', {
 			text: Messages.BACK,
 			ui: 'back',
+			align: 'left',
 			handler: function () {
 				var xTP = me.getReferencePanel();
 				xTP.animateActiveItem(me.getBackReference(), {
@@ -102,6 +103,7 @@ Ext.define('ARSnova.view.home.SessionInfoPanel', {
 			text: Messages.SAVE,
 			ui: 'confirm',
 			hidden: true,
+			align: 'right',
 			cls: 'saveQuestionButton',
 			style: 'width: 89px',
 			handler: function () {
@@ -162,6 +164,7 @@ Ext.define('ARSnova.view.home.SessionInfoPanel', {
 			text: Messages.EDIT,
 			ui: 'normal',
 			hidden: true,
+			align: 'right',
 			cls: 'saveQuestionButton',
 			style: 'width: 89px',
 			handler: function () {
@@ -169,7 +172,7 @@ Ext.define('ARSnova.view.home.SessionInfoPanel', {
 			}
 		});
 
-		this.toolbar = Ext.create('Ext.Toolbar', {
+		this.toolbar = Ext.create('Ext.TitleBar', {
 			title: Ext.os.is.Desktop ?
 				Messages.SESSION_INFO_TITLE :
 				Messages.SESSION_INFO_TITLE_SHORT,
@@ -177,9 +180,6 @@ Ext.define('ARSnova.view.home.SessionInfoPanel', {
 			ui: 'light',
 			items: [
 				this.backButton,
-				{
-					xtype: 'spacer'
-				},
 				this.saveButton,
 				this.editButton
 			]
@@ -278,7 +278,7 @@ Ext.define('ARSnova.view.home.SessionInfoPanel', {
 				Messages.SESSION_PREVIEW_BUTTON_TITLE_DESKTOP :
 				Messages.QUESTION_PREVIEW_BUTTON_TITLE,
 			ui: 'action',
-			cls: 'centerButton',
+			cls: 'centerButton previewButton',
 			scope: this,
 			handler: function () {
 				this.previewHandler();

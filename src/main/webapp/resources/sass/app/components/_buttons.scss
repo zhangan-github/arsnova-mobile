@@ -1,7 +1,7 @@
 /*
  * This file is part of ARSnova Mobile.
  * Copyright (C) 2011-2012 Christian Thomas Weber
- * Copyright (C) 2012-2015 The ARSnova Team
+ * Copyright (C) 2012-2016 The ARSnova Team
  *
  * ARSnova Mobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@
 		background-color: $vote-student-abcd-button-color;
 
 		.iconBtnImg {
-		    margin: 13px 0px 0px 15px !important;
+			margin: 13px 0px 0px 15px !important;
 
 			&:before {
 				color: $vote-student-abcd-button-text-color;
@@ -96,7 +96,7 @@
 		margin: 8px 0 0 10.5px !important;
 	}
 }
- 
+
 .answerListButton {
 	&.x-item-selected .x-innerhtml .answerOptionItem {
 		&.answerOptionCorrectItem:after {
@@ -147,6 +147,12 @@
 	}
 }
 
+.x-phone {
+	.matrixButton.smallerActionButton .buttonText {
+		font-size: 0.935em !important;
+	}
+}
+
 .matrixButton {
 	min-height: 130px;
 	padding-left: 3px;
@@ -161,7 +167,7 @@
 	&.mediumActionButton {
 		padding-left: 0px;
 		padding-right: 0px;
-	
+
 		.buttonText {
 			width: 120px !important;
 			margin-left: 0px;
@@ -172,7 +178,7 @@
 	&.smallerActionButton {
 		padding-left: 0px;
 		padding-right: 0px;
-		
+
 		.buttonText {
 			width: 107px !important;
 			margin-left: 0px;
@@ -223,16 +229,16 @@
 		.x-container {
 			overflow: visible;
 		}
-		
+
 		.x-component-outer {
 			padding: 0;
 			margin: 20px 0 0 2.9px;
-		}	
+		}
 	}
 }
 
 .matrixButton .buttonText {
-	overflow: hidden;
+	overflow: visible;
 	width: 90px;
 	margin-left: 5px;
 	margin-right: 5px;
@@ -265,6 +271,14 @@
 	-webkit-border-bottom-right-radius: 15px;
 	border-bottom-left-radius: 15px;
 	border-bottom-right-radius: 15px;
+}
+
+.standardForm {
+	.x-button {
+		width: auto !important;
+		margin-left: 12px !important;
+		margin-right: 12px !important;
+	}
 }
 
 .forwardListButton { /* apple-like forward arrow*/
@@ -439,7 +453,7 @@
 			background-color: transparent;
 			cursor: initial;
 		}
-		
+
 		&.x-button-pressing {
 			background-image: none;
 			background-color: transparent;

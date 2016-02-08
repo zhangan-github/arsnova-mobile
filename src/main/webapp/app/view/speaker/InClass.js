@@ -1,7 +1,7 @@
 /*
  * This file is part of ARSnova Mobile.
  * Copyright (C) 2011-2012 Christian Thomas Weber
- * Copyright (C) 2012-2015 The ARSnova Team
+ * Copyright (C) 2012-2016 The ARSnova Team
  *
  * ARSnova Mobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -141,6 +141,7 @@ Ext.define('ARSnova.view.speaker.InClass', {
 
 		this.roleIconButton = Ext.create('ARSnova.view.MatrixButton', {
 			text: Messages.CHANGE_ROLE_BUTTONTEXT,
+			cls: 'smallerActionButton',
 			buttonConfig: 'icon',
 			imageCls: 'icon-speaker',
 			handler: function () {
@@ -359,9 +360,11 @@ Ext.define('ARSnova.view.speaker.InClass', {
 
 	/* will be called on session login */
 	registerListeners: function () {
+		var features = Ext.decode(sessionStorage.getItem("features"));
 		var inClassPanel = ARSnova.app.mainTabPanel.tabPanel.speakerTabPanel.inClassPanel;
 		ARSnova.app.taskManager.start(inClassPanel.countFeedbackQuestionsTask);
-		if (ARSnova.app.globalConfig.features.learningProgress) {
+
+		if (features.learningProgress) {
 			ARSnova.app.sessionModel.on(ARSnova.app.sessionModel.events.learningProgressChange, this.learningProgressChange, this);
 			ARSnova.app.taskManager.start(inClassPanel.courseLearningProgressTask);
 		}
@@ -369,9 +372,11 @@ Ext.define('ARSnova.view.speaker.InClass', {
 
 	/* will be called whenever panel is shown */
 	refreshListeners: function () {
+		var features = Ext.decode(sessionStorage.getItem("features"));
+
 		// tasks should get run immediately
 		this.countFeedbackQuestionsTask.taskRunTime = 0;
-		if (ARSnova.app.globalConfig.features.learningProgress) {
+		if (features.learningProgress) {
 			this.courseLearningProgressTask.taskRunTime = 0;
 		}
 	},
@@ -380,10 +385,8 @@ Ext.define('ARSnova.view.speaker.InClass', {
 	destroyListeners: function () {
 		var inClassPanel = ARSnova.app.mainTabPanel.tabPanel.speakerTabPanel.inClassPanel;
 		ARSnova.app.taskManager.stop(inClassPanel.countFeedbackQuestionsTask);
-		if (ARSnova.app.globalConfig.features.learningProgress) {
-			ARSnova.app.sessionModel.un(ARSnova.app.sessionModel.events.learningProgressChange, this.learningProgressChange, this);
-			ARSnova.app.taskManager.stop(inClassPanel.courseLearningProgressTask);
-		}
+		ARSnova.app.sessionModel.un(ARSnova.app.sessionModel.events.learningProgressChange, this.learningProgressChange, this);
+		ARSnova.app.taskManager.stop(inClassPanel.courseLearningProgressTask);
 	},
 
 	onActivate: function () {

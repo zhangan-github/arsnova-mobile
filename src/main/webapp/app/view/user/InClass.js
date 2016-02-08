@@ -1,7 +1,7 @@
 /*
  * This file is part of ARSnova Mobile.
  * Copyright (C) 2011-2012 Christian Thomas Weber
- * Copyright (C) 2012-2015 The ARSnova Team
+ * Copyright (C) 2012-2016 The ARSnova Team
  *
  * ARSnova Mobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -79,8 +79,8 @@ Ext.define('ARSnova.view.user.InClass', {
 		// Reload learning progress, but do it using a random delay.
 		// We do not want to initiate a DDoS if every user is trying to reload at the same time.
 		// http://stackoverflow.com/a/1527820
-		var min = 500;
-		var max = 2500;
+		var min = 250;
+		var max = 1750;
 		this.learningProgressChange = Ext.Function.createBuffered(function () {
 			// Reset run-time to enforce reload of learning progress
 			this.checkLearningProgressTask.taskRunTime = 0;
@@ -188,8 +188,7 @@ Ext.define('ARSnova.view.user.InClass', {
 			badgeCls: 'badgeicon',
 			controller: 'Questions',
 			action: 'listFeedbackQuestions',
-			handler: this.buttonClicked,
-			hidden: !ARSnova.app.globalConfig.features.studentsOwnQuestions
+			handler: this.buttonClicked
 		});
 
 		this.myLearningProgressButton = Ext.create('ARSnova.view.MultiBadgeButton', {
@@ -201,8 +200,7 @@ Ext.define('ARSnova.view.user.InClass', {
 			disabledCls: '',
 			controller: 'Questions',
 			action: 'showLearningProgress',
-			handler: this.buttonClicked,
-			hidden: !ARSnova.app.globalConfig.features.learningProgress
+			handler: this.buttonClicked
 		});
 
 		var buttons = [];
@@ -286,7 +284,6 @@ Ext.define('ARSnova.view.user.InClass', {
 				type: 'hbox',
 				pack: 'center'
 			},
-			hidden: !ARSnova.app.globalConfig.features.learningProgress,
 
 			items: [
 				this.swotBadge
@@ -307,7 +304,10 @@ Ext.define('ARSnova.view.user.InClass', {
 		// hide or show listeners won't work, so check if the tabpanel activates this panel
 		ARSnova.app.mainTabPanel.tabPanel.on('activeitemchange', function (tabpanel, newPanel, oldPanel) {
 			if (newPanel.down('#' + this.getId())) {
-				this.refreshListeners();
+				var tP = ARSnova.app.mainTabPanel.tabPanel;
+				if (oldPanel !== tP.rolePanel && oldPanel !== tP.homeTabPanel) {
+					this.refreshListeners();
+				}
 			}
 		}, this);
 	},
@@ -341,35 +341,36 @@ Ext.define('ARSnova.view.user.InClass', {
 
 	/* will be called whenever panel is shown */
 	refreshListeners: function () {
+		var features = Ext.decode(sessionStorage.getItem("features"));
+
 		// tasks should get run immediately
-		if (ARSnova.app.globalConfig.features.studentsOwnQuestions) {
+		if (features.interposed) {
 			this.countFeedbackQuestionsTask.taskRunTime = 0;
 		}
-		if (ARSnova.app.globalConfig.features.learningProgress) {
+		if (features.learningProgress) {
 			this.checkLearningProgressTask.taskRunTime = 0;
 		}
+
+		ARSnova.app.socket.setSession(null);
+		ARSnova.app.socket.setSession(sessionStorage.getItem('keyword'));
 	},
 
 	startTasks: function () {
 		var panel = ARSnova.app.mainTabPanel.tabPanel.userTabPanel.inClassPanel;
+		var features = Ext.decode(sessionStorage.getItem("features"));
 
-		if (ARSnova.app.globalConfig.features.studentsOwnQuestions) {
+		if (features.interposed) {
 			ARSnova.app.taskManager.start(panel.countFeedbackQuestionsTask);
 		}
-		if (ARSnova.app.globalConfig.features.learningProgress) {
+		if (features.learningProgress) {
 			ARSnova.app.taskManager.start(panel.checkLearningProgressTask);
 		}
 	},
 
 	stopTasks: function () {
 		var panel = ARSnova.app.mainTabPanel.tabPanel.userTabPanel.inClassPanel;
-
-		if (ARSnova.app.globalConfig.features.studentsOwnQuestions) {
-			ARSnova.app.taskManager.stop(panel.countFeedbackQuestionsTask);
-		}
-		if (ARSnova.app.globalConfig.features.learningProgress) {
-			ARSnova.app.taskManager.stop(panel.checkLearningProgressTask);
-		}
+		ARSnova.app.taskManager.stop(panel.countFeedbackQuestionsTask);
+		ARSnova.app.taskManager.stop(panel.checkLearningProgressTask);
 	},
 
 	/* will be called on session logout */

@@ -1,7 +1,7 @@
 /*
  * This file is part of ARSnova Mobile.
  * Copyright (C) 2011-2012 Christian Thomas Weber
- * Copyright (C) 2012-2015 The ARSnova Team
+ * Copyright (C) 2012-2016 The ARSnova Team
  *
  * ARSnova Mobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,11 +28,11 @@ Ext.define('ARSnova.BrowserSupport', {
 	config: {
 		supported: {
 			"Chrome": 0,
-			"Safari": 0,
 			"Firefox": 22,
+			"Edge": 0,
+			"Safari": 0,
 			"Opera": 15,
-			"Explorer": 10,
-			"Android": 2
+			"Android Browser": 2
 		}
 	},
 
@@ -47,14 +47,7 @@ Ext.define('ARSnova.BrowserSupport', {
 	},
 
 	getRequiredBrowsers: function () {
-		var browsers = [];
-		var supported = this.getSupported();
-		for (var browser in supported) {
-			if (supported.hasOwnProperty(browser)) {
-				browsers.push(browser);
-			}
-		}
-		return browsers;
+		return Object.keys(Object.getPrototypeOf(this.getSupported()));
 	},
 
 	isBrowserSupported: function (updateRequiredCallback, browserUnsupportedCallback, scope) {

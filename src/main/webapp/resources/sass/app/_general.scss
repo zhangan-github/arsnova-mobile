@@ -1,7 +1,7 @@
 /*
  * This file is part of ARSnova Mobile.
  * Copyright (C) 2011-2012 Christian Thomas Weber
- * Copyright (C) 2012-2015 The ARSnova Team
+ * Copyright (C) 2012-2016 The ARSnova Team
  *
  * ARSnova Mobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 .hidden {
 	display: none;
 }
- 
+
 .noBackground {
 	background: none !important;
 }
@@ -35,19 +35,19 @@
 
 .x-html {
 	a:link {
-	    color: $hyperlink-unvisited-color;
+		color: $hyperlink-unvisited-color;
 	}
 
 	a:visited {
-	    color: $hyperlink-visited-color;
+		color: $hyperlink-visited-color;
 	}
-	
+
 	a:hover {
-	    color: $hyperlink-hover-color;
+			color: $hyperlink-hover-color;
 	}
-	
+
 	a:active {
-	    color: $hyperlink-active-color;
+		color: $hyperlink-active-color;
 	}
 }
 
@@ -56,6 +56,18 @@
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	padding-right: 55px;
+}
+
+.x-form-fieldset-title {
+	.x-innerhtml {
+		white-space: normal;
+	}
+}
+
+.abcOptions {
+	.x-button {
+		width: 33.3%;
+	}
 }
 
 .buttontext {
@@ -198,7 +210,7 @@ code {
 	}
 
 	.x-nested-list-inner {
-	    margin-top: 20px;
+		margin-top: 20px;
 	}
 
 	.x-list .x-list-item.x-item-selected.x-list-item-tpl {
@@ -391,7 +403,7 @@ code {
 
 	&.unchecked {
 		color: $form-unchecked-icon-color !important;
-	} 
+	}
 
 	> span {
 		font-weight: normal;
@@ -432,11 +444,6 @@ code {
 	-moz-user-select: text;
 	-ms-user-select: text;
 	user-select: text;
-}
-
-.standardForm {
-	margin-left: 12px !important;
-	margin-right: 12px !important;
 }
 
 .inClassForm {
@@ -490,7 +497,7 @@ code {
 	margin: 1em auto 30px;
 }
 
-.previewButtonLong {
+.previewButton {
 	width: 300px;
 }
 
@@ -588,7 +595,7 @@ code {
 
 .x-msgbox.markdownMessageBox {
 	max-width: 480px;
-	width: 90%;	
+	width: 90%;
 }
 
 .dangerLabel {
@@ -631,15 +638,15 @@ code {
 
 .formInvalid:-moz-placeholder { /* Firefox 18- */
 	color: $brand-danger;
-	opacity: 0.5; 
+	opacity: 0.5;
 }
 
-.formInvalid::-moz-placeholder {  /* Firefox 19+ */
+.formInvalid::-moz-placeholder { /* Firefox 19+ */
 	color: $brand-danger;
 	opacity: 0.5;
 }
 
-.formInvalid:-ms-input-placeholder {  
+.formInvalid:-ms-input-placeholder {
 	color: $brand-danger;
 	opacity: 0.5;
 }
@@ -653,4 +660,10 @@ code {
 	.x-list-item:hover {
 		background-color: transparent;
 	}
+}
+
+.softwareDetails {
+	margin-top: 0.75em;
+	font-size: 0.75em;
+	opacity: 0.75;
 }

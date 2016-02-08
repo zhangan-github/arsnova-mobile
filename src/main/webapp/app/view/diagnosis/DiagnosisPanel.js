@@ -1,7 +1,7 @@
 /*
  * This file is part of ARSnova Mobile.
  * Copyright (C) 2011-2012 Christian Thomas Weber
- * Copyright (C) 2012-2015 The ARSnova Team
+ * Copyright (C) 2012-2016 The ARSnova Team
  *
  * ARSnova Mobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -114,18 +114,22 @@ Ext.define('ARSnova.view.diagnosis.DiagnosisPanel', {
 				}, {
 					text: Messages.BROWSER_INFO,
 					handler: function (b) {
-						this.detect = Ext.create("ARSnova.BrowserDetect");
-						var browserInfo = "<b>Name:</b> " + this.detect.browser + "<br>" +
-							"<b>Engine:</b> " + Ext.browser.engineName +
-							" " + Ext.browser.engineVersion.version + "<br>" +
-							"<b>UA:</b> " + Ext.browser.userAgent + "<br>";
-						Ext.Msg.alert('Browser', browserInfo, Ext.emptyFn);
+						var detect = Ext.create('ARSnova.BrowserDetect');
+						var browserInfo = '<p>' + detect.browser + ' ' + (detect.version || '') + '<br>' +
+							detect.os + '</p><p class="softwareDetails">' + Ext.browser.userAgent + '</p>';
+						Ext.Msg.alert(Messages.BROWSER_INFO, browserInfo, Ext.emptyFn);
 					}
+				}, {
+					text: Messages.ARSNOVA_INFO,
+					handler: function (b) {
+						this.showSoftwareVersionDialog();
+					},
+					scope: this
 				}, {
 					text: Messages.ARSNOVA_RELOAD,
 					handler: function (b) {
 						Ext.Msg.confirm(Messages.ARSNOVA_RELOAD, Messages.RELOAD_SURE, function (b) {
-							if (b === "yes") {
+							if (b === 'yes') {
 								if (ARSnova.app.checkSessionLogin()) {
 									ARSnova.app.getController('Sessions').logout();
 								}
@@ -147,6 +151,26 @@ Ext.define('ARSnova.view.diagnosis.DiagnosisPanel', {
 		});
 
 		this.add([this.toolbar, this.inClass]);
+	},
+
+	showSoftwareVersionDialog: function () {
+		var versionData = ARSnova.app.getController('Version').getInfo();
+		versionData.then(function (versionData) {
+			var info = this.toVersionString(versionData.frontend) + '<br><br>' +
+				this.toVersionString(versionData.backend);
+			Ext.Msg.alert(Messages.ARSNOVA_INFO, info, Ext.emptyFn);
+		}.bind(this));
+	},
+
+	/** Returns a string containing the product name, version and commit id or
+	 * build time depending on the repository state at build time.
+	 */
+	toVersionString: function (versionData) {
+		var versionStr = versionData.version.string;
+		versionStr += versionData.version.gitDirty ?
+			'<br>' + versionData.version.buildTime :
+			' (' + versionData.version.gitCommitId.substr(0, 7) + ')';
+		return versionData.productName + '<br>' + versionStr;
 	},
 
 	joinSessionEvent: function () {

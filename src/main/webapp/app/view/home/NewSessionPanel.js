@@ -1,7 +1,7 @@
 /*
  * This file is part of ARSnova Mobile.
  * Copyright (C) 2011-2012 Christian Thomas Weber
- * Copyright (C) 2012-2015 The ARSnova Team
+ * Copyright (C) 2012-2016 The ARSnova Team
  *
  * ARSnova Mobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -100,6 +100,7 @@ Ext.define('ARSnova.view.home.NewSessionPanel', {
 			id: 'session-info-button',
 			cls: 'saveButton centered',
 			ui: 'action',
+			style: 'margin-top: 20px',
 			text: Messages.SESSION_OPTIONAL_INFO,
 			handler: function () {
 				var session = {};
@@ -164,8 +165,8 @@ Ext.define('ARSnova.view.home.NewSessionPanel', {
 					placeHolder: Messages.SESSION_SHORT_NAME_PLACEHOLDER,
 					maxLength: 8,
 					clearIcon: true
-				}]
-			}, this.sessionInfoButton, this.submitButton, this.coursesFieldset]
+				}, this.sessionInfoButton, this.submitButton]
+			}, this.coursesFieldset]
 		}]);
 
 		this.onBefore('activate', function () {

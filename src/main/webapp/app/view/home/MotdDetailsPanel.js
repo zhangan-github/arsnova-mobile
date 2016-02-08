@@ -1,7 +1,7 @@
 /*
  * This file is part of ARSnova Mobile.
  * Copyright (C) 2011-2012 Christian Thomas Weber
- * Copyright (C) 2012-2015 The ARSnova Team
+ * Copyright (C) 2012-2016 The ARSnova Team
  *
  * ARSnova Mobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,10 @@ Ext.define('ARSnova.view.home.MotdDetailsPanel', {
 
 	config: {
 		title: 'MotdDetailsPanel',
+		layout: {
+			type: 'vbox',
+			pack: 'center'
+		},
 		fullscreen: true,
 		scrollable: {
 			direction: 'vertical',
@@ -402,9 +406,7 @@ Ext.define('ARSnova.view.home.MotdDetailsPanel', {
 				Messages.QUESTION_PREVIEW_BUTTON_TITLE_DESKTOP :
 				Messages.QUESTION_PREVIEW_BUTTON_TITLE,
 			ui: 'action',
-			cls: Ext.os.is.Desktop ?
-				'previewButtonLong' :
-				'previewButton',
+			cls: 'centerButton previewButton',
 			scope: this,
 			handler: function () {
 				var values = {};
@@ -441,6 +443,7 @@ Ext.define('ARSnova.view.home.MotdDetailsPanel', {
 				items: [this.previewButton]
 			}]
 		});
+
 		this.setContentFormContent(this.motdObj);
 		/* END MOTD DETAILS */
 

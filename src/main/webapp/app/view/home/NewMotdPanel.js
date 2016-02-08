@@ -1,7 +1,7 @@
 /*
 * This file is part of ARSnova Mobile.
 * Copyright (C) 2011-2012 Christian Thomas Weber
-* Copyright (C) 2012-2015 The ARSnova Team
+* Copyright (C) 2012-2016 The ARSnova Team
 *
 * ARSnova Mobile is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,10 @@ Ext.define('ARSnova.view.home.NewMotdPanel', {
 
 	config: {
 		title: Messages.CREATE_NEW_MOTD,
+		layout: {
+			type: 'vbox',
+			pack: 'center'
+		},
 		fullscreen: true,
 		scrollable: null,
 		scroll: 'vertical'
@@ -101,8 +105,7 @@ Ext.define('ARSnova.view.home.NewMotdPanel', {
 				{text: Messages.MOTD_AUDIENCE_ALL, value: 'all'},
 				{text: Messages.MOTD_AUDIENCE_LOGGEDIN, value: 'loggedIn'},
 				{text: Messages.MOTD_AUDIENCE_TUTORS, value: 'tutors'},
-				{text: Messages.MOTD_AUDIENCE_STUDENTS, value: 'students'},
-				{text: Messages.MOTD_AUDIENCE_SESSION, value: 'session'}
+				{text: Messages.MOTD_AUDIENCE_STUDENTS, value: 'students'}
 			]
 		});
 
@@ -124,9 +127,7 @@ Ext.define('ARSnova.view.home.NewMotdPanel', {
 				Messages.QUESTION_PREVIEW_BUTTON_TITLE_DESKTOP :
 				Messages.QUESTION_PREVIEW_BUTTON_TITLE,
 			ui: 'action',
-			cls: Ext.os.is.Desktop ?
-				'previewButtonLong' :
-				'previewButton',
+			cls: 'centerButton previewButton',
 			scope: this,
 			handler: function () {
 				var panel = null;
@@ -259,6 +260,8 @@ Ext.define('ARSnova.view.home.NewMotdPanel', {
 				button.enable();
 			}
 		});
+		panel.motdtitle.setValue("");
+		panel.motdtext.setValue("");
 		return promise;
 	}
 });

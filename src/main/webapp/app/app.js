@@ -1,7 +1,7 @@
 /*
  * This file is part of ARSnova Mobile.
  * Copyright (C) 2011-2012 Christian Thomas Weber
- * Copyright (C) 2012-2015 The ARSnova Team
+ * Copyright (C) 2012-2016 The ARSnova Team
  *
  * ARSnova Mobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 /**
  * required classes
  */
-//@require lib/moment.de.js
+//@require lib/moment.de.min.js
 //@requrie lib/moment.min.js
 //@requrie lib/rsvp.min.js
 //@require utils/Ext.util.TaskRunner.js
@@ -155,6 +155,12 @@ Ext.application({
 		console.info("ARSnova.app.launch");
 		this.configLoaded = new RSVP.Promise();
 
+		/* Workaround needed for Edge since ST recognizes it as WebKit */
+		var detect = Ext.create("ARSnova.BrowserDetect");
+		if (detect.browser === "Edge") {
+			Ext.getBody().removeCls('x-webkit');
+		}
+
 		this.checkLocalStorage();
 		this.checkBrowser();
 		this.taskManager = new TaskRunner();
@@ -277,6 +283,7 @@ Ext.application({
 			Ext.fly('splashScreenContainer').destroy();
 			window.document.body.style.overflow = 'initial';
 			window.document.body.style.background = 'initial';
+			window.document.body.classList.add('splashscreenClosed');
 		}
 		if (ARSnova.app.loggedIn !== true) {
 			ARSnova.app.restProxy.getMotdsForAll({

@@ -1,7 +1,7 @@
 /*
  * This file is part of ARSnova Mobile.
  * Copyright (C) 2011-2012 Christian Thomas Weber
- * Copyright (C) 2012-2015 The ARSnova Team
+ * Copyright (C) 2012-2016 The ARSnova Team
  *
  * ARSnova Mobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -79,7 +79,7 @@ Ext.define('ARSnova.view.components.QuestionToolbar', {
 			option = value === 1 ? Messages.ANSWER : Messages.ANSWERS;
 		} else if (option === Messages.ABSTENTION) {
 			option = value === 1 ? Messages.ABSTENTION : Messages.ABSTENTIONS;
-			if (moment.lang() === "en") {
+			if (moment.locale() === "en") {
 				option = option.toLowerCase();
 			}
 		}

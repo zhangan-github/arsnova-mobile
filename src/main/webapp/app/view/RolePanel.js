@@ -1,7 +1,7 @@
 /*
  * This file is part of ARSnova Mobile.
  * Copyright (C) 2011-2012 Christian Thomas Weber
- * Copyright (C) 2012-2015 The ARSnova Team
+ * Copyright (C) 2012-2016 The ARSnova Team
  *
  * ARSnova Mobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -96,7 +96,7 @@ Ext.define('ARSnova.view.RolePanel', {
 					"<span class='icon-logo-nova'>n</span>" +
 					"</div>",
 			style: {
-				marginTop: isPhone && !mediumHeight ? (smallHeight ? '5px' : '10px') : '25px'
+				marginTop: '5px'
 			}
 		}, {
 			xtype: 'panel',
@@ -129,10 +129,10 @@ Ext.define('ARSnova.view.RolePanel', {
 				type: 'hbox',
 				pack: 'center'
 			},
-			style: 'margin-top: 15px; margin-bottom: 25px;',
+			style: 'margin-top: 15px; margin-bottom: 5px;',
 			items: [{
 				xtype: 'matrixbutton',
-				text: Messages.INFO,
+				text: Messages.MANUAL,
 				imageCls: "icon-book",
 				handler: function () {
 					var tabPanel = ARSnova.app.mainTabPanel.tabPanel;

@@ -13,8 +13,10 @@ module.exports = function (grunt) {
 	/* Files matching the following patterns will be checked by JSHint and JSCS */
 	var lintJs = [
 		"Gruntfile.js",
+		appPath + "/*.js",
 		appPath + "/app/**/*.js",
 		/* Exclude third-party code */
+		"!" + appPath + "/bootstrap.js",
 		"!" + appPath + "/app/utils/Ext.*.js",
 		"!" + appPath + "/app/Fileup.js"
 	];
@@ -129,7 +131,11 @@ module.exports = function (grunt) {
 		watch: {
 			js: {
 				files: [lintJs, ".jscs.json", ".jshintrc"],
-				tasks: ["newer:jscs", "newer:jshint"]
+				tasks: ["readpom", "genversionfile", "newer:jscs", "newer:jshint"]
+			},
+			pom: {
+				files: "pom.xml",
+				tasks: ["readpom", "genversionfile"]
 			}
 		}
 	});
@@ -224,10 +230,13 @@ module.exports = function (grunt) {
 					args: ["log", "-n", "1", "--pretty=format:%H"]
 				}, function (error, result, code) {
 					var version = {
-						version: grunt.config("pom").project.version[0],
-						gitCommitId: result.stdout,
-						gitDirty: dirty,
-						buildTime: (new Date()).toISOString()
+						productName: "arsnova-mobile",
+						version: {
+							string: grunt.config("pom").project.version[0],
+							gitCommitId: result.stdout,
+							gitDirty: dirty,
+							buildTime: (new Date()).toISOString()
+						}
 					};
 					grunt.file.write(versionFilePath + "/version.json", JSON.stringify(version) + "\n");
 					done(true);

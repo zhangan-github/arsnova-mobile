@@ -1,7 +1,7 @@
 /*
  * This file is part of ARSnova Mobile.
  * Copyright (C) 2011-2012 Christian Thomas Weber
- * Copyright (C) 2012-2015 The ARSnova Team
+ * Copyright (C) 2012-2016 The ARSnova Team
  *
  * ARSnova Mobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,19 +38,7 @@ Ext.define("ARSnova.controller.Feature", {
 		learningProgress: true
 	},
 
-	/* TODO:
-	 * Remove this workaround as soon as the feature controller uses its own
-	 * variable. Server-side global config should never be overriden.
-	 *
-	 * Potential solution:
-	 * Store feature activation locally in this controller and add
-	 * `isFeatureEnabled` method for feature testing.
-	 */
-	launch: function () {
-		ARSnova.app.configLoaded.then(function () {
-			ARSnova.app.globalConfig.features.learningProgress = true;
-		});
-	},
+	lastUpdate: 0,
 
 	applyFeatures: function (prevFeatures) {
 		var features = Ext.decode(sessionStorage.getItem("features"));
@@ -280,8 +268,6 @@ Ext.define("ARSnova.controller.Feature", {
 			button = tabPanel.inClassPanel.myLearningProgressButton;
 		}
 
-		/* FIXME: Server-side global config should never be overriden. */
-		ARSnova.app.globalConfig.features.learningProgress = enable;
 		this.applyButtonChange(container, button, enable, 3);
 	},
 
@@ -443,9 +429,14 @@ Ext.define("ARSnova.controller.Feature", {
 			default:
 			case 'interposed':
 				tP.setActiveItem(tabPanel);
-				ARSnova.app.socket.setSession(null);
-				ARSnova.app.socket.setSession(sessionStorage.getItem('keyword'));
-				ARSnova.app.sessionModel.fireEvent(ARSnova.app.sessionModel.events.sessionJoinAsStudent);
+
+				if (Date.now() - this.lastUpdate > 1000) {
+					this.lastUpdate = Date.now();
+					ARSnova.app.socket.setSession(null);
+					ARSnova.app.socket.setSession(sessionStorage.getItem('keyword'));
+					ARSnova.app.sessionModel.fireEvent(ARSnova.app.sessionModel.events.sessionJoinAsStudent);
+				}
+
 				tP.feedbackTabPanel.votePanel.setSinglePageMode(false, this);
 				tP.userQuestionsPanel.setSinglePageMode(false, this);
 				tabPanel.inClassPanel.startTasks();

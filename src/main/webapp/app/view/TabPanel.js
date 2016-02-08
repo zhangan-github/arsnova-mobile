@@ -1,7 +1,7 @@
 /*
  * This file is part of ARSnova Mobile.
  * Copyright (C) 2011-2012 Christian Thomas Weber
- * Copyright (C) 2012-2015 The ARSnova Team
+ * Copyright (C) 2012-2016 The ARSnova Team
  *
  * ARSnova Mobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -169,7 +169,7 @@ Ext.define('ARSnova.view.TabPanel', {
 				ARSnova.app.setWindowTitle(' - ' + Messages.DIAGNOSIS);
 				break;
 			case this.infoTabPanel:
-				ARSnova.app.setWindowTitle(' - ' + Messages.INFO);
+				ARSnova.app.setWindowTitle(' - ' + Messages.MANUAL);
 				break;
 			case this.feedbackTabPanel:
 				ARSnova.app.setWindowTitle(' - ' + Messages.FEEDBACK);

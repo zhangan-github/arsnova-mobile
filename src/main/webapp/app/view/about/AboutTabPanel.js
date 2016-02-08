@@ -1,7 +1,7 @@
 /*
  * This file is part of ARSnova Mobile.
  * Copyright (C) 2011-2012 Christian Thomas Weber
- * Copyright (C) 2012-2015 The ARSnova Team
+ * Copyright (C) 2012-2016 The ARSnova Team
  *
  * ARSnova Mobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ Ext.define('ARSnova.view.about.AboutTabPanel', {
 	requires: ['ARSnova.view.components.EmbeddedPage'],
 
 	config: {
-		title: Messages.INFO,
+		title: Messages.MANUAL,
 		iconCls: 'icon-book',
 
 		scrollable: {
@@ -61,7 +61,7 @@ Ext.define('ARSnova.view.about.AboutTabPanel', {
 		this.add(this.toolbar);
 
 		this.on("painted", function () {
-			var url = ARSnova.app.globalConfig.documentationUrl || "https://arsnova.eu/manual/index.php/" + encodeURIComponent(moment.lang()) + "/";
+			var url = ARSnova.app.globalConfig.documentationUrl || "https://arsnova.eu/manual/index.php/" + encodeURIComponent(moment.locale()) + "/";
 
 			this.add(Ext.create('ARSnova.view.components.EmbeddedPage', {
 				src: url
