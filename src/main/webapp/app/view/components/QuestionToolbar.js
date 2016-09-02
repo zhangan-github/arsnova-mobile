@@ -77,11 +77,14 @@ Ext.define('ARSnova.view.components.QuestionToolbar', {
 	setAnswerCounter: function (value, option) {
 		if (!option) {
 			option = value === 1 ? Messages.ANSWER : Messages.ANSWERS;
+		} else if (option === Messages.COMMENT) {
+			option = value === 1 ? Messages.COMMENT : Messages.COMMENTS;
 		} else if (option === Messages.ABSTENTION) {
 			option = value === 1 ? Messages.ABSTENTION : Messages.ABSTENTIONS;
-			if (moment.locale() === "en") {
-				option = option.toLowerCase();
-			}
+		}
+
+		if (moment.locale() === "en") {
+			option = option.toLowerCase();
 		}
 
 		this.answerCounter.setHtml(value + ' ' + option);
@@ -126,11 +129,18 @@ Ext.define('ARSnova.view.components.QuestionToolbar', {
 		this.clockElement.setHidden(false);
 	},
 
-	checkStatistics: function (question, isDisabled) {
-		if (question && question.showStatistic && isDisabled && question.questionType !== 'flashcard') {
-			this.statisticsButton.show();
+	checkStatisticButtonIcon: function (question) {
+		if (question && question.questionType === 'slide') {
+			this.statisticsButton.setIconCls('icon-comment');
 		} else {
-			this.statisticsButton.hide();
+			this.statisticsButton.setIconCls(this.statisticsButton.config.iconCls);
 		}
+	},
+
+	checkStatistics: function (question, isDisabled) {
+		var showStatistics = question && question.showStatistic && isDisabled && question.questionType !== 'flashcard' ||
+			question && question.showStatistic && question.questionType === 'slide';
+
+		this.statisticsButton.setHidden(!showStatistics);
 	}
 });

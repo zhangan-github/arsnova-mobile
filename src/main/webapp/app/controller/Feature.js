@@ -25,6 +25,7 @@ Ext.define("ARSnova.controller.Feature", {
 		clicker: false,
 		liveClicker: false,
 		liveFeedback: false,
+		interposedFeedback: false,
 		flashcard: false,
 		peerGrading: false
 	},
@@ -35,23 +36,41 @@ Ext.define("ARSnova.controller.Feature", {
 		lecture: true,
 		feedback: true,
 		interposed: true,
-		learningProgress: true
+		learningProgress: true,
+		slides: true
 	},
 
 	lastUpdate: 0,
 
-	applyFeatures: function (prevFeatures) {
+	getActiveFeatures: function () {
 		var features = Ext.decode(sessionStorage.getItem("features"));
+		if (features && features.total) {
+			/* Needed for backwards compatibility */
+			features.slides = true;
+		}
+
+		return features;
+	},
+
+	applyFeatures: function (prevFeatures) {
+		var features = this.getActiveFeatures();
 
 		var useCases = {
 			clicker: this.applyClickerUseCase,
 			peerGrading: this.applyPeerGradingUseCase,
 			flashcard: this.applyFlashcardUseCase,
 			liveFeedback: this.applyLiveFeedbackUseCase,
+			interposedFeedback: this.applyInterposedFeedbackUseCase,
 			liveClicker: this.applyLiveClickerUseCase,
 			total: this.applyTotalUseCase,
 			custom: this.applyCustomUseCase
 		};
+
+		if (this.getLoneActiveFeatureKey(features) === 'twitterWall') {
+			features.twitterWall = false;
+			features.interposedFeedback = true;
+			sessionStorage.setItem("features", Ext.encode(features));
+		}
 
 		if (ARSnova.app.userRole !== ARSnova.app.USER_ROLE_SPEAKER &&
 			prevFeatures && (prevFeatures.liveClicker || features.liveClicker)) {
@@ -67,23 +86,35 @@ Ext.define("ARSnova.controller.Feature", {
 	},
 
 	applyClickerUseCase: function (useCases) {
-		this.applyCustomUseCase(useCases, this.getFeatureValues(useCases));
+		this.applyCustomUseCase(this.getFeatureValues(useCases));
 	},
 
 	applyPeerGradingUseCase: function (useCases) {
-		this.applyCustomUseCase(useCases, this.getFeatureValues(useCases));
+		this.applyCustomUseCase(this.getFeatureValues(useCases));
 	},
 
 	applyFlashcardUseCase: function (useCases) {
-		this.applyCustomUseCase(useCases, this.getFeatureValues(useCases));
+		this.applyCustomUseCase(this.getFeatureValues(useCases));
 	},
 
 	applyLiveFeedbackUseCase: function (useCases) {
-		this.applyCustomUseCase(useCases, this.getFeatureValues(useCases));
+		this.applyCustomUseCase(this.getFeatureValues(useCases));
+	},
+
+	applyInterposedFeedbackUseCase: function (useCases) {
+		this.applyCustomUseCase(this.getFeatureValues(useCases));
 	},
 
 	applyTotalUseCase: function (useCases) {
-		this.applyCustomUseCase(useCases, this.features);
+		var tabPanel = ARSnova.app.mainTabPanel.tabPanel;
+		this.applyCustomUseCase(this.getFeatureValues(useCases));
+
+		if (ARSnova.app.userRole === ARSnova.app.USER_ROLE_SPEAKER) {
+			tabPanel = tabPanel.speakerTabPanel;
+			tabPanel.inClassPanel.changeActionButtonsMode(useCases);
+		} else {
+			tabPanel = tabPanel.userTabPanel;
+		}
 	},
 
 	applyLiveClickerUseCase: function (useCases, featureChange) {
@@ -94,7 +125,7 @@ Ext.define("ARSnova.controller.Feature", {
 			localStorage.getItem('lastVisitedRole') === ARSnova.app.USER_ROLE_SPEAKER) {
 			this.applyCustomUseCase(useCases, this.getFeatureValues(useCases));
 			tabPanel.speakerTabPanel.inClassPanel.showcaseActionButton.setHidden(false);
-			tabPanel.speakerTabPanel.inClassPanel.changeActionButtonsMode('liveClicker');
+			tabPanel.speakerTabPanel.inClassPanel.changeActionButtonsMode();
 			tabPanel.feedbackTabPanel.tab.show();
 		} else {
 			this.setSinglePageMode('feedback', {});
@@ -107,8 +138,8 @@ Ext.define("ARSnova.controller.Feature", {
 		fP.votePanel.questionRequestButton.setHidden(true);
 	},
 
-	applyCustomUseCase: function (useCases, features) {
-		features = features || Ext.decode(sessionStorage.getItem("features"));
+	applyCustomUseCase: function (features) {
+		features = features || this.getActiveFeatures();
 
 		var functions = {
 			pi: this.applyPiFeature,
@@ -116,12 +147,20 @@ Ext.define("ARSnova.controller.Feature", {
 			lecture: this.applyLectureFeature,
 			feedback: this.applyFeedbackFeature,
 			interposed: this.applyInterposedFeature,
-			learningProgress: this.applyLearningProgressFeature
+			learningProgress: this.applyLearningProgressFeature,
+			slides: this.applySlidesFeature
 		};
 
-		for (var property in features) {
-			if (typeof functions[property] === 'function') {
-				functions[property].call(this, features[property]);
+		/* Two loops are used to avoid race conditions. */
+		var property;
+		for (property in features) {
+			if (typeof functions[property] === 'function' && !features[property]) {
+				functions[property].call(this, false);
+			}
+		}
+		for (property in features) {
+			if (typeof functions[property] === 'function' && features[property]) {
+				functions[property].call(this, true);
 			}
 		}
 
@@ -133,41 +172,37 @@ Ext.define("ARSnova.controller.Feature", {
 	getFeatureValues: function (useCases) {
 		var features = Ext.Object.merge({}, this.features, useCases);
 
-		if (useCases.clicker) {
-			features.jitt = false;
-			features.learningProgress = false;
-			features.interposed = false;
-			features.feedback = false;
-		}
-
-		if (useCases.peerGrading) {
-			features.interposed = false;
-			features.feedback = false;
-			features.jitt = false;
-		}
-
-		if (useCases.flashcard) {
-			features.jitt = false;
-			features.learningProgress = false;
-			features.interposed = false;
-			features.feedback = false;
-			features.pi = false;
-		}
-
-		if (useCases.liveClicker) {
+		if (!useCases.custom && !useCases.total) {
 			features.jitt = false;
 			features.learningProgress = false;
 			features.interposed = false;
 			features.feedback = false;
 			features.lecture = false;
 			features.pi = false;
-		}
+			features.slides = false;
 
-		if (useCases.liveFeedback) {
-			features.pi = false;
-			features.jitt = false;
-			features.lecture = false;
-			features.learningProgress = false;
+			if (useCases.flashcard) {
+				features.lecture = true;
+			}
+
+			if (useCases.liveFeedback) {
+				features.feedback = true;
+			}
+
+			if (useCases.interposedFeedback) {
+				features.interposed = true;
+			}
+
+			if (useCases.clicker) {
+				features.lecture = true;
+				features.pi = true;
+			}
+
+			if (useCases.peerGrading) {
+				features.learningProgress = true;
+				features.lecture = true;
+				features.pi = true;
+			}
 		}
 
 		return features;
@@ -218,12 +253,18 @@ Ext.define("ARSnova.controller.Feature", {
 	 */
 	applyFeedbackFeature: function (enable) {
 		var tP = ARSnova.app.mainTabPanel.tabPanel;
+		var inClassPanel, container;
+
 		tP.feedbackTabPanel.tab.setHidden(!enable);
 
-		if (ARSnova.app.userRole !== ARSnova.app.USER_ROLE_SPEAKER) {
-			var inClassPanel = tP.userTabPanel.inClassPanel;
-			var container = inClassPanel.actionButtonPanel;
-			this.applyButtonChange(container, inClassPanel.voteButton, enable, 5);
+		if (ARSnova.app.userRole === ARSnova.app.USER_ROLE_SPEAKER) {
+			inClassPanel = tP.speakerTabPanel.inClassPanel;
+			container = inClassPanel.inClassButtons;
+			this.applyButtonChange(container, inClassPanel.liveFeedbackButton, enable, 3);
+		} else {
+			inClassPanel = tP.userTabPanel.inClassPanel;
+			container = inClassPanel.actionButtonPanel;
+			this.applyButtonChange(container, inClassPanel.voteButton, enable, 3);
 		}
 	},
 
@@ -272,6 +313,27 @@ Ext.define("ARSnova.controller.Feature", {
 	},
 
 	/**
+	 * apply changes affecting the "slides" feature
+	 */
+	applySlidesFeature: function (enable) {
+		var tP = ARSnova.app.mainTabPanel.tabPanel;
+		var tabPanel, container, button, position;
+
+		if (ARSnova.app.userRole === ARSnova.app.USER_ROLE_SPEAKER) {
+			tabPanel = tP.speakerTabPanel;
+			position = 1;
+			tP.speakerTabPanel.inClassPanel.changeActionButtonsMode();
+		} else {
+			tabPanel = tP.userTabPanel;
+			position = 0;
+		}
+
+		container = tabPanel.inClassPanel.inClassButtons;
+		button = tabPanel.inClassPanel.lectureQuestionButton;
+		this.applyButtonChange(container, button, enable, position);
+	},
+
+	/**
 	 * return key of lone active option
 	 */
 	getLoneActiveFeatureKey: function (features) {
@@ -293,7 +355,7 @@ Ext.define("ARSnova.controller.Feature", {
 	 * apply changes affecting combined feature activation/deactivation
 	 */
 	applyAdditionalChanges: function (features) {
-		var hasQuestionFeatures = features.lecture || features.jitt;
+		var hasQuestionFeatures = features.lecture || features.jitt || features.slides;
 		var feedbackWithoutInterposed = features.feedback && !features.interposed;
 		var isSpeaker = ARSnova.app.userRole === ARSnova.app.USER_ROLE_SPEAKER;
 		var loneActiveFeature = this.getLoneActiveFeatureKey(features);
@@ -301,6 +363,7 @@ Ext.define("ARSnova.controller.Feature", {
 		var tP = ARSnova.app.mainTabPanel.tabPanel;
 		var tabPanel = isSpeaker ? tP.speakerTabPanel : tP.userTabPanel;
 
+		tP.feedbackQuestionsPanel.setActiveItem(tP.feedbackQuestionsPanel.questionsPanel);
 		tP.feedbackTabPanel.statisticPanel.setToolbarTitle(localStorage.getItem('shortName'));
 		tP.feedbackTabPanel.statisticPanel.initializeOptionButtons();
 		tP.feedbackTabPanel.votePanel.setToolbarTitle(Messages.FEEDBACK);
@@ -309,20 +372,23 @@ Ext.define("ARSnova.controller.Feature", {
 		tP.getTabBar().setHidden(false);
 
 		if (isSpeaker) {
-			tabPanel.inClassPanel.showcaseActionButton.setHidden(!hasQuestionFeatures);
-			tabPanel.inClassPanel.createAdHocQuestionButton.setHidden(!hasQuestionFeatures);
-			tabPanel.inClassPanel.updateActionButtonElements();
+			var inClass = tabPanel.inClassPanel;
+			inClass.showcaseActionButton.setHidden(!hasQuestionFeatures);
+			inClass.createAdHocQuestionButton.setHidden(!hasQuestionFeatures);
+			inClass.feedbackQuestionButton.setText(inClass.feedbackQuestionButton.initialConfig.text);
+			inClass.updateActionButtonElements();
 
 			if (features.jitt && !features.lecture) {
-				tabPanel.inClassPanel.changeActionButtonsMode('preparation');
-				tabPanel.showcaseQuestionPanel.setController(ARSnova.app.getController('PreparationQuestions'));
+				inClass.changeActionButtonsMode(features);
 				tabPanel.showcaseQuestionPanel.setPreparationMode();
 				tabPanel.newQuestionPanel.setVariant('preparation');
 			} else {
-				tabPanel.inClassPanel.changeActionButtonsMode('lecture');
-				tabPanel.showcaseQuestionPanel.setController(ARSnova.app.getController('Questions'));
+				inClass.changeActionButtonsMode(features);
 				tabPanel.showcaseQuestionPanel.setLectureMode();
 				tabPanel.newQuestionPanel.setVariant('lecture');
+			}
+			if (features.slides) {
+				inClass.changeActionButtonsMode(features);
 			}
 		} else {
 			// hide questionsPanel tab when session has no question features active
@@ -342,17 +408,21 @@ Ext.define("ARSnova.controller.Feature", {
 			}
 
 			var lectureButtonText = Messages.LECTURE_QUESTIONS_LONG;
+			var questionsButtonText = Messages.MY_QUESTIONS_AND_COMMENTS;
 
-			if (features.flashcard) {
+			if (features.slides) {
+				lectureButtonText = Messages.PRESENTATION;
+				questionsButtonText = Messages.MY_QUESTIONS;
+			} else if (features.flashcard) {
 				lectureButtonText = Messages.FLASHCARDS;
 			} else if (features.peerGrading) {
 				lectureButtonText = Messages.EVALUATION_QUESTIONS;
 			}
 
-			// flashcard use case
+			tabPanel.inClassPanel.myQuestionsButton.setText(questionsButtonText);
 			tabPanel.inClassPanel.lectureQuestionButton.setText(lectureButtonText);
+			tabPanel.inClassPanel.applyUIChanges(features);
 
-			// peer grading use case
 			if (tabPanel.inClassPanel.myLearningProgressButton) {
 				tabPanel.inClassPanel.myLearningProgressButton.setText(
 					features.peerGrading ? Messages.EVALUATION_ALT : Messages.MY_LEARNING_PROGRESS
@@ -415,6 +485,7 @@ Ext.define("ARSnova.controller.Feature", {
 		switch (featureKey) {
 			case 'jitt':
 			case 'lecture':
+			case 'slides':
 				if (tP.getActiveItem() === tP.userQuestionsPanel) {
 					tP.userQuestionsPanel.removeAll();
 					tP.userQuestionsPanel.getUnansweredSkillQuestions();
@@ -465,22 +536,34 @@ Ext.define("ARSnova.controller.Feature", {
 
 	applyNewQuestionPanelChanges: function (panel) {
 		var indexMap = panel.getOptionIndexMap();
-		var features = Ext.decode(sessionStorage.getItem("features"));
+		var features = this.getActiveFeatures();
+		var options = panel.questionOptions.getInnerItems();
+		panel.questionOptions.setPressedButtons([1]);
 
-		if (features.flashcard) {
+		if (features.slides && !features.lecture && !features.jitt) {
+			panel.questionOptions.setPressedButtons([indexMap[Messages.SLIDE]]);
+			panel.optionsToolbar.setHidden(true);
+		} else if (features.flashcard) {
 			panel.questionOptions.setPressedButtons([indexMap[Messages.FLASHCARD]]);
 			panel.optionsToolbar.setHidden(true);
 		} else if (features.peerGrading) {
 			panel.questionOptions.setPressedButtons([indexMap[Messages.EVALUATION]]);
 			panel.optionsToolbar.setHidden(true);
 		} else if (features.clicker) {
-			var options = panel.questionOptions.getInnerItems();
 			options[indexMap[Messages.FREETEXT]].hide();
 			options[indexMap[Messages.FLASHCARD]].hide();
+			options[indexMap[Messages.EVALUATION]].hide();
+			options[indexMap[Messages.SCHOOL]].hide();
 			options[indexMap[Messages.GRID]].hide();
+			panel.optionsToolbar.setHidden(false);
 		} else {
 			panel.optionsToolbar.setHidden(false);
 			panel.questionOptions.config.showAllOptions();
+			if (features.slides) {
+				panel.questionOptions.setPressedButtons([indexMap[Messages.SLIDE]]);
+			}
 		}
+
+		options[indexMap[Messages.SLIDE]].setHidden(!features.slides);
 	}
 });

@@ -66,6 +66,7 @@ Ext.define('ARSnova.view.speaker.InClass', {
 	initialize: function () {
 		var me = this;
 		this.callParent(arguments);
+		var screenWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
 
 		var loggedInCls = '';
 		if (ARSnova.app.loginMode === ARSnova.app.LOGIN_THM) {
@@ -188,9 +189,19 @@ Ext.define('ARSnova.view.speaker.InClass', {
 			handler: this.buttonClicked
 		});
 
+		this.liveFeedbackButton = Ext.create('ARSnova.view.MultiBadgeButton', {
+			text: Messages.LIVE_FEEDBACK,
+			cls: 'forwardListButton',
+			controller: 'Feedback',
+			action: 'showFeedbackStatistic',
+			handler: this.buttonClicked
+		});
+
 		this.feedbackQuestionButton = Ext.create('ARSnova.view.MultiBadgeButton', {
 			ui: 'normal',
-			text: Messages.QUESTIONS_FROM_STUDENTS,
+			text: screenWidth < 450 ?
+				Messages.QUESTIONS_FROM_STUDENTS_SHORT :
+				Messages.QUESTIONS_FROM_STUDENTS,
 			cls: 'forwardListButton',
 			controller: 'Questions',
 			action: 'listFeedbackQuestions',
@@ -209,7 +220,8 @@ Ext.define('ARSnova.view.speaker.InClass', {
 		var buttons = [
 			this.feedbackQuestionButton,
 			this.lectureQuestionButton,
-			this.preparationQuestionButton
+			this.preparationQuestionButton,
+			this.liveFeedbackButton
 		];
 
 		this.inClassActions = Ext.create('ARSnova.view.speaker.InClassActionButtons');
@@ -285,10 +297,7 @@ Ext.define('ARSnova.view.speaker.InClass', {
 		this.add([this.toolbar, this.inClassItems]);
 		this.on('destroy', this.destroyListeners);
 
-		this.onBefore('painted', function () {
-			this.onActivate();
-		});
-
+		this.onBefore('painted', this.onActivate);
 		this.on('show', this.refreshListeners);
 	},
 
@@ -318,18 +327,21 @@ Ext.define('ARSnova.view.speaker.InClass', {
 		tabPanel.animateActiveItem(tabPanel.feedbackTabPanel, 'slide');
 	},
 
-	changeActionButtonsMode: function (mode) {
-		var features = Ext.decode(sessionStorage.getItem("features"));
+	changeActionButtonsMode: function (features) {
+		features = features || ARSnova.app.getController('Feature').getActiveFeatures();
+		var sTP = ARSnova.app.mainTabPanel.tabPanel.speakerTabPanel;
 
-		if (mode === 'liveClicker') {
+		if (features.liveClicker) {
 			this.showcaseActionButton.setHandler(this.showcaseLiveQuestionHandler);
 			this.showcaseActionButton.setButtonText(Messages.SHOWCASE_LIVE_CLICKER);
-		} else if (mode === 'preparation') {
+		} else if (features.jitt && !features.lecture) {
+			sTP.showcaseQuestionPanel.setPreparationMode();
 			this.createAdHocQuestionButton.config.mode = 'preparation';
 			this.showcaseActionButton.setButtonText(this.showcaseActionButton.config.altText);
 			this.createAdHocQuestionButton.setButtonText(this.createAdHocQuestionButton.config.altText);
 			this.showcaseActionButton.setHandler(this.showcaseHandler);
 		} else {
+			sTP.showcaseQuestionPanel.setLectureMode();
 			this.createAdHocQuestionButton.config.mode = 'lecture';
 			this.showcaseActionButton.setButtonText(this.showcaseActionButton.config.text);
 			this.showcaseActionButton.setHandler(this.showcaseHandler);
@@ -337,11 +349,15 @@ Ext.define('ARSnova.view.speaker.InClass', {
 				features.flashcard ? Messages.NEW_FLASHCARD : this.createAdHocQuestionButton.config.text
 			);
 		}
+		if (features.slides) {
+			this.showcaseActionButton.setButtonText(Messages.SHOWCASE_KEYNOTE);
+			this.createAdHocQuestionButton.setButtonText(Messages.NEW_CONTENT);
+		}
 	},
 
 	updateActionButtonElements: function (showElements) {
 		var me = this;
-		var features = Ext.decode(sessionStorage.getItem("features"));
+		var features = ARSnova.app.getController('Feature').getActiveFeatures();
 		var hasQuestionFeature = features.lecture || features.jitt;
 
 		if (features.liveClicker) {
@@ -349,8 +365,7 @@ Ext.define('ARSnova.view.speaker.InClass', {
 		}
 
 		this.actionButtonPanel.getInnerItems().forEach(function (element) {
-			if (element === me.showcaseActionButton ||
-				element.getItemId() === 'innerLeftSpacer') {
+			if (element === me.showcaseActionButton || element.getItemId() === 'innerLeftSpacer') {
 				element.setHidden(!showElements);
 			}
 		});
@@ -360,7 +375,7 @@ Ext.define('ARSnova.view.speaker.InClass', {
 
 	/* will be called on session login */
 	registerListeners: function () {
-		var features = Ext.decode(sessionStorage.getItem("features"));
+		var features = ARSnova.app.getController('Feature').getActiveFeatures();
 		var inClassPanel = ARSnova.app.mainTabPanel.tabPanel.speakerTabPanel.inClassPanel;
 		ARSnova.app.taskManager.start(inClassPanel.countFeedbackQuestionsTask);
 
@@ -372,7 +387,7 @@ Ext.define('ARSnova.view.speaker.InClass', {
 
 	/* will be called whenever panel is shown */
 	refreshListeners: function () {
-		var features = Ext.decode(sessionStorage.getItem("features"));
+		var features = ARSnova.app.getController('Feature').getActiveFeatures();
 
 		// tasks should get run immediately
 		this.countFeedbackQuestionsTask.taskRunTime = 0;
@@ -390,7 +405,8 @@ Ext.define('ARSnova.view.speaker.InClass', {
 	},
 
 	onActivate: function () {
-		var features = Ext.decode(sessionStorage.getItem("features"));
+		var features = ARSnova.app.getController('Feature').getActiveFeatures();
+		this.changeActionButtonsMode(features);
 		var sTP = ARSnova.app.mainTabPanel.tabPanel.speakerTabPanel;
 		sTP.inClassPanel.updateActionButtonElements(false);
 		sTP.inClassPanel.updateAudienceQuestionBadge();
@@ -399,7 +415,7 @@ Ext.define('ARSnova.view.speaker.InClass', {
 
 	updateCaption: function () {
 		var me = this, hasOptions = false;
-		var features = Ext.decode(sessionStorage.getItem("features"));
+		var features = ARSnova.app.getController('Feature').getActiveFeatures();
 
 		if (features) {
 			if (!features.lecture && !features.jitt) {
@@ -446,17 +462,25 @@ Ext.define('ARSnova.view.speaker.InClass', {
 		ARSnova.app.questionModel.countLectureQuestions(sessionStorage.getItem("keyword"), {
 			success: function (response) {
 				var numQuestions = parseInt(response.responseText);
+				var singularText, pluralText;
+
 				me.badgeOptions.numQuestions = numQuestions;
 
-				if (numQuestions && features.lecture) {
+				if (features.total || features.slides) {
+					singularText = pluralText = Messages.SHOWCASE_KEYNOTE;
+				} else if (features.flashcards) {
+					singularText = Messages.SHOWCASE_FLASHCARD;
+					pluralText = Messages.SHOWCASE_FLASHCARDS;
+				} else {
+					singularText = Messages.SHOWCASE_MODE;
+					pluralText = Messages.SHOWCASE_MODE_PLURAL;
+				}
+
+				if (numQuestions && (features.lecture || features.slides)) {
 					if (numQuestions === 1 || features.liveClicker) {
-						me.showcaseActionButton.setButtonText(
-							features.flashcard ? Messages.SHOWCASE_FLASHCARD : Messages.SHOWCASE_MODE
-						);
+						me.showcaseActionButton.setButtonText(singularText);
 					} else {
-						me.showcaseActionButton.setButtonText(
-							features.flashcard ? Messages.SHOWCASE_FLASHCARDS : Messages.SHOWCASE_MODE_PLURAL
-						);
+						me.showcaseActionButton.setButtonText(pluralText);
 					}
 					me.updateActionButtonElements(!!numQuestions);
 				}
@@ -531,11 +555,18 @@ Ext.define('ARSnova.view.speaker.InClass', {
 
 	countFeedbackQuestions: function () {
 		var me = this;
+		var features = ARSnova.app.getController('Feature').getActiveFeatures();
 
 		ARSnova.app.questionModel.countFeedbackQuestions(sessionStorage.getItem("keyword"), null, {
 			success: function (response) {
 				var questionCount = Ext.decode(response.responseText);
 				ARSnova.app.mainTabPanel.tabPanel.feedbackQuestionsPanel.tab.setBadgeText(questionCount.unread);
+
+				if (features.interposed && ARSnova.app.activeSpeakerUtility) {
+					var hideOverlay = !parseInt(questionCount.unread) || !ARSnova.app.projectorModeActive;
+					ARSnova.app.activeSpeakerUtility.interposedOverlay.setBadgeText(questionCount.unread);
+					ARSnova.app.activeSpeakerUtility.interposedOverlay.setHidden(hideOverlay);
+				}
 
 				me.badgeOptions.numInterposed = !me.badgeOptions.numInterposed ? questionCount.total :
 					me.badgeOptions.numInterposed;
@@ -575,6 +606,21 @@ Ext.define('ARSnova.view.speaker.InClass', {
 		this.courseLearningProgressButton.setText(
 			features.peerGrading ? Messages.EVALUATION_ALT : Messages.COURSES_LEARNING_PROGRESS
 		);
+
+		if (features.total || features.slides) {
+			lectureButtonText = Messages.SLIDE_LONG;
+
+			this.createAdHocQuestionButton.element.down('.iconBtnImg').replaceCls('icon-question', 'icon-pencil');
+			this.caption.setBadgeTranslation({
+				feedback: Messages.QUESTIONS_FROM_STUDENTS,
+				unredFeedback: Messages.UNREAD_QUESTIONS_FROM_STUDENTS,
+				questions: Messages.CONTENT_PLURAL,
+				answers: Messages.COMMENTS
+			});
+		} else {
+			this.caption.setBadgeTranslation(this.caption.config.badgeTranslation);
+			this.createAdHocQuestionButton.element.down('.iconBtnImg').replaceCls('icon-pencil', 'icon-question');
+		}
 
 		if (features.flashcard) {
 			lectureButtonText = Messages.FLASHCARDS;

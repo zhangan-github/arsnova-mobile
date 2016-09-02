@@ -145,7 +145,8 @@ Ext.define("ARSnova.controller.Questions", {
 			gridLineColor: options.gridLineColor,
 			numberOfDots: options.numberOfDots,
 			gridType: options.gridType,
-			showStatistic: 1,
+			showStatistic: options.showStatistic,
+			votingDisabled: options.votingDisabled,
 			scaleFactor: options.scaleFactor,
 			gridScaleFactor: options.gridScaleFactor,
 			timestamp: options.timestamp,
@@ -305,10 +306,23 @@ Ext.define("ARSnova.controller.Questions", {
 
 	details: function (options) {
 		var sTP = ARSnova.app.mainTabPanel.tabPanel.speakerTabPanel;
+		var lastDetailsPanel = sTP.questionDetailsPanel;
+
 		sTP.questionDetailsPanel = Ext.create('ARSnova.view.speaker.QuestionDetailsPanel', {
+			index: options.index,
 			question: options.question
 		});
-		sTP.animateActiveItem(sTP.questionDetailsPanel, 'slide');
+		sTP.animateActiveItem(sTP.questionDetailsPanel, {
+			type: 'slide',
+			direction: options.direction || 'left',
+			listeners: {
+				animationend: function () {
+					if (lastDetailsPanel) {
+						lastDetailsPanel.destroy();
+					}
+				}
+			}
+		});
 	},
 
 	freetextDetailAnswer: function (options) {
@@ -317,7 +331,8 @@ Ext.define("ARSnova.controller.Questions", {
 		options.answer.deletable = ARSnova.app.isSessionOwner;
 		var freetextDetailAnswerPanel = Ext.create('ARSnova.view.FreetextDetailAnswer', {
 			sTP: mainTabPanel,
-			answer: options.answer
+			answer: options.answer,
+			questionObj: options.panel.questionObj
 		});
 
 		if (ARSnova.app.isSessionOwner && !options.answer.read) {
@@ -335,7 +350,8 @@ Ext.define("ARSnova.controller.Questions", {
 	detailsFeedbackQuestion: function (options) {
 		options.question.read();
 		var newPanel = Ext.create('ARSnova.view.feedbackQuestions.DetailsPanel', {
-			question: options.question
+			question: options.question,
+			lastPanel: options.lastPanel
 		});
 		ARSnova.app.mainTabPanel.tabPanel.feedbackQuestionsPanel.animateActiveItem(newPanel, 'slide');
 	},
@@ -420,7 +436,9 @@ Ext.define("ARSnova.controller.Questions", {
 
 			if (tP.speakerTabPanel.getActiveItem() === showcasePanel) {
 				if (showcasePanel.getActiveItem().getItemId() === id) {
-					if (answerCount === abstentionCount && answerCount > 0) {
+					if (showcasePanel.getActiveItem().questionObj.questionType === 'slide') {
+						showcasePanel.toolbar.setAnswerCounter(answerCount, Messages.COMMENT);
+					} else if (!answerCount && abstentionCount) {
 						showcasePanel.toolbar.setAnswerCounter(abstentionCount, Messages.ABSTENTION);
 					} else {
 						showcasePanel.toolbar.updateAnswerCounter(answerCount);

@@ -88,6 +88,8 @@ Ext.define('ARSnova.view.diagnosis.AddOnsPanel', {
 				selectionChange: function (field) {
 					var selections = this.getValues();
 					me.optionalFieldSet.setHidden(!selections.lecture && !selections.jitt);
+					me.optionalFieldSet.getInnerItems()[0].setHidden(!selections.lecture && !selections.jitt);
+					me.optionalFieldSet.getInnerItems()[1].setHidden(!selections.lecture && !selections.jitt);
 				}
 			},
 
@@ -117,6 +119,9 @@ Ext.define('ARSnova.view.diagnosis.AddOnsPanel', {
 				}, {
 					name: 'feedback',
 					label: Messages.LIVE_FEEDBACK
+				}, {
+					name: 'slides',
+					label: Messages.SLIDE_LONG
 				}]
 			}, this.optionalFieldSet]
 		});
@@ -148,7 +153,7 @@ Ext.define('ARSnova.view.diagnosis.AddOnsPanel', {
 		this.add([this.toolbar, this.formPanel]);
 
 		this.on('activate', function () {
-			var features = Ext.decode(sessionStorage.getItem("features"));
+			var features = ARSnova.app.getController('Feature').getActiveFeatures();
 
 			if (features && features.custom) {
 				this.featureFormPanel.setValues(features);
@@ -158,9 +163,13 @@ Ext.define('ARSnova.view.diagnosis.AddOnsPanel', {
 
 	getFeatureValues: function () {
 		var selection = this.featureFormPanel.getValues();
-		if (this.optionalFieldSet.isHidden()) {
-			selection.learningProgress = null;
+		var optionalFields = this.optionalFieldSet.getInnerItems();
+
+		if (optionalFields[0].isHidden()) {
 			selection.pi = null;
+		}
+		if (optionalFields[1].isHidden()) {
+			selection.learningProgress = null;
 		}
 
 		return selection;
@@ -168,7 +177,7 @@ Ext.define('ARSnova.view.diagnosis.AddOnsPanel', {
 
 	validateSelection: function (button) {
 		var selection = this.getFeatureValues();
-		if (!selection.lecture && !selection.interposed && !selection.jitt && !selection.feedback) {
+		if (!selection.lecture && !selection.interposed && !selection.jitt && !selection.feedback && !selection.slides) {
 			Ext.Msg.alert(Messages.NOTIFICATION, Messages.FEATURE_SAVE_ERROR, function () {
 				button.enable();
 			});

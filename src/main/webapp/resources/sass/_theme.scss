@@ -113,6 +113,8 @@ $icon-bullhorn-color: $brand-warning;
 $icon-presenter-color: $brand-primary;
 $icon-hint-color: $brand-warning;
 $icon-solution-color: $brand-warning;
+$icon-warning-color: $brand-warning;
+$icon-danger-color: $brand-danger;
 
 
 /** form color configuration **/
@@ -130,6 +132,8 @@ $markdown-button-bg-color: $default-white-color;
 $list-text-color: $brand-text;
 $list-bg-color: $default-white-color;
 $list-header-color: $default-grey-color;
+$list-header-unread-color: $brand-danger;
+$list-header-txt-color: $default-white-color;
 $list-selection-color: $brand-warning;
 
 
@@ -194,6 +198,7 @@ $statistics-abstention-color: $default-grey-color;
 /** carousel indicator and navigation color configuration **/
 $carousel-indicator-color: $brand-primary;
 $carousel-indicator-active-color: $brand-secondary;
+$carousel-indicator-unanswered-question-color: $brand-warning;
 $carousel-navigation-button-color: $brand-primary;
 $carousel-navigation-button-pressed-color: $brand-info;
 
@@ -240,3 +245,5 @@ $hyperlink-active-color: $default-green-color !important;
 /** additional color configurations **/
 $caption-bg-color: $brand-buttons;
 $startscreen-rolechange-alternative-color: $brand-secondary;
+$tooltip-background-color: $brand-primary;
+$tooltip-text-color: white;

@@ -1,17 +1,80 @@
 # Changelog
 
+## 2.4.3
+Bug fixes:
+* Buttons of the question format bar are now correctly shown or hidden when
+  switching use cases.
+* Flipping of flashcards is no longer inhibited.
+
+## 2.4.2
+Bug fixes:
+* Fixed a JavaScript `TypeError` which occured when presenting questions with
+  enabled slides feature and required a reload to make ARSnova usable again.
+* Button descriptions now adjust correctly when slides are enabled.
+* ARSnova no longer hangs because of a `ReferenceError` when loading for the
+  first time on slow connections.
+
+## 2.4.1
+Bug fixes:
+* Theme variable `tabbar-button-icon-color` works again.
+
+## 2.4
+Major features:
+* Slides: A new content format without any answer options has been added.
+* Interactive keynote: A new use case including the 'slides' format has been
+  added. It replaces the 'All-inclusive' use case.
+
+Minor features and changes:
+* An overlay showing count of new student's questions and average feedback has
+  been added to presentation mode.
+* Student's questions and comments are now directly displayed instead of a list
+  of subjects.
+* JSON export and import now include session info and feature settings.
+
+Bug fixes:
+* Editor buttons now add new lines when necessary to produce correct Markdown.
+* New lines in Markdown content are now displayed as is.
+* All question formats apart from 'grid' are now correctly exported to CSV.
+
+New variables for theming:
+* `carousel-indicator-unanswered-question-color`
+* `icon-danger-color`
+* `icon-warning-color`
+* `list-header-txt-color`
+* `list-header-unread-color`
+* `tooltip-background-color`
+* `tooltip-text-color`
+
+Changes for developers:
+* Initial support for localization variations has been implemented.
+
+**This version is brought to you by:**  
+Project management: Klaus Quibeldey-Cirkel  
+Lead programming: Andreas Gärtner, Daniel Gerhardt, Tom "tekay" Käsler  
+Sponsoring: [AG QLS](https://www.thm.de/site/en/hochschule/service/ag-qls.html),
+[HMWK](https://wissenschaft.hessen.de/wissenschaft/it-neue-medien/kompetenznetz-e-learning-hessen)
+
+
+## 2.3.3
+Bug fixes:
+* Fixes JavaScript errors occuring with `question.answer-option-limit` set to
+  values other than `8`.
+* Fixes charset errors in German i18n of dates.
+* Fixes opening of external pages (blog, privacy, legal info) when they can not
+  be embedded in Firefox
+
 ## 2.3.2
 This patch release improves browser compatibility.
 
 Minor changes:
 * Improved browser detection
 
-Bugfixes:
+Bug fixes:
 * Fixes scrolling with touch devices for Edge browser
 * Fixes numerous usability and rendering errors with Internet Explorer
 
 ## 2.3.1
-Bugfixes:
+Bug fixes:
 * Fixes a regression leading to incorrect detection of Safari.
 
 ## 2.3
@@ -90,7 +153,7 @@ Minor features and changes:
   instead of opening a new browser tab.
 * Usability improvements and bug fixes
 
-Bugfixes:
+Bug fixes:
 * Fixed a rendering bug with latest Chrome versions (43+) which made question
   answering impossible.
 
@@ -169,6 +232,7 @@ Testing & Feedback: Kevin Atkins, Kathrin Jäger
 Sponsoring: [AG QLS](https://www.thm.de/site/en/hochschule/service/ag-qls.html),
 [HMWK](https://wissenschaft.hessen.de/wissenschaft/it-neue-medien/kompetenznetz-e-learning-hessen),
 [@LLZ](http://llz.uni-halle.de/)  
+
 
 ## 1.0
 **The initial release of ARSnova is brought to you by:**  

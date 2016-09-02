@@ -34,13 +34,22 @@ Ext.define('ARSnova.view.MarkDownEditorPanel', {
 
 	initialize: function (args) {
 		this.callParent(args);
+		var me = this;
+
+		this.infoButton = Ext.create('Ext.Button', {
+			cls: 'markdownButton',
+			iconCls: 'info',
+			tooltip: Messages.EDITOR_INFO_TOOLTIP,
+			handler: this.openInfoMessage
+		});
 
 		this.boldButton = Ext.create('Ext.Button', {
 			cls: 'markdownButton',
 			iconCls: 'icon-editor-bold',
 			escapeString: '**',
 			biliteral: true,
-			handler: this.formatHandler
+			handler: this.formatHandler,
+			tooltip: Messages.EDITOR_BOLD_TOOLTIP
 		});
 
 		this.headerButton = Ext.create('Ext.Button', {
@@ -49,7 +58,8 @@ Ext.define('ARSnova.view.MarkDownEditorPanel', {
 			applyString: '#',
 			escapeString: '###',
 			biliteral: true,
-			handler: this.formatHandler
+			handler: this.formatHandler,
+			tooltip: Messages.EDITOR_HEADER_TOOLTIP
 		});
 
 		this.ulButton = Ext.create('Ext.Button', {
@@ -57,7 +67,8 @@ Ext.define('ARSnova.view.MarkDownEditorPanel', {
 			iconCls: 'icon-editor-ul',
 			escapeString: '- ',
 			biliteral: false,
-			handler: this.formatHandler
+			handler: this.formatHandler,
+			tooltip: Messages.EDITOR_ULIST_TOOLTIP
 		});
 
 		this.olButton = Ext.create('Ext.Button', {
@@ -65,7 +76,8 @@ Ext.define('ARSnova.view.MarkDownEditorPanel', {
 			iconCls: 'icon-editor-ol',
 			escapeString: '1. ',
 			biliteral: false,
-			handler: this.formatHandler
+			handler: this.formatHandler,
+			tooltip: Messages.EDITOR_OLIST_TOOLTIP
 		});
 
 		this.latexButton = Ext.create('Ext.Button', {
@@ -74,7 +86,8 @@ Ext.define('ARSnova.view.MarkDownEditorPanel', {
 			applyStrings: ['\\(', '\\)'],
 			escapeString: '$$',
 			biliteral: true,
-			handler: this.latexHandler
+			handler: this.latexHandler,
+			tooltip: Messages.EDITOR_LATEX_TOOLTIP
 		});
 
 		this.codeButton = Ext.create('Ext.Button', {
@@ -83,7 +96,8 @@ Ext.define('ARSnova.view.MarkDownEditorPanel', {
 			applyString: '<hlcode>',
 			escapeString: '</hlcode>',
 			biliteral: true,
-			handler: this.codeHandler
+			handler: this.codeHandler,
+			tooltip: Messages.EDITOR_CODE_TOOLTIP
 		});
 
 		this.quoteButton = Ext.create('Ext.Button', {
@@ -91,27 +105,31 @@ Ext.define('ARSnova.view.MarkDownEditorPanel', {
 			iconCls: 'icon-editor-quote',
 			escapeString: '>',
 			biliteral: false,
-			handler: this.formatHandler
+			handler: this.formatHandler,
+			tooltip: Messages.EDITOR_QUOTE_TOOLTIP
 		});
 
 		this.youtubeButton = Ext.create('Ext.Button', {
 			cls: 'markdownButton',
 			iconCls: 'icon-editor-youtube',
 			scope: this,
-			handler: this.youtubeButtonHandler
+			handler: this.youtubeButtonHandler,
+			tooltip: Messages.EDITOR_YOUTUBE_TOOLTIP
 		});
 
 		this.vimeoButton = Ext.create('Ext.Button', {
 			cls: 'markdownButton',
 			iconCls: 'icon-editor-vimeo',
 			scope: this,
-			handler: this.vimeoButtonHandler
+			handler: this.vimeoButtonHandler,
+			tooltip: Messages.EDITOR_VIMEO_TOOLTIP
 		});
 
 		this.picButton = Ext.create('Ext.Button', {
 			cls: 'markdownButton',
 			iconCls: 'icon-editor-image',
 			scope: this,
+			tooltip: Messages.EDITOR_PICTURE_TOOLTIP,
 			handler: function () {
 				var me = this;
 				this.showInputPanel({
@@ -138,8 +156,8 @@ Ext.define('ARSnova.view.MarkDownEditorPanel', {
 		this.linkButton = Ext.create('Ext.Button', {
 			cls: 'markdownButton',
 			iconCls: 'icon-editor-hyperlink',
-			tooltip: 'HyperLink',
 			scope: this,
+			tooltip: Messages.EDITOR_HYPERLINK_TOOLTIP,
 			handler: function () {
 				var me = this;
 				this.showInputPanel({
@@ -170,6 +188,7 @@ Ext.define('ARSnova.view.MarkDownEditorPanel', {
 			},
 
 			items: [
+				this.infoButton,
 				this.boldButton,
 				this.headerButton,
 				this.linkButton,
@@ -184,6 +203,17 @@ Ext.define('ARSnova.view.MarkDownEditorPanel', {
 			]
 		});
 		this.add(this.editorPanel);
+
+		if (Ext.os.is.Desktop) {
+			this.editorPanel.innerItems.forEach(function (button) {
+				button.element.dom.setAttribute('data-tooltip', button.config.tooltip);
+				button.element.addCls('buttonTooltip');
+			});
+
+			this.on('painted', function () {
+				this.getParent().addCls('activateTooltip');
+			});
+		}
 	},
 
 	getProcessVariables: function () {
@@ -205,9 +235,28 @@ Ext.define('ARSnova.view.MarkDownEditorPanel', {
 		};
 	},
 
+	checkNewLineRequire: function (processObj, escapeString, esc) {
+		var lastChar = processObj.preSel[processObj.preSel.length - 1];
+		var lineBeginning = !lastChar || lastChar.match(/\n/g) !== null;
+
+		var requireNewLine = [
+			this.headerButton.config.applyString,
+			this.ulButton.config.escapeString,
+			this.olButton.config.escapeString,
+			this.quoteButton.config.escapeString
+		];
+
+		return Ext.Array.contains(requireNewLine, escapeString) && !lineBeginning && lastChar !== esc;
+	},
+
 	applyFormatting: function (processObj, escapeString, biliteral) {
 		var value, length = escapeString.length;
 		var esc = biliteral ? escapeString : "";
+
+		if (this.checkNewLineRequire(processObj, escapeString, esc)) {
+			processObj.element.setValue(processObj.element.getValue() + '\n');
+			processObj = this.getProcessVariables();
+		}
 
 		value = !Array.isArray(escapeString) ?
 			processObj.preSel + escapeString + processObj.sel + esc + processObj.postSel :
@@ -479,5 +528,14 @@ Ext.define('ARSnova.view.MarkDownEditorPanel', {
 				onFailure();
 			}
 		});
+	},
+
+	openInfoMessage: function () {
+		var infoMessageBox = Ext.create('ARSnova.view.components.MarkdownMessageBox', {
+			content: Messages.EDITOR_INFO_HINT,
+			destroyOnHide: true
+		});
+
+		infoMessageBox.show();
 	}
  });

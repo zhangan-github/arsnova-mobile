@@ -107,6 +107,15 @@ Ext.define('ARSnova.view.feedback.AskPanel', {
 			}]
 		});
 
+		this.fieldSet = Ext.create('Ext.form.FieldSet', {
+			instructions: Messages.TWITTER_WALL_PRIVACY_INFO,
+			items: [
+				this.markdownEditPanel,
+				this.subject,
+				this.text
+			]
+		});
+
 		this.add([this.toolbar, {
 			cls: 'gravure',
 			style: 'margin: 10px',
@@ -115,17 +124,7 @@ Ext.define('ARSnova.view.feedback.AskPanel', {
 			xtype: 'formpanel',
 			submitOnAction: false,
 			scrollable: null,
-
-			items: [{
-				xtype: 'fieldset',
-				items: [
-					this.markdownEditPanel,
-					this.subject,
-					this.text
-				]
-			}
-
-			]
+			items: [this.fieldSet]
 		}, this.buttonPart]);
 	},
 

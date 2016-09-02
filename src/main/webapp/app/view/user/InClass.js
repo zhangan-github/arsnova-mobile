@@ -149,10 +149,10 @@ Ext.define('ARSnova.view.user.InClass', {
 				}, this.feedbackButton, {
 					xtype: 'spacer',
 					hidden: !ARSnova.app.isSessionOwner
-				}, this.roleIconButton, {
+				}, this.voteButton, {
 					xtype: 'spacer',
 					hidden: !ARSnova.app.isSessionOwner
-				}, this.voteButton, {
+				}, this.roleIconButton, {
 					xtype: 'spacer',
 					width: true,
 					flex: '3',
@@ -183,7 +183,7 @@ Ext.define('ARSnova.view.user.InClass', {
 
 		this.myQuestionsButton = Ext.create('ARSnova.view.MultiBadgeButton', {
 			ui: 'normal',
-			text: Messages.MY_QUESTIONS,
+			text: Messages.MY_QUESTIONS_AND_COMMENTS,
 			cls: 'forwardListButton',
 			badgeCls: 'badgeicon',
 			controller: 'Questions',
@@ -340,7 +340,7 @@ Ext.define('ARSnova.view.user.InClass', {
 
 	/* will be called whenever panel is shown */
 	refreshListeners: function () {
-		var features = Ext.decode(sessionStorage.getItem("features"));
+		var features = ARSnova.app.getController('Feature').getActiveFeatures();
 
 		// tasks should get run immediately
 		if (features.interposed) {
@@ -356,7 +356,7 @@ Ext.define('ARSnova.view.user.InClass', {
 
 	startTasks: function () {
 		var panel = ARSnova.app.mainTabPanel.tabPanel.userTabPanel.inClassPanel;
-		var features = Ext.decode(sessionStorage.getItem("features"));
+		var features = ARSnova.app.getController('Feature').getActiveFeatures();
 
 		if (features.interposed) {
 			ARSnova.app.taskManager.start(panel.countFeedbackQuestionsTask);
@@ -391,7 +391,7 @@ Ext.define('ARSnova.view.user.InClass', {
 
 	updateCaption: function () {
 		var hasOptions = false;
-		var features = Ext.decode(sessionStorage.getItem("features"));
+		var features = ARSnova.app.getController('Feature').getActiveFeatures();
 
 		if (!features.lecture && !features.jitt) {
 			this.badgeOptions.numQuestions = 0;
@@ -525,9 +525,9 @@ Ext.define('ARSnova.view.user.InClass', {
 	},
 
 	showNotification: function (questionIds, variant, newRound, round) {
-		var features = Ext.decode(sessionStorage.getItem("features"));
+		var features = ARSnova.app.getController('Feature').getActiveFeatures();
 
-		if (features.lecture && variant === 'lecture' ||
+		if (features.lecture && variant === 'lecture' && !features.slides ||
 			features.jitt && variant === 'preparation') {
 			this.showNotificationMessage(questionIds, variant, newRound, round);
 		}
@@ -578,7 +578,7 @@ Ext.define('ARSnova.view.user.InClass', {
 	},
 
 	countQuestionsAndAnswers: function (data) {
-		var features = Ext.decode(sessionStorage.getItem("features"));
+		var features = ARSnova.app.getController('Feature').getActiveFeatures();
 		var hasData = data.unansweredLectureQuestions
 			|| data.lectureQuestionAnswers
 			|| data.unansweredPreparationQuestions
@@ -685,5 +685,16 @@ Ext.define('ARSnova.view.user.InClass', {
 				me.inClassButtons.remove(me.myLearningProgressButton, false);
 			}
 		});
+	},
+
+	applyUIChanges: function (features) {
+		if (features.total || (features.slides && !features.lecture && !features.jitt)) {
+			this.caption.setBadgeTranslation({
+				feedback: Messages.QUESTIONS_FROM_STUDENTS,
+				unredFeedback: Messages.UNREAD_QUESTIONS_FROM_STUDENTS,
+				questions: Messages.QUESTIONS,
+				answers: Messages.COMMENTS
+			});
+		}
 	}
 });

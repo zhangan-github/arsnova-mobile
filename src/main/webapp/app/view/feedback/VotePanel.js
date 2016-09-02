@@ -54,13 +54,14 @@ Ext.define('ARSnova.view.feedback.VotePanel', {
 	initialize: function () {
 		this.callParent(arguments);
 		this.controller = ARSnova.app.getController('Feedback');
-		var features = Ext.decode(sessionStorage.getItem("features"));
+		var features = ARSnova.app.getController('Feature').getActiveFeatures();
 
 		this.backButton = Ext.create('Ext.Button', {
 			text: Messages.BACK,
 			ui: 'back',
 			hidden: false,
 			handler: function () {
+				ARSnova.app.mainTabPanel.tabPanel.getTabBar().setHidden(false);
 				ARSnova.app.mainTabPanel.tabPanel.animateActiveItem(ARSnova.app.mainTabPanel.tabPanel.userTabPanel, {
 					type: 'slide',
 					direction: 'right',
@@ -155,7 +156,7 @@ Ext.define('ARSnova.view.feedback.VotePanel', {
 	},
 
 	buttonClicked: function (button) {
-		var features = Ext.decode(sessionStorage.getItem("features"));
+		var features = ARSnova.app.getController('Feature').getActiveFeatures();
 
 		if (ARSnova.app.feedbackModel.lock) {
 			ARSnova.app.getController('Feedback').onLockedFeedback();

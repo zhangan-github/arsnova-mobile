@@ -23,7 +23,6 @@ Ext.define('ARSnova.view.speaker.form.ExpandingAnswerForm', {
 
 	config: {
 		minAnswers: 2,
-		maxAnswers: 8,
 		start: 4,
 		step: 1,
 		wording: {
@@ -102,10 +101,11 @@ Ext.define('ARSnova.view.speaker.form.ExpandingAnswerForm', {
 					scope: this,
 					checkchange: function (field, isChecked) {
 						var component = this.questionValueComponents[i];
+						var features = ARSnova.app.getController('Feature').getActiveFeatures();
 						var checked = this.answerComponents.filter(function (c) {
 							return c.isChecked();
 						});
-						this.questionValueFieldset.setHidden(checked.length === 0);
+						this.questionValueFieldset.setHidden(checked.length === 0 || !features.learningProgress);
 						if (checked.length === 0) {
 							this.questionValueComponents.forEach(function (c) {
 								c.reset();
@@ -145,7 +145,7 @@ Ext.define('ARSnova.view.speaker.form.ExpandingAnswerForm', {
 			this.questionValueFieldset.add(this.questionValueComponents[i]);
 		}.bind(this);
 
-		for (i = 0; i < this.getMaxAnswers(); i++) {
+		for (i = 0; i < ARSnova.app.globalConfig.answerOptionLimit; i++) {
 			lpLoopFunc(i);
 		}
 
@@ -210,6 +210,7 @@ Ext.define('ARSnova.view.speaker.form.ExpandingAnswerForm', {
 	},
 
 	initWithQuestion: function (question) {
+		var features = ARSnova.app.getController('Feature').getActiveFeatures();
 		var possibleAnswers = question.possibleAnswers;
 		if (possibleAnswers.length < this.getMinAnswers() || possibleAnswers.length > ARSnova.app.globalConfig.answerOptionLimit) {
 			return;
@@ -220,7 +221,7 @@ Ext.define('ARSnova.view.speaker.form.ExpandingAnswerForm', {
 		var hasCorrectAnswers = possibleAnswers.reduce(function (acc, a2) {
 			return acc || a2.correct;
 		}, false);
-		this.questionValueFieldset.setHidden(!hasCorrectAnswers);
+		this.questionValueFieldset.setHidden(!hasCorrectAnswers && !features.learningProgress);
 	},
 
 	initSpinnerField: function (startValue) {

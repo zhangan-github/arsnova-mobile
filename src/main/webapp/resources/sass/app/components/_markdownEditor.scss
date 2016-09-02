@@ -106,6 +106,21 @@ div[id^=ext-mathJaxMarkDownPanel] * {
 	margin-bottom: -5px !important;
 }
 
+.icon-editor-image,
+.icon-editor-vimeo,
+.icon-editor-quote,
+.icon-editor-script,
+.icon-editor-youtube,
+.icon-editor-hyperlink {
+	margin-left: -2px !important;
+}
+
+.markdownButton .info {
+	margin-bottom: -0.5px !important;
+	margin-left: -5px !important;
+	font-size: 1em;
+}
+
 div[id^=ext-mathJaxMarkDownPanel] {
 	table {
 		border-collapse: collapse;
@@ -134,7 +149,7 @@ div[id^=ext-mathJaxMarkDownPanel] {
 	color: $brand-icons;
 	background: white;
 	border-radius: 5px 5px 5px 5px !important;
-	border: 1px double #788895;
+	border: 1px double $markdown-button-color;
 	width: 42px !important;
 	margin-right: 2px;
 	height: 40px;
@@ -159,4 +174,76 @@ div[id^=ext-mathJaxMarkDownPanel] {
 			text-align: center;
 		}
 	}
+}
+
+.activateTooltip {
+	.x-inner,
+	.x-dock-body,
+	.x-body.x-scroll-view {
+		overflow: visible;
+	}
+}
+
+.x-ie .buttonTooltip {
+	&:after,
+	&:before,
+	&:hover:after,
+	&:hover:before {
+		display: none;
+	}
+}
+
+.buttonTooltip {
+	overflow: visible;
+	position: relative;
+	text-decoration: none;
+}
+
+.buttonTooltip:after {
+	left: -30%;
+	bottom: 160%;
+	content: attr(data-tooltip);
+	position: absolute;
+	background: $tooltip-background-color !important;
+	padding: 5px 15px;
+	color: black;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	white-space: nowrap;
+	opacity: 0;
+	-webkit-transition: all 0.2s ease;
+	-moz-transition: all 0.2s ease;
+	transition: all 0.2s ease;
+	color: $tooltip-text-color;
+	pointer-events: none;
+}
+
+.buttonTooltip:before {
+	width: 0;
+	height: 0;
+	content: "";
+	position: absolute;
+	border-top: 16px solid $tooltip-background-color !important;
+	border-left: 16px solid transparent;
+	border-right: 16px solid transparent;
+	-webkit-transition: all 0.2s ease;
+	-moz-transition: all 0.2s ease;
+	transition: all 0.2s ease;
+	pointer-events: none;
+	opacity: 0;
+	left: 10%;
+	bottom: 120%;	
+}
+
+.buttonTooltip:hover:after {
+	bottom: 130%;
+}
+
+.buttonTooltip:hover:before {
+	bottom: 90%;
+}
+
+.buttonTooltip:hover:after, .buttonTooltip:hover:before {
+	opacity: 1;
 }

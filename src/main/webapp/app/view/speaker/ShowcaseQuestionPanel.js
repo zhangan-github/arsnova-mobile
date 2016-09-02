@@ -167,6 +167,8 @@ Ext.define('ARSnova.view.speaker.ShowcaseQuestionPanel', {
 
 			panel.updateControlButtonHiddenState();
 			panel.speakerUtilities.setHidden(screenWidth < 700);
+			panel.speakerUtilities.checkQuestionType(newQuestion);
+			panel.toolbar.checkStatisticButtonIcon(newQuestion.questionObj);
 			panel.setProjectorMode(this, ARSnova.app.projectorModeActive && screenWidth > 700, true);
 			panel.toolbar.setTitle(Ext.util.Format.htmlEncode(title));
 			newQuestion.setZoomLevel(ARSnova.app.globalZoomLevel);
@@ -264,7 +266,7 @@ Ext.define('ARSnova.view.speaker.ShowcaseQuestionPanel', {
 	addQuestion: function (question) {
 		var questionPanel;
 
-		if (question.questionType === 'freetext') {
+		if (question.questionType === 'freetext' || question.questionType === 'slide') {
 			questionPanel = Ext.create('ARSnova.view.FreetextQuestion', {
 				itemId: question._id,
 				questionObj: question,
@@ -339,11 +341,13 @@ Ext.define('ARSnova.view.speaker.ShowcaseQuestionPanel', {
 	},
 
 	setLectureMode: function () {
+		this.setController(ARSnova.app.getController('Questions'));
 		this.setQuestionTitleLong(Messages.LECTURE_QUESTION_LONG);
 		this.setQuestionTitleShort(Messages.LECTURE_QUESTIONS);
 	},
 
 	setPreparationMode: function () {
+		this.setController(ARSnova.app.getController('PreparationQuestions'));
 		this.setQuestionTitleLong(Messages.PREPARATION_QUESTION_LONG);
 		this.setQuestionTitleShort(Messages.PREPARATION_QUESTION_SHORT);
 	}
