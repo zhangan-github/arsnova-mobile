@@ -477,6 +477,18 @@ Ext.define('ARSnova.proxy.RestProxy', {
 		});
 	},
 
+	bulkSaveSkillQuestions: function (questions, callbacks) {
+		if (questions && questions.length > 0) {
+			this.arsjax.request({
+				url: "session/" + questions[0].sessionKeyword + "/question/bulk",
+				method: "POST",
+				jsonData: questions,
+				success: callbacks.success,
+				failure: callbacks.failure
+			});
+		}
+	},
+
 	updateSkillQuestion: function (question, callbacks) {
 		this.arsjax.request({
 			url: "lecturerquestion/" + question.get('_id'),
@@ -988,6 +1000,27 @@ Ext.define('ARSnova.proxy.RestProxy', {
 			url: "session/import",
 			method: "POST",
 			jsonData: jsonData,
+			success: callbacks.success,
+			failure: callbacks.failure
+		});
+	},
+
+	exportSessions: function (keywords, withAnswerStatistics, withFeedbackQuestions, callbacks) {
+		this.arsjax.request({
+			url: "session/export?sessionkey=" + keywords +
+			"&withAnswerStatistics=" + encodeURIComponent(withAnswerStatistics) +
+			"&withFeedbackQuestions=" + encodeURIComponent(withFeedbackQuestions),
+			method: "GET",
+			success: callbacks.success,
+			failure: callbacks.failure
+		});
+	},
+
+	copySessionToPublicPool: function (keyword, PublicPoolData, callbacks) {
+		this.arsjax.request({
+			url: "session/" + keyword + "/copytopublicpool",
+			method: "POST",
+			jsonData: PublicPoolData,
 			success: callbacks.success,
 			failure: callbacks.failure
 		});

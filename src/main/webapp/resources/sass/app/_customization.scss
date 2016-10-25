@@ -404,15 +404,22 @@ html, body,
 		.x-button-label {
 			color: $tabbar-button-label-color;
 		}
+
+		.x-button-icon:before {
+			color: $tabbar-button-icon-color;
+		}
 	}
 
 	.voteIcons:after {
 		box-shadow: inset 50px 50px 50px $tabbar-bg-color;
 	}
 
-	.voteIcons:before,
-	.x-button-icon:before {
-		color: $tabbar-button-icon-color;
+	.voteIcons:before {
+		color: $smiley-bg-color;
+	}
+
+	.voteIcons.icon-warning:before {
+		color: $icon-warning-color;
 	}
 
 	.x-tab-pressed .x-button-icon:before {
@@ -429,6 +436,10 @@ html, body,
 			&.voteIcons.icon-chart:before,
 			&.voteIcons.icon-bullhorn:before {
 				color: $tabbar-button-active-icon-color;
+			}
+
+			&.voteIcons.icon-warning:before {
+				color: $icon-danger-color;
 			}
 
 			&.voteIcons.lockedFeedback:before {
@@ -449,7 +460,7 @@ html, body,
 .x-list,
 .x-list-normal {
 	.x-list-header {
-		color: white !important;
+		color: $list-header-txt-color !important;
 		border: none !important;
 		text-shadow: none !important;
 		background-color: $list-header-color !important;
@@ -488,6 +499,10 @@ html, body,
 	&:hover {
 		background-color: $button-pressing-color;
 		cursor: pointer;
+	}
+
+	&.unanswered {
+		background-color: $carousel-indicator-unanswered-question-color;
 	}
 
 	&.x-carousel-indicator-active {

@@ -129,7 +129,7 @@ Ext.define('ARSnova.view.Question', {
 				editable: false,
 				gridIsHidden: true
 			});
-			me.grid.prepareRemoteImage(me.questionObj._id);
+			me.grid.prepareRemoteImage(me.questionObj);
 			this.formPanel.insert(1, this.grid);
 		}
 
@@ -145,7 +145,7 @@ Ext.define('ARSnova.view.Question', {
 
 		/* update disabled state on initialize */
 		if (this.questionObj.votingDisabled) {
-			this.disableQuestion();
+			this.disableQuestion(false);
 		}
 
 		if (ARSnova.app.userRole === ARSnova.app.USER_ROLE_SPEAKER) {
@@ -172,7 +172,7 @@ Ext.define('ARSnova.view.Question', {
 			}
 
 			if (this.isDisabled() || this.questionObj.votingDisabled) {
-				this.disableQuestion();
+				this.disableQuestion(false);
 
 				if (this.questionObj.userAnswered && this.questionObj.showAnswer) {
 					this.getScrollable().getScroller().scrollToEnd(true);
@@ -314,7 +314,7 @@ Ext.define('ARSnova.view.Question', {
 	prepareQuestionContent: function (isAnswerable) {
 		switch (this.questionObj.questionType) {
 			case "flashcard":
-				this.prepareFreetextQuestion();
+				this.prepareFlashcardQuestion();
 				break;
 
 			case "grid":
@@ -401,6 +401,7 @@ Ext.define('ARSnova.view.Question', {
 						Messages.GRID_LABEL_REMAINING_DOTS + remainingDots);
 				}
 			});
+			this.grid.update(this.questionObj, false);
 
 			panel = new Ext.Panel({
 				layout: {
@@ -417,12 +418,12 @@ Ext.define('ARSnova.view.Question', {
 			});
 		} else {
 			this.grid = Ext.create('ARSnova.view.components.GridImageContainer');
+			this.grid.update(this.questionObj, false);
 		}
 
-		this.grid.update(this.questionObj, false);
 		this.grid.setPossibleAnswers(me.questionObj.possibleAnswers);
 		this.grid.prepareRemoteImage(
-			me.questionObj._id, false, false, function (dataUrl) {
+			me.questionObj, false, false, function (dataUrl) {
 				me.questionObj.image = dataUrl;
 				me.setGridAnswer(me.questionObj.userAnswered);
 
@@ -449,7 +450,7 @@ Ext.define('ARSnova.view.Question', {
 		}
 	},
 
-	prepareFreetextQuestion: function () {
+	prepareFlashcardQuestion: function () {
 		var me = this;
 
 		var answerPanel = Ext.create('ARSnova.view.MathJaxMarkDownPanel', {
@@ -472,7 +473,7 @@ Ext.define('ARSnova.view.Question', {
 				style: 'margin-bottom: 20px'
 			});
 
-			me.flashcardGrid.prepareRemoteImage(me.questionObj._id, true);
+			me.flashcardGrid.prepareRemoteImage(me.questionObj, true);
 			this.answerList.add(this.flashcardGrid);
 		}
 
@@ -501,7 +502,6 @@ Ext.define('ARSnova.view.Question', {
 					button.setText(Messages.SHOW_FLASHCARD_ANSWER);
 
 					if (!this.viewOnly) {
-						ARSnova.app.mainTabPanel.tabPanel.userQuestionsPanel.next();
 						ARSnova.app.mainTabPanel.tabPanel.userQuestionsPanel.checkIfLastAnswer();
 					}
 				}
@@ -517,6 +517,7 @@ Ext.define('ARSnova.view.Question', {
 
 		answer.saveAnswer(me.questionObj._id, {
 			success: function () {
+				var questionsPanel = ARSnova.app.mainTabPanel.tabPanel.userQuestionsPanel;
 				var questionsArr = Ext.decode(localStorage.getItem(me.questionObj.questionVariant + 'QuestionIds'));
 				if (questionsArr.indexOf(me.questionObj._id) === -1) {
 					questionsArr.push(me.questionObj._id);
@@ -530,14 +531,16 @@ Ext.define('ARSnova.view.Question', {
 						me.questionObj.userAnswered = true;
 					}
 
-					me.disableQuestion();
-					if (!me.questionObj.piRoundActive && !me.questionObj.showAnswer) {
-						ARSnova.app.mainTabPanel.tabPanel.userQuestionsPanel.showNextUnanswered();
-						ARSnova.app.mainTabPanel.tabPanel.userQuestionsPanel.checkIfLastAnswer();
-					} else {
+					me.disableQuestion(true);
+					questionsPanel.checkStatisticsRelease();
+
+					if (me.questionObj.showAnswer) {
 						me.getScrollable().getScroller().scrollToEnd(true);
-						ARSnova.app.mainTabPanel.tabPanel.userQuestionsPanel.checkStatisticsRelease();
+					} else {
+						questionsPanel.checkIfLastAnswer();
 					}
+				} else {
+					questionsPanel.getIndicator().setIndicatorColorAnswered(questionsPanel.getActiveIndex(), true);
 				}
 			},
 			failure: function (response, opts) {
@@ -638,7 +641,7 @@ Ext.define('ARSnova.view.Question', {
 
 				if (questionType === 'flashcard') {
 					sTP.showcaseQuestionPanel.toolbar.setAnswerCounter(answerCount, Messages.ANSWERS_SHOWN);
-				} else if (answerCount === abstentionCount && answerCount !== 0) {
+				} else if (!answerCount && abstentionCount) {
 					sTP.showcaseQuestionPanel.toolbar.setAnswerCounter(abstentionCount, Messages.ABSTENTION);
 				} else {
 					sTP.showcaseQuestionPanel.toolbar.setAnswerCounter(answerCount);
@@ -696,10 +699,16 @@ Ext.define('ARSnova.view.Question', {
 		}
 	},
 
-	disableQuestion: function () {
-		if (ARSnova.app.userRole !== ARSnova.app.USER_ROLE_SPEAKER) {
+	disableQuestion: function (afterInitialization) {
+		if (ARSnova.app.userRole !== ARSnova.app.USER_ROLE_SPEAKER
+				&& this.questionObj.questionType !== 'flashcard') {
 			this.setDisabled(true);
 			this.mask(this.customMask);
+
+			if (afterInitialization) {
+				var carousel = this.getParent();
+				carousel.getIndicator().setIndicatorColorAnswered(carousel.getActiveIndex(), true);
+			}
 
 			if (this.questionObj.userAnswered) {
 				var message = Messages.MASK_ALREADY_ANSWERED;
@@ -710,7 +719,7 @@ Ext.define('ARSnova.view.Question', {
 
 				this.customMask.setTextMessage(message, 'alreadyAnswered');
 				// Display icon with sample solution popup
-				if (this.questionObj.showAnswer) {
+				if (this.questionObj.showAnswer || this.questionObj.gridType === 'moderation') {
 					this.hintIcon.setHidden(!this.questionObj.solution);
 					this.hintIcon.setIconCls('icon-bullhorn');
 					this.hintIcon.addCls('solution');

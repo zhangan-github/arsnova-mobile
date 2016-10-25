@@ -51,8 +51,6 @@ Ext.define('ARSnova.view.speaker.AudienceQuestionPanel', {
 	newQuestionButton: null,
 
 	questionStore: null,
-	questionEntries: [],
-
 	reader: new FileReader(),
 
 	updateAnswerCount: {
@@ -151,6 +149,7 @@ Ext.define('ARSnova.view.speaker.AudienceQuestionPanel', {
 				scope: this,
 				itemtap: function (list, index, element) {
 					this.getController().details({
+						index: index,
 						question: list.getStore().getAt(index).data
 					});
 				}
@@ -224,7 +223,7 @@ Ext.define('ARSnova.view.speaker.AudienceQuestionPanel', {
 			centered: true
 		});
 
-		this.loadFilePanel =  Ext.create('Ext.Panel', {
+		this.loadFilePanel = Ext.create('Ext.Panel', {
 			modal: true,
 			centered: true,
 			ui: 'light',
@@ -366,7 +365,12 @@ Ext.define('ARSnova.view.speaker.AudienceQuestionPanel', {
 
 				Ext.Msg.confirm(Messages.QUESTIONS_CSV_EXPORT_MSBOX_TITLE, msg, function (answer) {
 					if (answer === 'yes') {
-						ARSnova.app.getController('QuestionExport').parseJsonToCsv(this.questionStore.getData().items);
+						this.getController().getQuestions(sessionStorage.getItem('keyword'), {
+							success: function (response) {
+								var questions = Ext.decode(response.responseText);
+								ARSnova.app.getController('QuestionExport').parseJsonToCsv(questions);
+							}
+						});
 					}
 				}, this);
 			}
@@ -411,7 +415,6 @@ Ext.define('ARSnova.view.speaker.AudienceQuestionPanel', {
 
 		this.on('activate', this.onActivate);
 		this.on('deactivate', this.onDeactivate);
-		this.on('orientationchange', this.onOrientationChange);
 	},
 
 	onActivate: function () {
@@ -430,13 +433,16 @@ Ext.define('ARSnova.view.speaker.AudienceQuestionPanel', {
 
 	onDeactivate: function () {
 		this.questionList.hide();
+		this.listTotalRange = this.questionList.getTotalRange();
 		this.questionList.restoreOffsetState();
 		ARSnova.app.taskManager.stop(this.updateAnswerCount);
 	},
 
-	getQuestions: function () {
-		var features = Ext.decode(sessionStorage.getItem("features"));
-		this.questionEntries = [];
+	getQuestions: function (callback) {
+		callback = typeof callback === 'function' ? callback : Ext.emptyFn;
+		var features = ARSnova.app.getController('Feature').getActiveFeatures();
+		var hideLoadIndicator = ARSnova.app.showLoadIndicator(Messages.LOAD_MASK, 1000);
+
 		this.getController().getQuestions(sessionStorage.getItem('keyword'), {
 			success: Ext.bind(function (response, totalRange) {
 				var questions = Ext.decode(response.responseText);
@@ -460,7 +466,13 @@ Ext.define('ARSnova.view.speaker.AudienceQuestionPanel', {
 					this.voteStatusButton.setMultiQuestionMode();
 				}
 
+				if (features.slides) {
+					this.showcaseActionButton.setButtonText(Messages.SHOWCASE_KEYNOTE);
+				}
+
 				this.questionList.updatePagination(questions.length, totalRange);
+				callback.apply();
+
 				this.showcaseActionButton.show();
 				this.questionListContainer.show();
 				this.questionList.show();
@@ -470,6 +482,7 @@ Ext.define('ARSnova.view.speaker.AudienceQuestionPanel', {
 				this.voteStatusButton.show();
 				// this.sortQuestionsButton.show();
 				this.deleteQuestionsButton.show();
+				hideLoadIndicator.apply();
 
 				if (this.screenWidth > 550) {
 					this.exportCsvQuestionsButton.show();
@@ -485,9 +498,11 @@ Ext.define('ARSnova.view.speaker.AudienceQuestionPanel', {
 				this.sortQuestionsButton.hide();
 				this.deleteQuestionsButton.hide();
 				this.exportCsvQuestionsButton.hide();
+				hideLoadIndicator.apply();
 			}, this),
 			failure: function (response) {
 				console.log('server-side error questionModel.getSkillQuestions');
+				hideLoadIndicator.apply();
 			}
 		}, this.questionList.getStartIndex(), this.questionList.getEndIndex());
 	},
@@ -511,6 +526,30 @@ Ext.define('ARSnova.view.speaker.AudienceQuestionPanel', {
 		ARSnova.app.mainTabPanel.tabPanel.getTabBar().setHidden(activateProjectorMode);
 		ARSnova.app.getController('Application').toggleFullScreen(activateProjectorMode);
 		showShowcasePanel.delay(activateProjectorMode ? 1250 : 0);
+	},
+
+	openQuestionDetails: function (index, direction) {
+		var loadedLimit = this.questionList.getLastOffset();
+		var me = this;
+
+		if (index < 0 || index >= this.listTotalRange) {
+			return;
+		}
+
+		if (index === loadedLimit) {
+			this.questionList.updateOffsetState();
+			this.getQuestions(function () {
+				me.openQuestionDetails(index, direction);
+			});
+
+			return;
+		}
+
+		this.getController().details({
+			index: index,
+			direction: direction,
+			question: this.questionStore.getAt(index).data
+		});
 	},
 
 	getQuestionAnswers: function () {
@@ -588,9 +627,53 @@ Ext.define('ARSnova.view.speaker.AudienceQuestionPanel', {
 	},
 
 	applyUIChanges: function () {
-		var features = Ext.decode(sessionStorage.getItem("features"));
-		this.newQuestionButton.setButtonText(
-			features.flashcard ? Messages.NEW_FLASHCARD : Messages.NEW_QUESTION
-		);
+		var features = ARSnova.app.getController('Feature').getActiveFeatures();
+		var lectureButtonText = Messages.NEW_QUESTION;
+
+		if (features.total || features.slides) {
+			this.toolbar.setTitle(Messages.SLIDE_LONG);
+			this.questionListContainer.setTitle(Messages.CONTENT_MANAGEMENT);
+			this.deleteAnswersButton.setButtonText(Messages.DELETE_COMMENTS);
+			this.deleteQuestionsButton.setButtonText(Messages.DELETE_CONTENT);
+			this.exportCsvQuestionsButton.setButtonText(Messages.EXPORT_CONTENT);
+			this.questionsImport.setButtonText(Messages.IMPORT_CONTENT);
+			this.questionStatusButton.setKeynoteWording();
+			this.voteStatusButton.setKeynoteWording();
+
+			lectureButtonText = Messages.NEW_CONTENT;
+			this.newQuestionButton.element.down('.iconBtnImg').replaceCls('icon-question', 'icon-pencil');
+
+			this.caption.setTranslation({
+				active: Messages.OPEN_CONTENT,
+				inactive: Messages.CLOSED_CONTENT,
+				disabledVote: Messages.CLOSED_COMMENTATION
+			});
+
+			this.caption.setBadgeTranslation({
+				feedback: Messages.QUESTIONS_FROM_STUDENTS,
+				unredFeedback: Messages.UNREAD_QUESTIONS_FROM_STUDENTS,
+				questions: Messages.QUESTIONS,
+				answers: Messages.COMMENTS
+			});
+		} else {
+			this.toolbar.setTitle(this.toolbar.config.title);
+			this.questionListContainer.setTitle(this.questionListContainer.config.title);
+			this.deleteAnswersButton.setButtonText(this.deleteAnswersButton.config.text);
+			this.deleteQuestionsButton.setButtonText(this.deleteQuestionsButton.config.text);
+			this.exportCsvQuestionsButton.setButtonText(this.exportCsvQuestionsButton.config.text);
+			this.questionsImport.setButtonText(this.questionsImport.config.text);
+			this.questionStatusButton.setDefaultWording();
+			this.voteStatusButton.setDefaultWording();
+
+			this.caption.setTranslation(this.caption.config.translation);
+			this.caption.setBadgeTranslation(this.caption.config.badgeTranslation);
+			this.newQuestionButton.element.down('.iconBtnImg').replaceCls('icon-pencil', 'icon-question');
+		}
+
+		if (features.flashcard) {
+			lectureButtonText = Messages.NEW_FLASHCARD;
+		}
+
+		this.newQuestionButton.setButtonText(lectureButtonText);
 	}
 });

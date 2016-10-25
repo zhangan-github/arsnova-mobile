@@ -112,10 +112,11 @@ Ext.define('ARSnova.WebSocket', {
 			}, this));
 
 			this.socket.on('feedbackData', Ext.bind(function (data) {
-				var features = Ext.decode(sessionStorage.getItem("features"));
+				var features = ARSnova.app.getController('Feature').getActiveFeatures();
 
 				if (features.liveClicker && !ARSnova.app.feedbackModel.lock &&
-					ARSnova.app.userRole !== ARSnova.app.USER_ROLE_SPEAKER) {
+					ARSnova.app.userRole !== ARSnova.app.USER_ROLE_SPEAKER &&
+					localStorage.getItem('lastVisitedRole') !== ARSnova.app.USER_ROLE_SPEAKER) {
 					return;
 				}
 
@@ -124,7 +125,7 @@ Ext.define('ARSnova.WebSocket', {
 			}, this));
 
 			this.socket.on('feedbackDataRoundedAverage', Ext.bind(function (average) {
-				var features = Ext.decode(sessionStorage.getItem("features"));
+				var features = ARSnova.app.getController('Feature').getActiveFeatures();
 
 				if (features.liveClicker && !ARSnova.app.feedbackModel.lock &&
 					ARSnova.app.userRole !== ARSnova.app.USER_ROLE_SPEAKER) {

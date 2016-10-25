@@ -57,18 +57,19 @@ Ext.define('ARSnova.view.feedback.StatisticPanel', {
 				var	tabPanel = ARSnova.app.mainTabPanel.tabPanel,
 					feedbackTabPanel = tabPanel.feedbackTabPanel;
 
+				var animation = {
+					type: 'slide',
+					direction: 'right',
+					duration: 700
+				};
+
 				if (ARSnova.app.userRole === ARSnova.app.USER_ROLE_SPEAKER) {
-					tabPanel.animateActiveItem(tabPanel.speakerTabPanel, {
-						type: 'slide',
-						direction: 'right',
-						duration: 700
-					});
+					tabPanel.animateActiveItem(tabPanel.speakerTabPanel, animation);
+				} else if (localStorage.getItem('lastVisitedRole') === ARSnova.app.USER_ROLE_SPEAKER) {
+					tabPanel.animateActiveItem(tabPanel.userTabPanel, animation);
 				} else {
-					feedbackTabPanel.animateActiveItem(feedbackTabPanel.votePanel, {
-						type: 'slide',
-						direction: 'down',
-						duration: 700
-					});
+					animation.direction = 'down';
+					feedbackTabPanel.animateActiveItem(feedbackTabPanel.votePanel, animation);
 				}
 			}
 		});
@@ -191,7 +192,6 @@ Ext.define('ARSnova.view.feedback.StatisticPanel', {
 
 		this.onBefore('painted', function () {
 			var me = this;
-
 			this.feedbackChartColors = [
 				ARSnova.app.feedbackChartStyleConfig.okColor,
 				ARSnova.app.feedbackChartStyleConfig.goodColor,
@@ -229,7 +229,7 @@ Ext.define('ARSnova.view.feedback.StatisticPanel', {
 
 	prepareView: function () {
 		var me = ARSnova.app.mainTabPanel.tabPanel.feedbackTabPanel.statisticPanel;
-		var features = Ext.decode(sessionStorage.getItem("features"));
+		var features = ARSnova.app.getController('Feature').getActiveFeatures();
 
 		if (ARSnova.app.userRole === ARSnova.app.USER_ROLE_SPEAKER) {
 			me.releaseFeedbackButton.setHidden(false);
@@ -242,7 +242,10 @@ Ext.define('ARSnova.view.feedback.StatisticPanel', {
 				me.backButton.setText(Messages.HOME);
 			} else {
 				me.optionButtons.setCls('voteButtonsPanel');
-				me.backButton.setText(Messages.FEEDBACK_VOTE);
+				me.backButton.setText(
+					localStorage.getItem('lastVisitedRole') === ARSnova.app.USER_ROLE_SPEAKER ?
+					Messages.HOME : Messages.FEEDBACK_VOTE
+				);
 			}
 
 			if (features.liveClicker) {
@@ -333,13 +336,20 @@ Ext.define('ARSnova.view.feedback.StatisticPanel', {
 	},
 
 	updateTabBar: function (averageFeedback) {
-		var features = Ext.decode(sessionStorage.getItem("features"));
+		var features = ARSnova.app.getController('Feature').getActiveFeatures();
+		var suspendedVotes = ARSnova.app.feedbackModel.currentSuspendedVotes;
+		var currentVotes = ARSnova.app.feedbackModel.currentValues;
 		var iconCls, lockedCls = ' lockedFeedback';
 
-		// update feedback-badge in tab bar
-		ARSnova.app.mainTabPanel.tabPanel.feedbackTabPanel.tab.setBadgeText(this.feedbackChart.getStore().sum('value'));
-
+		// summation of votes
+		for (var i = 0, voteCount = 0, voteBadge = ''; i < currentVotes.length; i++) {
+			voteCount += currentVotes[i];
+		}
+		voteBadge = voteCount ? String(voteCount) : '';
 		averageFeedback = averageFeedback ? averageFeedback : ARSnova.app.feedbackModel.currentAverage;
+
+		// update feedback-badge in tab bar
+		ARSnova.app.mainTabPanel.tabPanel.feedbackTabPanel.tab.setBadgeText(voteBadge);
 
 		// change the feedback tab bar icon
 		var tab = ARSnova.app.mainTabPanel.tabPanel.feedbackTabPanel.tab;
@@ -347,6 +357,8 @@ Ext.define('ARSnova.view.feedback.StatisticPanel', {
 		if (features.liveClicker) {
 			iconCls = "voteIcons icon-chart";
 			tab.setTitle(Messages.ABCD_TITLE);
+		} else if (suspendedVotes >= ARSnova.app.globalConfig.feedbackWarningOffset) {
+			iconCls = "voteIcons icon-warning";
 		} else {
 			tab.setTitle(Messages.FEEDBACK);
 			switch (averageFeedback) {
@@ -366,6 +378,12 @@ Ext.define('ARSnova.view.feedback.StatisticPanel', {
 					iconCls = "voteIcons icon-bullhorn";
 					break;
 			}
+		}
+
+		if (features.feedback && ARSnova.app.activeSpeakerUtility) {
+			ARSnova.app.activeSpeakerUtility.feedbackOverlay.setIconCls(iconCls);
+			ARSnova.app.activeSpeakerUtility.feedbackOverlay.setBadgeText(voteBadge);
+			ARSnova.app.activeSpeakerUtility.feedbackOverlay.setHidden(!voteCount || !ARSnova.app.projectorModeActive);
 		}
 
 		if (ARSnova.app.feedbackModel.lock) {

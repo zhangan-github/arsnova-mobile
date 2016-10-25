@@ -24,7 +24,7 @@
 	var ua = navigator.userAgent.toLowerCase();
 	var isAndroid = ua.indexOf("android") > -1;
 	var isChrome = ua.indexOf("chrome") > -1;
-	var lang;
+	var lang, components, variation;
 	var Messages;
 
 	if (isAndroid && !isChrome && navigator.userAgent &&
@@ -45,6 +45,8 @@
 	}
 
 	if (lang) {
+		components = lang.split("-");
+		variation = components[1] || null;
 		lang = lang.substr(0, 2).toLowerCase();
 	}
 
@@ -65,6 +67,7 @@
 				SPEAKER: "Dozent/in",
 				TITLE_ROLE: "Feedback & Interaktion",
 				/* loginPanel */
+				LOGIN: "Login",
 				GUEST: "Gast",
 				CHANGE_ROLE: "Rolle wechseln",
 				NO_GUEST_SPEAKER: "Hinweis: Um eine Session anzulegen, müssen Sie sich anmelden.",
@@ -116,10 +119,10 @@
 				MY_PUBLIC_POOL_SESSIONS: "Meine Pool-Sessions",
 				SESSIONS: "Sessions",
 				SESSIONID_WILL_BE_CREATED: "Session-ID wird erzeugt...",
-				SESSION_NAME: "Titel",
-				SESSION_NAME_PLACEHOLDER: "Langnamen der Session eingeben (max. 50 Zeichen)",
-				SESSION_SHORT_NAME: "Kürzel",
-				SESSION_SHORT_NAME_PLACEHOLDER: "Kurznamen der Session eingeben (max. 8 Zeichen)",
+				SESSION_NAME: "Langname",
+				SESSION_NAME_PLACEHOLDER: "max. 50 Zeichen",
+				SESSION_SHORT_NAME: "Kurzname",
+				SESSION_SHORT_NAME_PLACEHOLDER: "max. 8 Zeichen",
 				SESSION_SAVE: "Session anlegen",
 				SESSION_OPTIONAL_INFO: "Informationen zur Session",
 				SAVE: "Speichern",
@@ -128,7 +131,7 @@
 				MESSAGEOFTHEDAY: "\"Message of the Day\"",
 				MESSAGEOFTHEDAY_BUTTON:	"Message of the Day",
 				CREATE_NEW_MOTD: "Neue Nachricht anlegen",
-				MY_MESSAGES: "Alle Nachrichten",
+				MY_MESSAGES: "Zurück",
 				NEW_MOTD: "Neue Nachricht",
 				SAVE_NEW_MESSAGE: "Speichern",
 				EDIT_MOTD: "Nachricht bearbeiten",
@@ -143,8 +146,8 @@
 				MOTD_AUDIENCE_TUTORS: "Lehrende",
 				MOTD_AUDIENCE_STUDENTS: "Studierende",
 				MOTD_AUDIENCE_SESSION: "Session",
-				MOTD_STARTDATE: "Start der Anzeige",
-				MOTD_ENDDATE: "Ende der Anzeige",
+				MOTD_STARTDATE: "Anzeigenstart",
+				MOTD_ENDDATE: "Anzeigenende",
 				MOTD_NOTIFICATION_TITLE: "Keinen Titel angegeben",
 				MOTD_NOTIFICATION_TEXT: "Keinen Text angegeben",
 				MOTD_NOTIFICATION_STARTDATE: "Keinen Startzeitpunkt angegeben",
@@ -162,12 +165,12 @@
 				FEEDBACK_VOTE: "Feedback",
 				FEEDBACK_RESET: "Ihr Feedback wurde zurückgesetzt",
 				QUESTION_TO_SPEAKER: "Feedback",
-				QUESTION_INSTRUCTION: "Sie stellen diese Frage anonym",
-				QUESTION_TEXT: "Fragetext",
-				QUESTION_TEXT_PLACEHOLDER: "Nur die Lehrperson sieht Ihre Frage. Sobald die Lehrperson Ihre Frage gelesen hat, wird sie grau angezeigt. Antworten können in ARSnova nicht gegeben werden. Sie können auf Ihre Fragen nur in dem Browser zugreifen, den Sie gerade verwenden.",
+				QUESTION_INSTRUCTION: "Ihr Feedback bleibt anonym",
+				QUESTION_TEXT: "Text",
+				QUESTION_TEXT_PLACEHOLDER: "Nur die Lehrperson sieht Ihr Feedback. Sobald sie Ihre Fragen und Kommentare gelesen hat, werden diese grau angezeigt. Antworten können in ARSnova nicht gegeben werden. Als Gast können Sie auf Ihre Fragen und Kommentare nur in dem Browser zugreifen, den Sie gerade verwenden.",
 				QUESTION_SUBJECT: "Thema",
 				QUESTION_SUBJECT_PLACEHOLDER: "erscheint in der Übersicht, max. 50 Zeichen",
-				QUESTION_SAVED: 'Ihre Frage wurde gespeichert',
+				QUESTION_SAVED: 'Ihr Text wurde gespeichert',
 				NOTIFICATION: "Hinweis",
 				TRANSMISSION_ERROR: "Die Übermittlung der Frage war leider nicht erfolgreich",
 				QUESTION_CREATION_ERROR: "Das Erstellen der Frage war leider nicht erfolgreich",
@@ -180,7 +183,8 @@
 				QUESTION: "Frage",
 				QUESTION_PLACEHOLDER: "Frage eingeben",
 				QUESTIONTEXT_PLACEHOLDER: "Frage eingeben",
-				QUESTION_MANAGEMENT: "Fragenverwaltung",
+				QUESTION_MANAGEMENT: "Klicken Sie auf eine Frage, um sie zu editieren:",
+				CONTENT_MANAGEMENT: "Klicken Sie auf einen Inhalt, um diesen zu editieren:",
 				QUESTIONS: "Fragen",
 				TASKS: "Aufgaben",
 				QUESTION_DETAILS: "Volltext",
@@ -195,20 +199,30 @@
 				LOADING_NEW_QUESTIONS: "Lade neue Fragen",
 				NO_DATE: "Kein Datum",
 				NO_SUBJECT: "Kein Thema",
+				NO_TEXT_SUBMITTED: "Es wurde kein Text eingegeben.",
 				SESSION_CLOSE_NOTICE: "Um mehrfaches Abstimmen zu verhindern, hat Ihr/e Dozent/in die Session gesperrt. Loggen Sie sich bitte erst am Ende der Vorlesung aus!",
 				NOTICE_READ: "Ich hab's verstanden",
 				STATUS: "Status",
+				COMMENT: "Kommentar",
+				COMMENTS: "Kommentare",
+				MY_COMMENT: "Mein Kommentar",
+				MY_COMMENTS: "Meine Kommentare",
+				COMMENT_SAVED: "Ihr Kommentar wurde gespeichert.",
 				FREETEXT_ANSWER_TEXT: "Meine Antwort",
 				FREETEXT_DETAIL_HEADER: "Antwort",
 				FREETEXT_DETAIL_ANSWER: "Antwort",
 				FORMAT_PLACEHOLDER: "Text",
+				NO_COMMENTS: "Keine Kommentare vorhanden",
 				NO_ANSWERS: "Keine Antworten vorhanden",
 				ONLY_ABSTENTION_ANSWERS: "Es gibt ###, aber bisher keine Antworten.",
 				FREETEXT_DETAIL_LABEL: "Es gibt ### und %%%:",
+				SLIDE_DETAIL_LABEL: "Es gibt ###:",
 				ANSWER_SAVED: "Ihre Antwort wurde gespeichert",
 				MISSING_INPUT: "Es müssen alle Felder ausgefüllt werden",
 				SHOWCASE: "Vorstellen",
 				LEAVE: "Verlassen",
+				CONTENT: "Inhalt",
+				CONTENT_PLURAL: "Inhalte",
 				MEMBERS_ONLY: "Diese Frage ist nur für Kursmitglieder sichtbar",
 				QUESTION_RATING: "5-stufige Likert-Skala mit Auswertung",
 				QUESTION_RATING_SHORT: "Skala",
@@ -219,15 +233,18 @@
 				QUESTION_MC: "Multiple-Choice-Frage (Mehrfachauswahl)",
 				QUESTION_MC_SHORT: "MC",
 				QUESTION_YESNO: "Entscheidungsfrage",
-				QUESTION_LIVE_CLICKER: "Publikumsfrage",
+				QUESTION_LIVE_CLICKER: "Live Clicker",
 				QUESTION_YESNO_SHORT: "Ja | Nein",
 				QUESTION_SINGLE_CHOICE: "Single-Choice-Frage (Einfachauswahl)",
 				QUESTION_SINGLE_CHOICE_SHORT: "SC",
 				QUESTION_FREETEXT: "Offene Frage (Freitextfrage)",
 				QUESTION_FREETEXT_SHORT: "Freitext",
-				OPEN_QUESTION: "Offene Frage",
+				OPEN_QUESTION: "Freigegebene Frage",
+				OPEN_CONTENT: "Offener Inhalt",
 				CLOSED_QUESTION: "Gesperrte Frage",
+				CLOSED_CONTENT: "Gesperrter Inhalt",
 				CLOSED_VOTING: "Abstimmung gesperrt",
+				CLOSED_COMMENTATION: "Kommentierung gesperrt",
 				CONFIRM_CLOSE_VOTE: "Abstimmung wirklich sperren?",
 				CONFIRM_CLOSE_ALL_VOTES: "Abstimmungen wirklich sperren?",
 				CONFIRM_CLOSE_QUESTION: "Frage wirklich sperren?",
@@ -236,7 +253,8 @@
 				CONFIRM_CLOSE_VOTE_MESSAGE: "Wenn Sie die Abstimmung sperren, können Studierende die Frage nicht mehr beantworten.",
 				CONFIRM_CLOSE_ALL_VOTES_MESSAGE: "Wenn Sie die Abstimmung für alle Fragen sperren, können Studierende die Fragen nicht mehr beantworten.",
 				CONFIRM_CLOSE_ALL_QUESTIONS_MESSAGE: "Wenn Sie die Fragen sperren, können Studierende die Fragen weder sehen noch beantworten.",
-				SAVE_AND_CONTINUE: "Speichern und neue Frage stellen",
+				SAVE_AND_CONTINUE: "Speichern und weiter",
+				SAVE_AND_ASK_NEW_QUESTION: "Speichern und neue Frage stellen",
 				PICTURE_MAX_FILESIZE: "Dateiformat: JPEG oder PNG, max. ###",
 				CONFIRM_ANSWERS_CHANGED: "Bereits gegebene Antworten gehen verloren",
 				QUESTION_PREVIEW_BUTTON_TITLE: "Vorschau",
@@ -269,8 +287,9 @@
 
 				/* user */
 				QUESTIONS_TO_STUDENTS: "Fragen ans Publikum",
-				QUESTIONS_FROM_STUDENTS: "Fragen der Studierenden",
-				UNREAD_QUESTIONS_FROM_STUDENTS: "Ungelesene Fragen",
+				QUESTIONS_FROM_STUDENTS: "Fragen & Kommentare der Studierenden",
+				QUESTIONS_FROM_STUDENTS_SHORT: "Fragen & Kommentare",
+				UNREAD_QUESTIONS_FROM_STUDENTS: "Ungelesene Fragen & Kommentare",
 				PREPARATION_QUESTIONS: "Vorbereitung",
 				PREPARATION_QUESTIONS_LONG: "Vorbereitungsaufgaben",
 				PREPARATION_QUESTION_SHORT: "Vorbereitung",
@@ -294,6 +313,7 @@
 				THERE_ARE: "Es gibt",
 				NEW_QUESTIONS: "neue Fragen.",
 				MY_QUESTIONS: "Meine Fragen",
+				MY_QUESTIONS_AND_COMMENTS: "Meine Fragen & Kommentare",
 				MY_LEARNING_PROGRESS: "Mein Lernstand",
 				VERSUS: "vs.",
 				LEARN: "Lernen",
@@ -311,9 +331,11 @@
 				].join('\n'),
 
 				/* speaker */
+				PRESENTATION: "Vortrag",
 				LIVE_FEEDBACK: "Live Feedback",
 				COURSES_LEARNING_PROGRESS: "Lernstand des Kurses",
 				COURSES_LEARNING_PROGRESS_SHORT: "Lernstand",
+				INTERPOSED_QUESTIONS: "Zwischenfragen & Kommentare",
 				CURRENT_VALUE: "Aktueller Wert",
 				HOW_TO_CALCULATE_LEARNING_PROGRESS: "Wie soll der Lernstand berechnet werden?",
 				QUESTION_BASED_PROGRESS: "Fragenbasiert",
@@ -325,17 +347,17 @@
 					'Es sind 3 Fragen vorhanden, die jeweils eine maximal mögliche Punktzahl haben. Die Punkte seien 10, 20 und 30.',
 					'Eine Frage gilt als korrekt beantwortet, wenn die jeweilige Maximalpunktzahl erreicht ist. Das heißt, wenn eine',
 					'falsche Antwortoption gewählt wurde, werden Punkte abgezogen und die Maximalpunktzahl kann nicht mehr erreicht werden.',
-					'Erreicht ein Studierender für die drei Fragen eine Punktzahl von 10, 20 und 20 wurde demnach die letzte Frage falsch beantwortet.',
+					'Erreicht jemand für die drei Fragen eine Punktzahl von 10, 20 und 20, wurde demnach die letzte Frage falsch beantwortet.',
 					'Der individuelle Lernstand berechnet sich nach der Formel: \\\\[ l_{\\text{S}} = \\frac{\\text{Richtige Antw.}}{\\text{Fragen}} = \\frac{2}{3} \\hat{=}\\, 67\\%\\\\]\n',
-					'Für den Kurs ergibt sich der Lernstand über die Anzahl der Studierenden: \\\\[l_{\\text{K}} = \\frac{\\text{Richtige Antworten}}{\\text{Fragen} \\cdot \\text{Studierende}}\\\\]'
+					'Für den Kurs ergibt sich der Lernstand über die Anzahl der Teilnehmenden: \\\\[l_{\\text{K}} = \\frac{\\text{Richtige Antworten}}{\\text{Fragen} \\cdot \\text{Teilnehmende}}\\\\]'
 				].join('\n'),
 				SCORE_BASED_PROGRESS_EXPLANATION: [
 					'Der punktbasierte Lernstand gewichtet Fragen mit mehreren richtigen Antwortoptionen stärker als Fragen mit nur einer richtigen Option. Der Lernstand berechnet sich beispielhaft wie folgt:\n',
 					'Es sind 3 Fragen vorhanden, die jeweils eine maximal mögliche Punktzahl haben. Die Punkte seien 10, 20 und 30.',
-					'Das bedeutet, dass ein Studierender für die Beantwortung der 3 Fragen insgesamt 60 Punkte erreichen kann.',
+					'Das bedeutet, dass man für die Beantwortung der 3 Fragen insgesamt 60 Punkte erreichen kann.',
 					'Bei Auswahl von falschen Antwortoptionen reduziert sich die erreichte Punktzahl, z.B. auf 30.',
 					'Der individuelle Lernstand berechnet sich also nach der Formel: \\\\[ l_{\\text{S}} = \\frac{\\text{Erreichte Punkte}}{\\text{Mögliche Punkte}} = \\frac{30}{60} \\hat{=}\\, 50\\%\\\\]\n',
-					'Für den Kurs ergibt sich der Lernstand über die Anzahl der Studierenden: \\\\[l_{\\text{K}} = \\frac{\\text{Gesamtzahl erreichter Punkte}}{\\text{Mögliche Punkte} \\cdot \\text{Studierende}}\\\\]'
+					'Für den Kurs ergibt sich der Lernstand über die Anzahl der Teilnehmenden: \\\\[l_{\\text{K}} = \\frac{\\text{Gesamtzahl erreichter Punkte}}{\\text{Mögliche Punkte} \\cdot \\text{Teilnehmende}}\\\\]'
 				].join('\n'),
 				QUESTIONS_ABBR: "Fragen",
 				POINTS_ABBR: "Pkt.",
@@ -385,8 +407,8 @@
 				INCOMPLETE_INPUTS: "Ihre Eingaben sind unvollständig",
 				DELETE_ALL_ANSWERS_INFO: "Es werden auch alle bisher gegebenen Antworten gelöscht",
 				DELETE_ROUND_ANSWERS_COMPLETED: "Die Antworten der aktuellen Runde wurden gelöscht",
-				RELEASE_LIVE_VOTING: "Live-Abstimmung freigeben",
-				CLOSE_LIVE_VOTING: "Live-Abstimmung einfrieren",
+				RELEASE_LIVE_VOTING: "Abstimmung freigeben",
+				CLOSE_LIVE_VOTING: "Abstimmung schließen",
 				CHANGE_RELEASE: "Ändere die Freigabe...",
 				TYPE: 'Typ',
 				INFINITE: "unbegrenzt",
@@ -438,7 +460,6 @@
 				TEMPLATE_FOR_MODERATION: "Vorlagen zur Meinungsabfrage",
 				TEMPLATE: "Vorlage",
 				APPLY: "Übernehmen",
-				DOWNLOAD: "Vorlage herunterladen",
 				MISSING_INPUTS: "Ihre Eingaben sind unvollständig:",
 				MISSING_SUBJECT: "Das Thema fehlt",
 				MISSING_QUESTION: "Der Text der Frage fehlt",
@@ -498,7 +519,7 @@
 
 				/*Markdown Editor*/
 				EDITOR_VIMEO: "Vimeo",
-				EDITOR_YOUTUBE: "Youtube",
+				EDITOR_YOUTUBE: "YouTube",
 				EDITOR_HYPERLINK: "Hyperlink",
 				EDITOR_PICTURE: "Bild",
 				EDITOR_URL: "Linkziel",
@@ -512,6 +533,21 @@
 				EDITOR_CENTER: "zentriert",
 				EDITOR_RIGHT: "rechts",
 				EDITOR_LEFT: "links",
+
+				EDITOR_BOLD_TOOLTIP: "Fett",
+				EDITOR_HEADER_TOOLTIP: "Überschrift",
+				EDITOR_HYPERLINK_TOOLTIP: "Hyperlink",
+				EDITOR_ULIST_TOOLTIP: "Unsortierte Liste",
+				EDITOR_OLIST_TOOLTIP: "Sortierte Liste",
+				EDITOR_LATEX_TOOLTIP: "LaTex-Auszeichnung",
+				EDITOR_CODE_TOOLTIP: "Code-Auszeichnung",
+				EDITOR_QUOTE_TOOLTIP: "Zitat",
+				EDITOR_YOUTUBE_TOOLTIP: "YouTube",
+				EDITOR_VIMEO_TOOLTIP: "Vimeo",
+				EDITOR_PICTURE_TOOLTIP: "Bild",
+				EDITOR_INFO_TOOLTIP: "Info",
+
+				EDITOR_INFO_HINT: "Sie können Texte innerhalb von ARSnova mithilfe von [Markdown](https://de.wikipedia.org/wiki/Markdown) auszeichnen. Die am häufigsten verwendeten Markdown Optionen werden in Form von Schaltflächen über den unterstützten Eingabefeldern angeboten. Zudem unterstützt ARSnova [GitHub Flavored Markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet).",
 
 				/*Public pool*/
 				SESSIONPOOL_LEVEL: "Niveau",
@@ -547,6 +583,7 @@
 				YESNO: "J|N",
 				ABCD: "SC",
 				GRID: "Bild",
+				SLIDE: "Folie",
 				FREETEXT: "Text",
 				MC_LONG: "MC-Frage",
 				ABCD_LONG: "SC-Frage",
@@ -556,6 +593,7 @@
 				SCHOOL_LONG: 'Benotung',
 				YESNO_LONG: 'Ja|Nein',
 				GRID_LONG: "Hot Spots",
+				SLIDE_LONG: "Vortragsfolien",
 				FREETEXT_LONG: 'Freitext',
 				BUZZWORD: "Schlagwort für",
 				BUZZWORD_A: "Schlagwort für A",
@@ -622,6 +660,20 @@
 				CHANGE_FEATURES: "Use Case<br/>wechseln",
 				CHANGE_ROLE_BUTTONTEXT: "Rolle<br/>wechseln",
 
+				NEW_SLIDE: "Folien<br/>erstellen",
+				NEW_CONTENT: "Inhalte<br/>erstellen",
+				DELETE_SLIDE: "Folie<br/>löschen",
+				DELETE_CONTENT: "Inhalte<br/>löschen",
+				RELEASE_SLIDE: "Folie<br/>freigeben",
+				RELEASE_CONTENT: "Inhalte<br/>freigeben",
+				SHOW_COMMENTS: "Kommentare<br/>anzeigen",
+				DELETE_COMMENTS: "Kommentare<br/>löschen",
+				RELEASE_COMMENTS: "Kommentare<br/>freischalten",
+				ALLOW_COMMENTS: "Kommentare<br/>erlauben",
+				SHOWCASE_KEYNOTE: "Vortrag<br/>halten",
+				EXPORT_CONTENT: "Inhalte<br/>exportieren",
+				IMPORT_CONTENT: "Inhalte<br/>importieren",
+
 				/* about */
 				MANUAL: "Anleitung",
 				ABOUT: "Über",
@@ -630,7 +682,8 @@
 
 				OPINION: "Deine Meinung ist gefragt",
 				WIDGET_IS_LOADING: 'Widget wird geladen...',
-				RELOAD_SURE: "Möchten Sie ARSnova neu herunterladen?",
+				RELOAD_SURE: "Durch diesen Vorgang werden Sie aus der aktuellen Sitzung ausgeloggt.### Möchten Sie ARSnova neu herunterladen?",
+				RELOAD_GUEST_ADDITION: " Da Sie als Gast angemeldet sind, haben Sie nach dieser Aktion keinen Zugriff auf Ihre erstellten Sessions. Bitte stellen Sie sicher, dass alle benötigten Daten mit der Export-Funktion gesichert wurden.",
 				OPEN_SESSIONS: "Sessions: offen",
 				ACTIVE_SESSIONS: "Sessions: aktiv",
 				CLOSED_SESSIONS: "Sessions: geschlossen",
@@ -641,7 +694,7 @@
 				DIAGNOSIS: "System",
 				BROWSER_INFO: "Browser-Informationen",
 				ARSNOVA_INFO: "ARSnova-Version",
-				ARSNOVA_RELOAD: "ARSnova laden",
+				ARSNOVA_RELOAD: "ARSnova neu laden",
 				VOTINGS: "Abstimmungen",
 				SESSION_OWNERS: "Rolle Dozent/in",
 				LEARNING_PROGRESS: "Lernstandsberechnung",
@@ -654,32 +707,37 @@
 				FEATURE_SAVE_ERROR: 'Es muss mindestens ein Feature ausgewählt werden',
 
 				/* use cases */
-				USECASES: "Use-Case-Auswahl",
-				USECASES_CHOOSE: "Welche Frageformate und Funktionen wollen Sie in Ihrer Session einsetzen?",
-				USECASE_CLICKER: "Standard-Frageformate (Clicker-Fragen)",
-				USECASE_ABCD_CLICKER: "Publikumsfrage à la Günther Jauch (A|B|C|D ohne Fragetext)",
-				USECASE_PEER_GRADING: "Evaluationsfragen (5-stufige Likert-Skala mit Auswertung)",
-				USECASE_FLASHCARD: "Lernkarten fürs Selbststudium (Session als Lernkartei)",
-				USECASE_LIVE_FEEDBACK: "Zwischenfragen & Live Feedback",
-				USECASE_ARSNOVA_TOTAL: "ARSnova total (alle Frageformate, alle Funktionen)",
-				USECASE_ARSNOVA_CUSTOM: "Mein ARSnova",
+				USECASES: "Use Cases",
+				USECASES_CHOOSE: "Welche Frageformate und Funktionen brauchen Sie für Ihre Session?",
+				USECASE_CLICKER: "Nur Quizfragen in den Formaten Multiple- und Single-Choice, Ja|Nein",
+				USECASE_ABCD_CLICKER: "Nur die Publikumsfrage à la Günther Jauch: A|B|C|D ohne Fragetext",
+				USECASE_PEER_GRADING: "Nur Evaluationsfragen mit 5-stufiger Likert-Skala und Auswertung",
+				USECASE_FLASHCARD: "Nur Lernkarten fürs Selbststudium: Session als Lernkartei",
+				USECASE_LIVE_FEEDBACK: "Nur Live Feedback (Verständnisbarometer)",
+				USECASE_INTERPOSED_FEEDBACK: "Nur Zwischenfragen & Kommentare (Kummerkasten)",
+				USECASE_KEYNOTE: "Interaktiver Vortrag",
+				USECASE_ARSNOVA_CUSTOM: "Eigene Funktionsauswahl",
 
-				USECASES_CHOOSE_SHORT: "Einsatz-Zweck",
-				USECASE_CLICKER_SHORT: "Clicker-Fragen",
-				USECASE_ABCD_CLICKER_SHORT: "Publikumsfrage",
-				USECASE_PEER_GRADING_SHORT: "Evaluationsfragen",
-				USECASE_FLASHCARD_SHORT: "Lernkarten",
-				USECASE_LIVE_FEEDBACK_SHORT: "Feedback",
-				USECASE_ARSNOVA_TOTAL_SHORT: "ARSnova total",
-				USECASE_ARSNOVA_CUSTOM_SHORT: "Mein ARSnova",
+				USECASES_CHOOSE_SHORT: "Welche Frageformate und Funktionen?",
+				USECASE_CLICKER_SHORT: "Nur Quizfragen MC, SC, Ja|Nein",
+				USECASE_ABCD_CLICKER_SHORT: "Nur die Publikumsfrage A|B|C|D",
+				USECASE_PEER_GRADING_SHORT: "Nur Evaluationsfragen mit Auswertung",
+				USECASE_FLASHCARD_SHORT: "Nur Lernkarten fürs Selbststudium",
+				USECASE_LIVE_FEEDBACK_SHORT: "Nur Live Feedback",
+				USECASE_INTERPOSED_FEEDBACK_SHORT: "Nur Zwischenfragen & Kommentare",
+				USECASE_KEYNOTE_SHORT: "Interaktiver Vortrag",
+				USECASE_ARSNOVA_CUSTOM_SHORT: "Eigene Funktionsauswahl",
 
-				USECASE_CLICKER_DETAILS: "###Clicker-Fragen\n\n Nur einfache Frageformate wie Multiple-Choice (Mehrfachauswahl), Single-Choice (Einfachauswahl), Ja|Nein (Entscheidungsfrage), Likert-Skala (Evaluation) und Schulnoten.",
-				USECASE_ABCD_CLICKER_DETAILS: "###Ad-hoc-Publikumsfrage à la Günther Jauch\n\n Publikumsfrage à la Günther Jauch: nur A|B|C|D-Antwortoptionen ohne Fragetext. Keinerlei Aufwand für das Erstellen der Frage. Sie geben lediglich die Session-ID bekannt.",
+				USECASE_CLICKER_DETAILS: "###Quizfragen\n\n Nur die einfachen Frageformate:\n- Multiple-Choice (Mehrfachauswahl),\n- Single-Choice (Einfachauswahl) und\n- Ja|Nein (Entscheidungsfrage).\n\n ![SC-Frage](https://arsnova.thm.de/blog/wp-content/uploads/2016/02/SC-Frage-1.png \"600xautoxcenter\")",
+				USECASE_ABCD_CLICKER_DETAILS: "###Publikumsfrage\n\n Wie bei Günther Jauch: nur A|B|C|D-Antwortoptionen ohne Fragetext. Keinerlei Aufwand für das Erstellen der Frage. Sie geben lediglich die Session-ID bekannt. Das Publikum wird automatisch auf die Abstimmseite geführt: ![Publikumsfrage](https://arsnova.thm.de/blog/wp-content/uploads/2015/12/ABCD-1-245x300.png \"245x300autoxcenter\") ",
 				USECASE_PEER_GRADING_DETAILS: "###Evaluationsfragen\n\n Nur Fragen mit 5-stufiger [Likert-Skala](https://de.wikipedia.org/wiki/Likert-Skala) und Bewertungspunkten.",
 				USECASE_FLASHCARD_DETAILS: "###Lernkarten fürs Selbststudium\n\n Vorderseite mit Frage, Rückseite mit Lösung. Sie können Videos und Bilder einbinden.",
-				USECASE_LIVE_FEEDBACK_DETAILS: "###Zwischenfragen & Live Feedback\n\n Anonyme Fragen der Studierenden an die Lehrperson und Live Feedback zum Tempo und Verständnis der Vorlesung.",
-				USECASE_ARSNOVA_TOTAL_DETAILS: "###ARSnova total\n\n Alles, was ARSnova an Unterstützungsfunktionen für die didaktischen Einsatz-Szenarien \"Peer Instruction\" und \"Inverted Classroom\" bietet: [![And the Winner is... ARSnova!](https://img.youtube.com/vi/C_WPaPv4yLI/0.jpg)](https://www.youtube.com/watch?v=C_WPaPv4yLI)",
-				USECASE_ARSNOVA_CUSTOM_DETAILS: "###Mein ARSnova\n\n Individuelle Auswahl der didaktischen Funktionen...",
+				USECASE_LIVE_FEEDBACK_DETAILS: "###Live Feedback\n\n Falls nur ein \"Verständnisbarometer\" benötigt wird: Live Feedback zum Tempo und Verständnis der Vorlesung. Sie können die Abstimmung schließen und das aktuelle Ergebnis als Stimmungsbild festhalten. ![Live Feedback](https://arsnova.thm.de/blog/wp-content/uploads/2016/02/Live-Feedback.png \"245xautoxcenter\") ",
+				USECASE_INTERPOSED_FEEDBACK_DETAILS: "###Zwischenfragen & Kommentare\n\n Falls nur ein digitaler \"Kummerkasten\" aufgestellt werden soll: Die Fragen und Kommentare der Studierenden sind anonym und nur sichtbar für die Lehrperson. ![Zwischenfrage](https://arsnova.thm.de/blog/wp-content/uploads/2016/02/Zwischenfrage.png \"245xautoxcenter\") ",
+				USECASE_KEYNOTE_DETAILS: "###Interaktiver Vortrag\n\n Die Folienschlacht war gestern. Interagieren Sie mit Ihrem Publikum, während Sie vortragen! Neben den Frageformaten stehen Ihnen auch Folien zur Verfügung. Via Smartphone können Ihre Studierenden Kommentare auf die aktuell gezeigte Folie schreiben. Die Kopfzeile der Folie weist auf neue Kommentare hin. Auch werden Live-Feedback und Zwischenfragen auf der Folie angezeigt: Ein Klick genügt und Sie sehen die aktuellen Verständnisprobleme Ihrer Studierenden. Kombinieren Sie Ihre Folien mit Verständnisfragen und Sie können am Ende Ihres Vortrags am Lernstand des Kurses ablesen, ob das Lernziel erreicht wurde. ![](https://arsnova.thm.de/blog/wp-content/uploads/2015/05/Bildschirmfoto-2016-05-07-um-10.04.24.png \"300xautoxcenter\") \n\nMit diesem Use Case stehen Ihnen alle Frageformate und Unterstützungsfunktionen für die didaktischen Einsatz-Szenarien \"Peer Instruction\" und \"Inverted Classroom\" zur Verfügung, siehe die ARSnova-Broschüre [Feedback](https://arsnova.thm.de/blog/wp-content/uploads/2015/08/ARSnova-Produktprospekt-v5.pdf). ![Feedback](https://arsnova.thm.de/blog/wp-content/uploads/2013/07/ARSnova-Broschuere.png \"300xautoxcenter\") ",
+				USECASE_ARSNOVA_CUSTOM_DETAILS: "###Eigene Funktionsauswahl\n\n Sie können die Funktionalität Ihrer Session kombinieren aus: \n- Hörsaalfragen \n- Vorbereitungsaufgaben\n- Fragen & Kommentare der Studierenden\n- Live Feedback\n- 2-Runden-Abstimmungen\n- Lernstandsberechnung",
+
+				TWITTER_WALL_PRIVACY_INFO: "Hinweis: Die Lehrperson kann Ihre Fragen und Kommentare auf der Twitter Wall anzeigen.",
 
 				/* errors */
 				SESSION_NOT_FOUND: "Diese Session gibt es nicht",
@@ -711,17 +769,106 @@
 
 				/* CSV export*/
 				QUESTIONS_CSV_EXPORT_BUTTON: "Fragen<br>exportieren",
-				QUESTIONS_CSV_EXPORT_MSBOX_TITLE: "Fragen exportieren",
-				QUESTIONS_CSV_EXPORT_MSBOX_INFO: "Die Fragen werden als CSV-Datei exportiert",
+				QUESTIONS_CSV_EXPORT_MSBOX_TITLE: "Inhalte exportieren",
+				QUESTIONS_CSV_EXPORT_MSBOX_INFO: "Die Inhalte werden als CSV-Datei exportiert. Fragen vom Typ \"Hot Spots\" werden übersprungen. Für den gesamten Export der Session steht der Export auf der Sessionübersichtseite zur Verfügung. <br>Fragen exportieren?",
 
 				/* CSV import*/
 				QUESTIONS_CSV_IMPORT_BUTTON: "Fragen<br>importieren",
-				QUESTIONS_CSV_IMPORT_MSBOX_TITLE: "Fragen importieren",
+				QUESTIONS_CSV_IMPORT_MSBOX_TITLE: "Inhalte importieren",
 				QUESTIONS_CSV_IMPORT_ERR_IN_ROW: "in Zeile",
 				QUESTIONS_CSV_IMPORT_TYPE_ERROR: "Ungültiger Fragentyp",
 				QUESTIONS_CSV_IMPORT_ABSTENTION_ERROR: "Fehler im Feld 'abstention'",
 				QUESTIONS_CSV_IMPORT_INVALID_FORMAT: "Ungültiges Dateiformat"
 			};
+
+			switch (variation) {
+				case "event":
+					Messages.variation = {
+						STUDENT: "Zuhörer/in",
+						SPEAKER: "Referent/in",
+						LAST_VISITED_SESSIONS_SPEAKER: "Als Referent/in besuchte Sessions",
+						QUESTIONS_FROM_STUDENTS: "Fragen & Kommentare der Zuhörer/innen",
+						LECTURE_QUESTIONS: "Seminar",
+						LECTURE_QUESTION_LONG: "Seminarfrage",
+						LECTURE_QUESTIONS_LONG: "Seninarfragen",
+						ONE_NEW_LECTURE_QUESTION: "1 neue Seminarfrage",
+						SEVERAL_NEW_LECTURE_QUESTIONS: '### neue Seminarfragen',
+						LECTURE: "Seminar",
+						NEW_LECTURE_QUESTION: "Neue Seminarfrage",
+						EXPORT_SESSION_INFORMATION: "Neben Seminarfragen und Vorbereitungsaufgaben der ausgewählten Sessions werden zusätzlich exportiert...",
+						USECASE_ARSNOVA_CUSTOM_DETAILS: "###Mein ARSnova\n\n Sie können die Funktionalität Ihrer Session kombinieren aus: \n- Seminarfragen \n- Vorbereitungsaufgaben\n- Fragen der Zuhörer/innen\n- Live Feedback\n- 2-Runden-Abstimmungen\n- Lernstandsberechnung\n- Twitter Wall",
+						QUESTION_TEXT_PLACEHOLDER: "Nur die Seminarleitung sieht Ihre Frage. Sobald die Seminarleitung Ihre Frage oder Kommentar gelesen hat, werden sie grau angezeigt. Antworten können in ARSnova nicht gegeben werden. Sie können auf Ihre Fragen und Kommentare nur in dem Browser zugreifen, den Sie gerade verwenden.",
+						SESSIONPOOL_AUTHORINFO: "Seminarleiter/in",
+						USECASE_INTERPOSED_FEEDBACK_DETAILS: "###Zwischenfragen & Kommentare\n\n Falls nur ein digitaler \"Kummerkasten\" aufgestellt werden soll: Die Fragen und Kommentare der Zuhörer/innen sind anonym und nur sichtbar für die Seminarleitung. ![Zwischenfrage](https://arsnova.thm.de/blog/wp-content/uploads/2016/02/Zwischenfrage.png \"245xautoxcenter\") ",
+						SESSION_CLOSE_NOTICE: "Um mehrfaches Abstimmen zu verhindern, hat Ihr/e Seminarleiter/in die Session gesperrt. Loggen Sie sich bitte erst am Ende des Seminars aus!",
+						USECASE_LIVE_FEEDBACK_DETAILS: "###Live Feedback\n\n Falls nur ein \"Verständnisbarometer\" benötigt wird: Live Feedback zum Tempo und Verständnis des Unterrichts. Sie können die Abstimmung schließen und das aktuelle Ergebnis als Stimmungsbild festhalten. ![Live Feedback](https://arsnova.thm.de/blog/wp-content/uploads/2016/02/Live-Feedback.png \"245xautoxcenter\") ",
+						EXPORT_FIELD_UNI: "Institution",
+						SESSIONPOOL_NOTIFICATION_UNIVERSITY: "Keine Institution angegeben",
+						EXPORT_FIELD_SPECIAL_FIELD: "Abteilung",
+						EXPORT_FIELD_SUBJECT: "Kurs",
+						ON_SESSION_CREATION_2: "Sie können diese Session nur in der Rolle Referent/in via ### verwalten",
+						SESSION_OWNERS: "Rolle Referent/in",
+						ACTIVE_STUDENT_USERS: "Rolle Zuhörer/in",
+						CONFIRM_CLOSE_QUESTION_MESSAGE: "Wenn Sie die Frage sperren, können die Zuhörer/innen die Frage weder sehen noch beantworten.",
+						CONFIRM_CLOSE_VOTE_MESSAGE: "Wenn Sie die Abstimmung sperren, können die Zuhörer/innen die Frage nicht mehr beantworten.",
+						CONFIRM_CLOSE_ALL_VOTES_MESSAGE: "Wenn Sie die Abstimmung für alle Fragen sperren, können die Zuhöer/innen die Fragen nicht mehr beantworten.",
+						CONFIRM_CLOSE_ALL_QUESTIONS_MESSAGE: "Wenn Sie die Fragen sperren, können Zuhörer/innen die Fragen weder sehen noch beantworten.",
+						CONFIRM_CLOSE_SESSION_MESSAGE: "Wenn Sie den Zugang sperren, können nur noch aktuell angemeldete Zuhörer/innen teilnehmen.",
+						ON_SESSION_CREATION_1: "Es wurde der Zugangsschlüssel «###» für Ihre Session erzeugt. Dieser kann jederzeit auf der Session-Übersicht eingesehen werden. Bitte teilen Sie ihn Ihren Zuhörerinnen und Zuhörern mit.",
+						MOTD_AUDIENCE_TUTORS: "Seminarleiter/innen",
+						MOTD_AUDIENCE_STUDENTS: "Zuhörer/innen",
+						MY_COURSES: "Meine Seminare:",
+						LOAD_MASK_SEARCH_COURSES: "Suche Seminare...",
+						COURSES_LEARNING_PROGRESS: "Lernstand des Seminars"
+					};
+
+					break;
+
+				case "school":
+					Messages.variation = {
+						STUDENT: "Schüler/in",
+						SPEAKER: "Lehrer/in",
+						LAST_VISITED_SESSIONS_SPEAKER: "Als Lehrer/in besuchte Sessions",
+						QUESTIONS_FROM_STUDENTS: "Fragen & Kommentare der Schüler/innen",
+						LECTURE_QUESTIONS: "Klasse",
+						LECTURE_QUESTION_LONG: "Klassenfrage",
+						LECTURE_QUESTIONS_LONG: "Klassenfragen",
+						ONE_NEW_LECTURE_QUESTION: "1 neue Klassenfrage",
+						SEVERAL_NEW_LECTURE_QUESTIONS: '### neue Klassenfragen',
+						LECTURE: "Klasse",
+						QUESTION_INSTRUCTION: "Du stellst diese Frage anonym",
+						TWITTER_WALL_PRIVACY_INFO: "Im aktuellen Modus kann die Lehrperson deine Frage auf der Twitter Wall anzeigen.",
+						NEW_LECTURE_QUESTION: "Neue Klassenfrage",
+						EXPORT_SESSION_INFORMATION: "Neben Klassenfragen und Vorbereitungsaufgaben der ausgewählten Sessions werden zusätzlich exportiert...",
+						USECASE_ARSNOVA_CUSTOM_DETAILS: "###Mein ARSnova\n\n Sie können die Funktionalität Ihrer Session kombinieren aus: \n- Klassenfragen \n- Vorbereitungsaufgaben\n- Fragen & Kommentare der Schüler/innen\n- Live Feedback\n- 2-Runden-Abstimmungen\n- Lernstandsberechnung\n- Twitter Wall",
+						QUESTION_TEXT_PLACEHOLDER: "Nur die Lehrperson sieht deine Frage. Sobald die Lehrperson deine Frage gelesen hat, wird sie grau angezeigt. Antworten können in ARSnova nicht gegeben werden. Du kannst auf deine Fragen und Kommentare nur in dem Browser zugreifen, den du gerade verwendest.",
+						SESSIONPOOL_AUTHORINFO: "Lehrer/in",
+						USECASE_INTERPOSED_FEEDBACK_DETAILS: "###Zwischenfragen & Kommentare\n\n Falls nur ein digitaler \"Kummerkasten\" aufgestellt werden soll: Die Fragen und Kommentare der Schüler/innen sind anonym und nur sichtbar für die Lehrperson. ![Zwischenfrage](https://arsnova.thm.de/blog/wp-content/uploads/2016/02/Zwischenfrage.png \"245xautoxcenter\") ",
+						SESSION_CLOSE_NOTICE: "Um mehrfaches Abstimmen zu verhindern, hat dein/e Lehrer/in die Session gesperrt. Logg dich bitte erst am Ende der Stunde aus!",
+						USECASE_LIVE_FEEDBACK_DETAILS: "###Live Feedback\n\n Falls nur ein \"Verständnisbarometer\" benötigt wird: Live Feedback zum Tempo und Verständnis des Unterrichts. Sie können die Abstimmung schließen und das aktuelle Ergebnis als Stimmungsbild festhalten. ![Live Feedback](https://arsnova.thm.de/blog/wp-content/uploads/2016/02/Live-Feedback.png \"245xautoxcenter\") ",
+						EXPORT_FIELD_UNI: "Schule",
+						SESSIONPOOL_NOTIFICATION_UNIVERSITY: "Keine Schule angegeben",
+						EXPORT_FIELD_SPECIAL_FIELD: "Klasse",
+						EXPORT_FIELD_SUBJECT: "Fach",
+						ON_SESSION_CREATION_2: "Sie können diese Session nur in der Rolle Lehrer/in via ### verwalten",
+						SESSION_OWNERS: "Rolle Lehrer/in",
+						ACTIVE_STUDENT_USERS: "Rolle Schüler/in",
+						CONFIRM_CLOSE_QUESTION_MESSAGE: "Wenn Sie die Frage sperren, können die Schüler/innen die Frage weder sehen noch beantworten.",
+						CONFIRM_CLOSE_VOTE_MESSAGE: "Wenn Sie die Abstimmung sperren, können die Schüler/innen die Frage nicht mehr beantworten.",
+						CONFIRM_CLOSE_ALL_VOTES_MESSAGE: "Wenn Sie die Abstimmung für alle Fragen sperren, können die Schüler/innen die Fragen nicht mehr beantworten.",
+						CONFIRM_CLOSE_ALL_QUESTIONS_MESSAGE: "Wenn Sie die Fragen sperren, können die Schüler/innen die Fragen weder sehen noch beantworten.",
+						CONFIRM_CLOSE_SESSION_MESSAGE: "Wenn Sie den Zugang sperren, können nur noch aktuell angemeldete Schüler/innen teilnehmen.",
+						ON_SESSION_CREATION_1: "Es wurde der Zugangsschlüssel «###» für Ihre Session erzeugt. Dieser kann jederzeit auf der Session-Übersicht eingesehen werden. Bitte teilen Sie ihn Ihren Schülerinnen und Schülern mit.",
+						MOTD_AUDIENCE_TUTORS: "Lehrer/innen",
+						MOTD_AUDIENCE_STUDENTS: "Schüler/innen",
+						MY_COURSES: "Meine Klassen:",
+						LOAD_MASK_SEARCH_COURSES: "Suche Klassen...",
+						COURSES_LEARNING_PROGRESS: "Lernstand der Klasse"
+					};
+
+					break;
+			}
+
 			break;
 
 		case 'en':
@@ -742,6 +889,7 @@
 				SPEAKER: "Teacher",
 				TITLE_ROLE: "Feedback & Interaction",
 				/* loginPanel */
+				LOGIN: "Login",
 				GUEST: "Guest",
 				CHANGE_ROLE: "Change role",
 				NO_GUEST_SPEAKER: "Note: You have to log in to create a session.",
@@ -793,7 +941,7 @@
 				MY_PUBLIC_POOL_SESSIONS: "My pool sessions",
 				SESSIONS: "Sessions",
 				SESSIONID_WILL_BE_CREATED: "Session ID is being created...",
-				SESSION_NAME: "Name",
+				SESSION_NAME: "Long Name",
 				SESSION_NAME_PLACEHOLDER: "max. 50 digits",
 				SESSION_SHORT_NAME: "Short name",
 				SESSION_SHORT_NAME_PLACEHOLDER: "max. 8 digits",
@@ -805,7 +953,7 @@
 				MESSAGEOFTHEDAY: "\"Message of the Day\"",
 				MESSAGEOFTHEDAY_BUTTON:	"Message of the Day",
 				CREATE_NEW_MOTD: "Create new message",
-				MY_MESSAGES: "All messages",
+				MY_MESSAGES: "Back",
 				NEW_MOTD: "New message",
 				SAVE_NEW_MESSAGE: "Save",
 				EDIT_MOTD: "Edit message",
@@ -857,7 +1005,8 @@
 				QUESTION: "Question",
 				QUESTION_PLACEHOLDER: "Enter question",
 				QUESTIONTEXT_PLACEHOLDER: "Enter question",
-				QUESTION_MANAGEMENT: "Question Management",
+				QUESTION_MANAGEMENT: "Click on a question to edit:",
+				CONTENT_MANAGEMENT: "Click on a content to edit:",
 				QUESTIONS: "Questions",
 				TASKS: "Tasks",
 				QUESTION_DETAILS: "Full text",
@@ -872,20 +1021,30 @@
 				LOADING_NEW_QUESTIONS: "Loading new questions.",
 				NO_DATE: "No date",
 				NO_SUBJECT: "No subject",
+				NO_TEXT_SUBMITTED: "No text has been submitted.",
 				SESSION_CLOSE_NOTICE: 'In order to prevent multiple votings, your teacher has closed the session. Please log out at the end of the lecture!',
 				NOTICE_READ: "I understood it",
 				STATUS: "Status",
-				FREETEXT_ANSWER_TEXT: "My Answer",
+				COMMENT: "Comment",
+				COMMENTS: "Comments",
+				MY_COMMENT: "My comment",
+				MY_COMMENTS: "My comments",
+				COMMENT_SAVED: "Your comment was saved.",
+				FREETEXT_ANSWER_TEXT: "My answer",
 				FREETEXT_DETAIL_HEADER: "Answer",
 				FREETEXT_DETAIL_ANSWER: "Answer",
 				FORMAT_PLACEHOLDER: "(use Markdown for text formatting and LaTeX for mathematical formulas)",
 				NO_ANSWERS: "No answers found.",
+				NO_COMMENTS: "No comments found",
 				ONLY_ABSTENTION_ANSWERS: "There are ###, but no answers yet.",
 				FREETEXT_DETAIL_LABEL: "There ### and %%%:",
+				SLIDE_DETAIL_LABEL: "There ###:",
 				ANSWER_SAVED: 'Your answer has been saved.',
 				MISSING_INPUT: "Please fill out all required fields.",
 				SHOWCASE: "Showcase",
 				LEAVE: "Leave",
+				CONTENT: "Content",
+				CONTENT_PLURAL: "Content",
 				MEMBERS_ONLY: "This question is visible to course members only.",
 				QUESTION_RATING: "Likert-type Scale",
 				QUESTION_RATING_SHORT: "Rating",
@@ -896,15 +1055,18 @@
 				QUESTION_MC: "Multiple Choice: Select",
 				QUESTION_MC_SHORT: "MC",
 				QUESTION_YESNO: "Polar Question",
-				QUESTION_LIVE_CLICKER: "\"Ask the Audience\"",
+				QUESTION_LIVE_CLICKER: "Live Clicker",
 				QUESTION_YESNO_SHORT: "Yes | No",
 				QUESTION_SINGLE_CHOICE: "Single Choice: Choose",
 				QUESTION_SINGLE_CHOICE_SHORT: "Single",
 				QUESTION_FREETEXT: "Open-ended Question",
 				QUESTION_FREETEXT_SHORT: "Free Text",
 				OPEN_QUESTION: "Open question",
+				OPEN_CONTENT: "Open content",
 				CLOSED_QUESTION: "Closed question",
+				CLOSED_CONTENT: "Closed content",
 				CLOSED_VOTING: "Voting closed",
+				CLOSED_COMMENTATION: "Commentation closed",
 				CONFIRM_CLOSE_VOTE: "Are you sure you want to close the voting?",
 				CONFIRM_CLOSE_ALL_VOTES: "Are you sure you want to close the voting?",
 				CONFIRM_CLOSE_QUESTION: "Are you sure you want to close this question?",
@@ -944,8 +1106,9 @@
 
 				/* user */
 				QUESTIONS_TO_STUDENTS: "Teacher's questions",
-				QUESTIONS_FROM_STUDENTS: "Students' questions",
-				UNREAD_QUESTIONS_FROM_STUDENTS: "Unread questions",
+				QUESTIONS_FROM_STUDENTS: "Students' questions & comments",
+				QUESTIONS_FROM_STUDENTS_SHORT: "Questions & comments",
+				UNREAD_QUESTIONS_FROM_STUDENTS: "Unread questions & comments",
 				PREPARATION_QUESTIONS: "Prep tasks",
 				PREPARATION_QUESTIONS_LONG: "Preparation tasks",
 				PREPARATION_QUESTION_SHORT: "Prep task",
@@ -969,6 +1132,7 @@
 				THERE_ARE: "There are",
 				NEW_QUESTIONS: "new questions.",
 				MY_QUESTIONS: "My questions",
+				MY_QUESTIONS_AND_COMMENTS: "My questions & comments",
 				MY_LEARNING_PROGRESS: "My progress",
 				VERSUS: "vs",
 				LEARN: "Learn",
@@ -986,9 +1150,11 @@
 				].join('\n'),
 
 				/* speaker */
+				PRESENTATION: "Presentation",
 				LIVE_FEEDBACK: "Instant feedback",
 				COURSES_LEARNING_PROGRESS: "Class progress",
 				COURSES_LEARNING_PROGRESS_SHORT: "Class progress",
+				INTERPOSED_QUESTIONS: "Interposed questions",
 				CURRENT_VALUE: "Current value",
 				HOW_TO_CALCULATE_LEARNING_PROGRESS: "How to calculate the learning progress?",
 				QUESTION_BASED_PROGRESS: "Question based",
@@ -1056,8 +1222,8 @@
 				DELETE_ANSWERS_REQUEST: "Delete answers?",
 				DELETE_ALL_ANSWERS_REQUEST: "Delete all answers?",
 				DELETE_ROUND_ANSWERS_COMPLETED: "All answers of the actual round have been deleted.",
-				RELEASE_LIVE_VOTING: "Release live voting",
-				CLOSE_LIVE_VOTING: "Freeze live voting",
+				RELEASE_LIVE_VOTING: "Release voting",
+				CLOSE_LIVE_VOTING: "Freeze voting",
 				QUESTION_REMAINS: "The question itself stays unaffected.",
 				INCOMPLETE_INPUTS: "Your inputs are incomplete.",
 				ALL_QUESTIONS_REMAIN: "The questions themselves stay unaffected.",
@@ -1071,7 +1237,8 @@
 				BACK: "Back",
 				FLASHCARD_FRONT_PAGE: 'Front side',
 				FLASHCARD_BACK_PAGE: 'Back side',
-				SAVE_AND_CONTINUE: "Save and ask a new question",
+				SAVE_AND_CONTINUE: "Save and continue",
+				SAVE_AND_ASK_NEW_QUESTION: "Save and ask a new question",
 				PICTURE_MAX_FILESIZE: "Maximum file size: ###",
 				SELECT_PICTURE_FS: "URL",
 				SELECT_PICTURE_URL: "Picture URL",
@@ -1116,7 +1283,6 @@
 				TEMPLATE_FOR_MODERATION: "Templates for an opinion poll",
 				TEMPLATE: "Template",
 				APPLY: "Apply",
-				DOWNLOAD:	"Download template",
 				MISSING_INPUTS: "Some inputs are incomplete:",
 				MISSING_SUBJECT: "The subject is missing",
 				MISSING_QUESTION: "The question is missing",
@@ -1176,7 +1342,7 @@
 
 				/*Markdown Editor*/
 				EDITOR_VIMEO: "Vimeo",
-				EDITOR_YOUTUBE: "Youtube",
+				EDITOR_YOUTUBE: "YouTube",
 				EDITOR_HYPERLINK: "Hyperlink",
 				EDITOR_PICTURE: "Picture",
 				EDITOR_URL: "Reference",
@@ -1190,6 +1356,21 @@
 				EDITOR_CENTER: "center",
 				EDITOR_RIGHT: "right",
 				EDITOR_LEFT: "left",
+
+				EDITOR_BOLD_TOOLTIP: "Bold",
+				EDITOR_HEADER_TOOLTIP: "Header",
+				EDITOR_HYPERLINK_TOOLTIP: "Hyperlink",
+				EDITOR_ULIST_TOOLTIP: "Unsorted list",
+				EDITOR_OLIST_TOOLTIP: "Sorted list",
+				EDITOR_LATEX_TOOLTIP: "LaTex",
+				EDITOR_CODE_TOOLTIP: "Code",
+				EDITOR_QUOTE_TOOLTIP: "Quotation",
+				EDITOR_YOUTUBE_TOOLTIP: "YouTube",
+				EDITOR_VIMEO_TOOLTIP: "Vimeo",
+				EDITOR_PICTURE_TOOLTIP: "Picture",
+				EDITOR_INFO_TOOLTIP: "Info",
+
+				EDITOR_INFO_HINT: "You can markup text inside of ARSnova by using [Markdown](https://en.wikipedia.org/wiki/Markdown). The most frequent used Markdown options are accessible above all supported textareas. ARSnova also supports [GitHub Flavored Markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet).",
 
 				/*Public pool*/
 				SESSIONPOOL_LEVEL: "Level",
@@ -1225,6 +1406,7 @@
 				YESNO: "Y|N",
 				ABCD: "SC",
 				GRID: "Pic",
+				SLIDE: "Slide",
 				FREETEXT: "Text",
 				MC_LONG: "Multiple Choice",
 				ABCD_LONG: "Single Choice",
@@ -1234,6 +1416,7 @@
 				SCHOOL_LONG: 'Grade',
 				YESNO_LONG: 'Yes|No',
 				GRID_LONG: "Hot Spots",
+				SLIDE_LONG: "Slides",
 				FREETEXT_LONG: 'Free Text',
 				BUZZWORD: "Buzzword for",
 				BUZZWORD_A: "Buzzword for A",
@@ -1302,6 +1485,20 @@
 				CHANGE_FEATURES: "Change<br/>use case",
 				CHANGE_ROLE_BUTTONTEXT: "Change<br/>role",
 
+				NEW_SLIDE: "Create new<br/>slides",
+				NEW_CONTENT: "Create new<br/>content",
+				DELETE_SLIDE: "Delete<br/>slide",
+				DELETE_CONTENT: "Delete<br/>content",
+				RELEASE_SLIDE: "Release<br/>slide",
+				RELEASE_CONTENT: "Release<br/>content",
+				ALLOW_COMMENTS: "Allow<br/>comments",
+				SHOW_COMMENTS: "Show<br/>comments",
+				DELETE_COMMENTS: "Delete<br/>comments",
+				RELEASE_COMMENTS: "Release<br/>comments",
+				SHOWCASE_KEYNOTE: "Deliver<br/>talk",
+				EXPORT_CONTENT: "Export<br/>content",
+				IMPORT_CONTENT: "Import<br/>content",
+
 				/* about */
 				MANUAL: "Manual",
 				ABOUT: "About",
@@ -1310,7 +1507,8 @@
 
 				OPINION: "Your opinion matters",
 				WIDGET_IS_LOADING: 'Widget is loading...',
-				RELOAD_SURE: "Do you want to reload ARSnova?",
+				RELOAD_SURE: "You will be logged out from the current session.### Do you want to reload ARSnova?",
+				RELOAD_GUEST_ADDITION: " Since you are logged in as guest, you can not access your created sessions after this action. Please make sure that all the necessary data have been backed up with the export function.",
 				OPEN_SESSIONS: "Sessions: open",
 				ACTIVE_SESSIONS: "Sessions: active",
 				CLOSED_SESSIONS: "Sessions: closed",
@@ -1340,8 +1538,9 @@
 				USECASE_ABCD_CLICKER: "\"Ask the Audience\" (A|B|C|D single-choice question)",
 				USECASE_PEER_GRADING: "Evaluation (5-level Likert scale)",
 				USECASE_FLASHCARD: "Flashcards for self studies",
-				USECASE_LIVE_FEEDBACK: "Live feedback & questions from the audience",
-				USECASE_ARSNOVA_TOTAL: "All-inclusive (all question types, all functions)",
+				USECASE_LIVE_FEEDBACK: "Instant Feedback",
+				USECASE_INTERPOSED_FEEDBACK: "Questions & comments from the audience",
+				USECASE_KEYNOTE: "Interactive Keynote",
 				USECASE_ARSNOVA_CUSTOM: "My ARSnova",
 
 				USECASES_CHOOSE_SHORT: "Select use case",
@@ -1350,17 +1549,20 @@
 				USECASE_PEER_GRADING_SHORT: "Evaluation",
 				USECASE_FLASHCARD_SHORT: "Flashcards",
 				USECASE_LIVE_FEEDBACK_SHORT: "Live feedback",
-				USECASE_ARSNOVA_TOTAL_SHORT: "All-inclusive",
+				USECASE_INTERPOSED_FEEDBACK_SHORT: "Interposed Questions",
+				USECASE_KEYNOTE_SHORT: "Interactive Keynote",
 				USECASE_ARSNOVA_CUSTOM_SHORT: "My ARSnova",
 
 				USECASE_CLICKER_DETAILS: "###Clicker Questions\n\n Only simple question types: Multiple Choice (select), Single Choice (choose), Yes|No (polar question), Likert Scale (evaluation), and Grading (school grades).",
 				USECASE_ABCD_CLICKER_DETAILS: "###Ask the Audience\n\n Only A|B|C|D response options without question text as known from the quiz show \"Who Wants to Be a Millionaire\".",
 				USECASE_PEER_GRADING_DETAILS: "###Evaluation Questions\n\n 5-level [Likert items](https://en.wikipedia.org/wiki/Likert_scale) with values in the range of -10 to 10. The response options are editable, default: strongly agree | agree | neutral | disagree | strongly disagree.",
 				USECASE_FLASHCARD_DETAILS: "###Flashcards for private study\n\n Question on front side, answer on back side. You can embed videos and pictures.",
-				USECASE_LIVE_FEEDBACK_DETAILS: "###Live Feedback\n\n With the use of \“Smileys\”, the listeners can indicate their pace of learning and understanding of the lecture or pose questions, without interrupting the class.",
-				USECASE_ARSNOVA_TOTAL_DETAILS: "###All-inclusive ARSnova\n\n All didactic functions and question types that ARSnova supports for [Peer Instruction](https://en.wikipedia.org/wiki/Peer_instruction) and [Flipped Classroom](https://en.wikipedia.org/wiki/Flipped_classroom).",
+				USECASE_LIVE_FEEDBACK_DETAILS: "###Live Feedback\n\n With the use of \“Smileys\”, the listeners can indicate their pace of learning and understanding of the lecture.",
+				USECASE_INTERPOSED_FEEDBACK_DETAILS: "###Interposed Questions & Comments\n\n The listeners can pose questions or give comments, without interrupting the class.",
+				USECASE_KEYNOTE_DETAILS: "###Interactive Keynote\n\n All didactic functions and question types that ARSnova supports for [Peer Instruction](https://en.wikipedia.org/wiki/Peer_instruction) and [Flipped Classroom](https://en.wikipedia.org/wiki/Flipped_classroom).",
 				USECASE_ARSNOVA_CUSTOM_DETAILS: "###My ARSnova\n\n Personal selection of didactic functions...",
 
+				TWITTER_WALL_PRIVACY_INFO: "In current session mode, the teacher is able to show your question on the Twitter Wall.",
 
 				/* errors */
 				SESSION_NOT_FOUND: "This session does not seem to exist.",
@@ -1392,17 +1594,36 @@
 
 				/* CSV export */
 				QUESTIONS_CSV_EXPORT_BUTTON: "Export<br>questions",
-				QUESTIONS_CSV_EXPORT_MSBOX_TITLE: "Export Questions",
-				QUESTIONS_CSV_EXPORT_MSBOX_INFO: "The questions will be exported as a CSV file.",
+				QUESTIONS_CSV_EXPORT_MSBOX_TITLE: "Export content",
+				QUESTIONS_CSV_EXPORT_MSBOX_INFO: "The questions will be exported as a CSV file. \"Hot Spots\" questions won't be exported. For exporting the whole session please use the export function on the session overview.<br>Export questions?",
 
 				/* CSV import */
 				QUESTIONS_CSV_IMPORT_BUTTON: "Import<br>questions",
-				QUESTIONS_CSV_IMPORT_MSBOX_TITLE: "Import questions",
+				QUESTIONS_CSV_IMPORT_MSBOX_TITLE: "Import content",
 				QUESTIONS_CSV_IMPORT_ERR_IN_ROW: "at line",
 				QUESTIONS_CSV_IMPORT_TYPE_ERROR: "Invalid question type",
 				QUESTIONS_CSV_IMPORT_ABSTENTION_ERROR: "Error in field 'abstention'",
 				QUESTIONS_CSV_IMPORT_INVALID_FORMAT: "Invalid file format"
 			};
+
+			switch (variation) {
+				case "event":
+					Messages.variation = {
+						/* TODO: add localization */
+						STUDENT: "Learner",
+						SPEAKER: "Instructor"
+					};
+
+					break;
+
+				case "school":
+					Messages.variation = {
+						/* TODO: add localization */
+						STUDENT: "Pupil",
+						SPEAKER: "Teacher"
+					};
+			}
+
 			break;
 	}
 	// make Messages globally accessible

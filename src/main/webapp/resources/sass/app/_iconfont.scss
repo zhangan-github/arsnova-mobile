@@ -70,6 +70,9 @@
 @include icon("icon-text-height" , "\f034", "arsnova");
 @include icon("icon-projector" , "\e607", "arsnova");
 @include icon("icon-dashboard" , "\f0e4", "arsnova");
+@include icon("icon-warning" , "\f071", "arsnova");
+@include icon("icon-pencil" , "\f045", "arsnova");
+@include icon("icon-comment" , "\f075", "arsnova");
 
 @include icon("icon-undo", "\f0e2", "arsnova");
 @include icon("icon-drag", "\f0dc", "arsnova");
@@ -78,7 +81,7 @@
 @include icon("icon-sort-time", "\f017", "arsnova");
 @include icon("icon-sort-random", "\f074", "arsnova");
 
-@include icon("icon-check" , "3", "Pictos");
+@include icon("icon-check", "3", "Pictos");
 @include icon('minus2');
 
 @include icon("login-icon-guest" , "\e616", "arsnova");
@@ -135,6 +138,11 @@
 	margin-bottom: 3.5px!important;
 }
 
+.latexIcon::before {
+	content: "\f12b";
+	font-family: "arsnova";
+}
+
 .codeListingIcon::before {
 	content: "\f121";
 	font-family: "arsnova";
@@ -154,6 +162,12 @@
 
 .imageIcon::before {
 	content: "\f1c5";
+	font-family: "arsnova";
+	left: 3px !important;
+}
+
+.hyperlinkIcon::before {
+	content: "\f0ac";
 	font-family: "arsnova";
 	left: 3px !important;
 }
@@ -288,12 +302,22 @@
 	line-height: 1em !important;
 }
 
+.x-button-icon.icon-comment:before {
+	top: -2px !important;
+}
+
 .iconBtn {
+	.icon-pencil,
 	.icon-newsession {
 		color: $icon-newsession-color;
 		margin-left: 19px !important;
 		margin-top: 15px !important;
 		font-size: 50px !important;
+	}
+
+	.icon-comment {
+		color: $icon-chart-color;
+		margin-top: 12px !important;
 	}
 
 	.icon-close {
@@ -422,6 +446,10 @@
 	display: inline-block;
 	border-radius: 50%/50%;
 	box-shadow: inset 50px 50px 50px $smiley-bg-color;
+}
+
+.icon-warning {
+	color: $icon-warning-color;
 }
 
 .text-icons {

@@ -31,6 +31,7 @@ Ext.define('ARSnova.view.user.QuestionPanel', {
 		fullscreen: true,
 		title: Messages.QUESTIONS,
 		iconCls: 'icon-presenter',
+		cls: 'userQuestions',
 
 		mode: 'lecture',
 		questionLoader: null,
@@ -100,6 +101,7 @@ Ext.define('ARSnova.view.user.QuestionPanel', {
 
 		if (newQuestion.questionObj) {
 			newQuestion.updateQuestionText();
+			this.toolbar.checkStatisticButtonIcon(newQuestion.questionObj);
 			this.toolbar.setTitle(Ext.util.Format.htmlEncode(newQuestion.getQuestionTypeMessage()));
 		}
 	},
@@ -203,6 +205,7 @@ Ext.define('ARSnova.view.user.QuestionPanel', {
 	addQuestion: function (question, index) {
 		var questionPanel;
 		var questionsLength = this.getInnerItems().length;
+		var isUnanswered = !question.userAnswered && !question.isAbstentionAnswer;
 
 		// do not add the same question multiple times
 		if (this.questions.indexOf(question._id) !== -1) {
@@ -212,7 +215,7 @@ Ext.define('ARSnova.view.user.QuestionPanel', {
 		/**
 		 * add question to questionPanel
 		 */
-		if (question.questionType === 'freetext') {
+		if (question.questionType === 'freetext' || question.questionType === 'slide') {
 			questionPanel = Ext.create('ARSnova.view.FreetextQuestion', {
 				itemId: question._id,
 				questionObj: question
@@ -234,6 +237,7 @@ Ext.define('ARSnova.view.user.QuestionPanel', {
 			this.updateIndicatorPosition(this.nextUnansweredIndex);
 		}
 
+		this.getIndicator().setIndicatorColorAnswered(index, !isUnanswered);
 		this.setActiveItem(this.nextUnansweredIndex);
 	},
 
@@ -242,10 +246,13 @@ Ext.define('ARSnova.view.user.QuestionPanel', {
 		var index = 0;
 		var activeIndex = -1;
 		var questionIndex = 0;
+		var isNextUnanswered = false;
 		this.nextUnansweredIndex = me.getNextUnansweredIndex(questions, questionIds);
 
 		if (this.nextUnansweredIndex) {
-			this.addQuestion(questions[questionIds[this.nextUnansweredIndex]]);
+			var question = questions[questionIds[this.nextUnansweredIndex]];
+			isNextUnanswered = !question.userAnswered && !question.isAbstentionAnswer;
+			this.addQuestion(question);
 		}
 
 		var addQuestionTask = function () {
@@ -270,6 +277,9 @@ Ext.define('ARSnova.view.user.QuestionPanel', {
 					me.setActiveItem(activeIndex);
 				}
 
+				if (me.nextUnansweredIndex) {
+					me.getIndicator().setIndicatorColorAnswered(me.nextUnansweredIndex, !isNextUnanswered);
+				}
 				hideIndicatorFn();
 			} else {
 				questionIndex++;
@@ -321,6 +331,7 @@ Ext.define('ARSnova.view.user.QuestionPanel', {
 
 	checkAnswer: function (questionPanel) {
 		var questionObj = questionPanel.questionObj;
+
 		if (!questionObj.userAnswered && !questionObj.isAbstentionAnswer) {
 			return;
 		}
@@ -386,6 +397,10 @@ Ext.define('ARSnova.view.user.QuestionPanel', {
 	 */
 	checkStatisticsRelease: function () {
 		var questionView = this.getActiveItem();
+
+		if (questionView.questionObj.piRoundActive) {
+			return;
+		}
 
 		questionView.fireEvent('preparestatisticsbutton', this.toolbar.statisticsButton);
 		this.toolbar.checkStatistics(questionView.questionObj, questionView.isDisabled());

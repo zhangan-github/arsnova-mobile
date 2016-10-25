@@ -36,7 +36,8 @@ Ext.define('ARSnova.view.diagnosis.UseCasePanel', {
 			interposed: false,
 			learningProgress: false,
 			jitt: false,
-			pi: false
+			pi: false,
+			slides: false
 		},
 		scrollable: {
 			direction: 'vertical',
@@ -98,6 +99,11 @@ Ext.define('ARSnova.view.diagnosis.UseCasePanel', {
 				shortLabel: Messages.USECASE_CLICKER_SHORT,
 				details: Messages.USECASE_CLICKER_DETAILS
 			}, {
+				value: 'interposedFeedback',
+				label: Messages.USECASE_INTERPOSED_FEEDBACK,
+				shortLabel: Messages.USECASE_INTERPOSED_FEEDBACK_SHORT,
+				details: Messages.USECASE_INTERPOSED_FEEDBACK_DETAILS
+			}, {
 				value: 'liveFeedback',
 				label: Messages.USECASE_LIVE_FEEDBACK,
 				shortLabel: Messages.USECASE_LIVE_FEEDBACK_SHORT,
@@ -114,9 +120,9 @@ Ext.define('ARSnova.view.diagnosis.UseCasePanel', {
 				details: Messages.USECASE_FLASHCARD_DETAILS
 			}, {
 				value: 'total',
-				label: Messages.USECASE_ARSNOVA_TOTAL,
-				shortLabel: Messages.USECASE_ARSNOVA_TOTAL_SHORT,
-				details: Messages.USECASE_ARSNOVA_TOTAL_DETAILS
+				label: Messages.USECASE_KEYNOTE,
+				shortLabel: Messages.USECASE_KEYNOTE_SHORT,
+				details: Messages.USECASE_KEYNOTE_DETAILS
 			}, {
 				value: 'custom',
 				label: Messages.USECASE_ARSNOVA_CUSTOM,
@@ -178,7 +184,7 @@ Ext.define('ARSnova.view.diagnosis.UseCasePanel', {
 	},
 
 	onActivate: function () {
-		var features = Ext.decode(sessionStorage.getItem("features"));
+		var features = ARSnova.app.getController('Feature').getActiveFeatures();
 		var selection = [];
 
 		for (var item in features) {
@@ -232,7 +238,7 @@ Ext.define('ARSnova.view.diagnosis.UseCasePanel', {
 
 	validateSelection: function () {
 		var selection = this.getUseCaseValues();
-		if (!selection.clicker && !selection.peerGrading && !selection.flashcard &&
+		if (!selection.clicker && !selection.peerGrading && !selection.flashcard && !selection.interposedFeedback &&
 			!selection.liveFeedback && !selection.total && !selection.custom && !selection.liveClicker) {
 			Ext.Msg.alert(Messages.NOTIFICATION, Messages.FEATURE_SAVE_ERROR);
 			return false;
