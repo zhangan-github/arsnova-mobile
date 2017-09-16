@@ -1,0 +1,2 @@
+grunt refresh
+grunt run
