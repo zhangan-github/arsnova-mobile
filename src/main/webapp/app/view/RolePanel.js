@@ -90,10 +90,11 @@ Ext.define('ARSnova.view.RolePanel', {
 		}, {
 			xtype: 'panel',
 			cls: null,
+			//for temp use
 			html: "<div class='icon-logo'>" +
-					"<span class='icon-logo-radar'>r</span>" +
-					"<span class='icon-logo-ars'>a</span>" +
-					"<span class='icon-logo-nova'>n</span>" +
+					"<span class='icon-logo-ars'>FIT</span>" +
+					"<span class='icon-lock'>-</span>" +
+					"<span class='icon-logo-nova'>TJU</span>" +
 					"</div>",
 			style: {
 				marginTop: '5px'

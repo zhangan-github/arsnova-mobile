@@ -21,6 +21,7 @@ Ext.define("ARSnova.controller.Application", {
 
 	config: {
 		routes: {
+			'teacherSecret': 'autoTeacherRoleSelect'
 		}
 	},
 
@@ -31,6 +32,13 @@ Ext.define("ARSnova.controller.Application", {
 		me.initializeAdvancedScrolling();
 		ARSnova.app.globalZoomLevel = 100;
 		ARSnova.app.storedZoomLevel = null;
+	},
+
+	autoTeacherRoleSelect: function () {
+		console.debug("Application.js : autoTeacherRoleSelect is called");
+		ARSnova.app.getController('Auth').roleSelect({
+			mode: ARSnova.app.USER_ROLE_SPEAKER
+		});
 	},
 
 	/**

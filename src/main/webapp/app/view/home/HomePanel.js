@@ -251,6 +251,7 @@ Ext.define('ARSnova.view.home.HomePanel', {
 	},
 
 	onActivate: function () {
+		console.debug("HomePanle : painted event is triggered");
 		var me = this;
 		this.resetPaginationState();
 
