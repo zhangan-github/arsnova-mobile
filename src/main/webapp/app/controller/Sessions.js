@@ -31,6 +31,7 @@ Ext.define("ARSnova.controller.Sessions", {
 	launch: function () {
 		/* (Re)join session on Socket.IO connect event */
 		ARSnova.app.socket.addListener("arsnova/socket/connect", function () {
+			console.debug("Controller: Session. socket-connect listener");
 			var keyword = sessionStorage.getItem('keyword');
 
 			if (keyword) {

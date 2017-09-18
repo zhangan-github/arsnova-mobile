@@ -203,11 +203,11 @@ Ext.define("ARSnova.controller.Auth", {
 	restoreLogin: function () {
 		/* Workaround: Currently ARSnova is not designed to support routing after startup */
 		if (this.disableRouting) {
-			console.debug("Route ignored");
+			console.debug("Route debug");
 
-			return;
+			//return;
 		}
-		this.disableRouting = true;
+		this.disableRouting = false;
 
 		console.debug("Controller: Auth.restoreLogin");
 		ARSnova.app.configLoaded.then(Ext.bind(function () {
@@ -223,9 +223,10 @@ Ext.define("ARSnova.controller.Auth", {
 
 		/* clear local storage */
 		localStorage.removeItem('sessions');
-		localStorage.removeItem('role');
 		localStorage.removeItem('loginMode');
 		localStorage.removeItem('isAdmin');
+		//don't delete role because we decide the role through url now
+		//localStorage.removeItem('role');
 
 		/* check if new version available */
 		var appCache = window.applicationCache;
@@ -233,7 +234,8 @@ Ext.define("ARSnova.controller.Auth", {
 			appCache.update();
 		}
 
-		ARSnova.app.userRole = "";
+		//Again, don't delete role because we decide the role through url now
+		//ARSnova.app.userRole = "";
 
 		/* redirect user:
 		 * a: to CAS if user is authorized
@@ -248,7 +250,7 @@ Ext.define("ARSnova.controller.Auth", {
 		} else {
 			ARSnova.app.restProxy.authLogout();
 
-			ARSnova.app.mainTabPanel.tabPanel.animateActiveItem(ARSnova.app.mainTabPanel.tabPanel.rolePanel, {
+			ARSnova.app.mainTabPanel.tabPanel.animateActiveItem(ARSnova.app.mainTabPanel.tabPanel.loginPanel, {
 				type: 'slide',
 				direction: 'right'
 			});

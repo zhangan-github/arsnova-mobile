@@ -21,7 +21,6 @@ Ext.define('ARSnova.view.TabPanel', {
 
 	requires: [
 		'ARSnova.view.LoginPanel',
-		'ARSnova.view.RolePanel',
 		'ARSnova.view.home.TabPanel',
 		'ARSnova.view.diagnosis.TabPanel',
 		'ARSnova.view.about.BlogTabPanel',
@@ -71,7 +70,6 @@ Ext.define('ARSnova.view.TabPanel', {
 		this.callParent(arguments);
 
 		this.loginPanel = Ext.create('ARSnova.view.LoginPanel');
-		this.rolePanel = Ext.create('ARSnova.view.RolePanel');
 		this.homeTabPanel = Ext.create('ARSnova.view.home.TabPanel');
 		this.diagnosisPanel = Ext.create('ARSnova.view.diagnosis.TabPanel');
 		this.infoTabPanel = Ext.create('ARSnova.view.about.AboutTabPanel');
@@ -80,7 +78,6 @@ Ext.define('ARSnova.view.TabPanel', {
 		this.imprintTabPanel = Ext.create('ARSnova.view.about.ImprintTabPanel');
 
 		this.add([
-			this.rolePanel,
 			this.loginPanel,
 			this.homeTabPanel,
 			this.diagnosisPanel,
@@ -110,7 +107,9 @@ Ext.define('ARSnova.view.TabPanel', {
 					ARSnova.app.lastActiveMainTabPanel = oldCard;
 			}
 
-			if (newCard === this.rolePanel) {
+			//disable because we ignore the role panel
+			//if (newCard === this.rolePanel) {
+			if (false) {
 				this.infoTabPanel.tab.hide();
 				this.blogTabPanel.tab.show();
 			} else {
@@ -118,7 +117,9 @@ Ext.define('ARSnova.view.TabPanel', {
 				this.blogTabPanel.tab.hide();
 			}
 
-			if (ARSnova.app.lastActiveMainTabPanel === this.rolePanel) {
+
+			//if (ARSnova.app.lastActiveMainTabPanel === this.rolePanel) {
+			if (false) {
 				if (newCard === this.infoTabPanel ||
 					newCard === this.privacyTabPanel ||
 					newCard === this.imprintTabPanel ||
@@ -131,11 +132,19 @@ Ext.define('ARSnova.view.TabPanel', {
 		}, this);
 
 		this.on('initialize', function () {
-			this.rolePanel.tab.hide();
 			this.loginPanel.tab.hide();
 			this.homeTabPanel.tab.hide();
 			this.infoTabPanel.tab.hide();
 			this.diagnosisPanel.tab.hide();
+			//before having throughly change code, we hide the origin copyright tab
+			this.infoTabPanel.tab.hide();
+			this.blogTabPanel.tab.hide();
+			this.privacyTabPanel.tab.hide();
+			this.imprintTabPanel.tab.hide();
+			//to direct
+			ARSnova.app.getController('Auth').roleSelect({
+				mode: ARSnova.app.USER_ROLE_STUDENT
+			});
 		});
 		this.on('activate', this.onActivate);
 		this.on('deactivate', this.onDeactivate);
@@ -169,9 +178,6 @@ Ext.define('ARSnova.view.TabPanel', {
 				break;
 			case this.feedbackQuestionsPanel:
 				ARSnova.app.setWindowTitle(' - ' + Messages.QUESTIONS_FROM_STUDENTS);
-				break;
-			case this.rolePanel:
-				ARSnova.app.setWindowTitle();
 				break;
 			default:
 				ARSnova.app.setWindowTitle(' - ' + Messages.HOME);

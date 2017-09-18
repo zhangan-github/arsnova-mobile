@@ -41,6 +41,7 @@ Ext.define('ARSnova.view.LoginPanel', {
 
 	initialize: function () {
 		this.callParent(arguments);
+		this.initializeCanvasColorDummy();
 		this.arsLogo = {
 			xtype: 'panel',
 			style: 'marginTop: 15px'
@@ -100,28 +101,59 @@ Ext.define('ARSnova.view.LoginPanel', {
 				});
 			}
 		});
+		this.on('painted', function () {
+			ARSnova.app.getController('Application').setCountdownTimerColors();
+			ARSnova.app.getController('Application').setFeedbackChartColors();
+			ARSnova.app.getController('Application').setCorrectChartColors();
+		});
 	},
 	addToolbar: function () {
+		var isPhone = (Ext.os.is.Phone && Ext.os.is.iOS);
+		var smallHeight = document.body.clientHeight <= 460;
+		var mediumHeight = document.body.clientHeight >= 520;
+		var slogan = ARSnova.app.globalConfig.arsnovaSlogan || "";
 		this.add([{
 			xtype: 'toolbar',
 			docked: 'top',
 			ui: 'light',
 			title: 'Login',
-			cls: null,
-			items: [{
-				text: Messages.CHANGE_ROLE,
-				ui: 'back',
-				handler: function () {
-					ARSnova.app.userRole = "";
-					ARSnova.app.setWindowTitle();
-
-					ARSnova.app.mainTabPanel.tabPanel.animateActiveItem(ARSnova.app.mainTabPanel.tabPanel.rolePanel, {
-						type: 'slide',
-						direction: 'right'
-					});
+			cls: null
+			//since we decide role with url, we don't provide those role shift function
+			//items: [{
+			//	text: Messages.CHANGE_ROLE,
+			//	ui: 'back',
+			//	handler: function () {
+			//		ARSnova.app.userRole = "";
+			//		ARSnova.app.setWindowTitle();
+			//		ARSnova.app.mainTabPanel.tabPanel.animateActiveItem(ARSnova.app.mainTabPanel.tabPanel.rolePanel, {
+			//			type: 'slide',
+			//			direction: 'right'
+			//		}
+			//	);
+			//	}
+			//}]
+			},
+			this.arsLogo,
+			{
+				xtype: 'panel',
+				cls: null,
+				//for temp use
+				html: "<div class='icon-logo'>" +
+						"<span class='icon-logo-ars'>FIT</span>" +
+						"<span class='icon-lock'>-</span>" +
+						"<span class='icon-logo-nova'>TJU</span>" +
+						"</div>",
+				style: {
+					marginTop: '5px'
 				}
-			}]},
-			this.arsLogo
+			}, {
+				xtype: 'panel',
+				style: {
+					marginBottom: isPhone && !mediumHeight ? (smallHeight ? '10px' : '15px') : '30px'
+				},
+				html: "<div class='gravure'>" + slogan + "</div>",
+				cls: null
+			}
 		]);
 	},
 	addButtons: function (role) {
@@ -157,5 +189,13 @@ Ext.define('ARSnova.view.LoginPanel', {
 		buttonPanels.forEach(function (buttonPanel) {
 			me.add(buttonPanel);
 		});
+		me.add(this.colorDummy);
+	},
+	initializeCanvasColorDummy: function () {
+		// essential for canvas color and style retrieval
+		this.colorDummy = {
+			hidden: true,
+			html: ARSnova.app.getController('Application').getCanvasColorDummies()
+		};
 	}
 });
