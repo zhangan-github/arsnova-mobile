@@ -119,19 +119,19 @@ Ext.define('ARSnova.view.diagnosis.DiagnosisPanel', {
 						Ext.Msg.alert(Messages.BROWSER_INFO, browserInfo, Ext.emptyFn);
 					}
 				}, {
-					text: Messages.ARSNOVA_INFO,
+					text: Messages.CRSFIT_INFO,
 					handler: function (b) {
 						this.showSoftwareVersionDialog();
 					},
 					scope: this
 				}, {
-					text: Messages.ARSNOVA_RELOAD,
+					text: Messages.CRSFIT_RELOAD,
 					handler: function (b) {
 						var message = ARSnova.app.loginMode === ARSnova.app.LOGIN_GUEST ?
-							Messages.RELOAD_SURE.replace(/###/, Messages.RELOAD_GUEST_ADDITION) :
-							Messages.RELOAD_SURE.replace(/###/, '');
+							Messages.RELOAD_SURE_CRSFIT.replace(/###/, Messages.RELOAD_GUEST_ADDITION) :
+							Messages.RELOAD_SURE_CRSFIT.replace(/###/, '');
 
-						Ext.Msg.confirm(Messages.ARSNOVA_RELOAD, message, function (b) {
+						Ext.Msg.confirm(Messages.CRSFIT_RELOAD, message, function (b) {
 							if (b === 'yes') {
 								if (ARSnova.app.checkSessionLogin()) {
 									ARSnova.app.getController('Sessions').logout();
@@ -159,7 +159,7 @@ Ext.define('ARSnova.view.diagnosis.DiagnosisPanel', {
 		versionData.then(function (versionData) {
 			var info = this.toVersionString(versionData.frontend) + '<br><br>' +
 				this.toVersionString(versionData.backend);
-			Ext.Msg.alert(Messages.ARSNOVA_INFO, info, Ext.emptyFn);
+			Ext.Msg.alert(Messages.CRSFIT_INFO, info, Ext.emptyFn);
 		}.bind(this));
 	},
 
